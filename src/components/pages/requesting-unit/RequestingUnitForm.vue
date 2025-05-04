@@ -1,0 +1,66 @@
+<template>
+  <base-card :title="title" @close="emit('close')">
+    <v-card-text>
+      <v-form>
+
+        <v-text-field
+          v-model="name"
+          density="compact"
+          :error-messages="errors.name"
+          label="Nome"
+          placeholder="Nome da Unidade Solicitante"
+          variant="outlined"
+        />
+      </v-form>
+    </v-card-text>
+    <v-card-actions class="flex justify-between mx-4 mb-4">
+      <base-button-clear v-if="!isEditing" button-text="Limpar Campo" @clear="clear" />
+      <v-spacer />
+      <base-button-register
+        button-icon="mdi-content-save"
+        button-text="Salvar"
+        @register="onSubmit"
+      />
+    </v-card-actions>
+  </base-card>
+</template>
+
+<script setup>
+  import { useField, useForm } from 'vee-validate'
+  import * as yup from 'yup'
+
+  const props = defineProps({
+    modelValue: { type: Object, default: () => ({}) },
+  })
+
+  const emit = defineEmits(['close', 'save']);
+  const title = computed(() =>
+    isEditing.value ? 'Editar Unidade Solicitante' : 'Cadastrar Unidade Solicitante'
+  );
+
+  const isEditing = computed(() => !!props.modelValue?.id);
+
+  const schema = yup.object({
+    name: yup.string().required('Nome da unidade é obrigatório'),
+  });
+
+  const { handleSubmit, errors, resetForm } = useForm({
+    validationSchema: schema,
+  });
+
+  const { value: name } = useField('name');
+
+  onMounted(() => {
+    if (isEditing.value) {
+      resetForm({ values: props.modelValue })
+    }
+  });
+
+  const onSubmit = handleSubmit(values => {
+    emit('save', values)
+  });
+
+  const clear = () => {
+    resetForm()
+  };
+</script>

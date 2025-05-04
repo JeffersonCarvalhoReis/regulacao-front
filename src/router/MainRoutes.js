@@ -1,0 +1,154 @@
+import Login from '@/pages/Login.vue'
+import Home from '@/pages/Home.vue'
+import Appointments from '@/pages/Appointments.vue'
+import Doctors from '@/pages/Doctors.vue'
+import HealthUnits from '@/pages/HealthUnits.vue'
+import HealthAgents from '@/pages/HealthAgents.vue'
+import Patients from '@/pages/Patients.vue'
+import Procedures from '@/pages/Procedures.vue'
+import Settings from '@/pages/Settings.vue'
+import Specialists from '@/pages/Specialists.vue'
+import RequestingUnits from '@/pages/RequestingUnits.vue'
+import ProviderUnits from '@/pages/ProviderUnits.vue'
+import Users from '@/pages/Users.vue'
+import Solicitations from '@/pages/Solicitations.vue'
+import AppointmentsManagement from '@/pages/AppointmentsManagement.vue'
+// import { auth, redirectIfAuthenticated } from './guard'
+
+export default [
+  {
+    path: '/',
+    name: 'login',
+    component: Login,
+    meta: {
+      login: true,
+      layout: 'login',
+    },
+
+  },
+  {
+    path: '/inicio',
+    name: 'home',
+    component: Home,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/agendamentos',
+    name: 'appointments',
+    component: Appointments,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/controle-de-agendamentos',
+    name: 'appointments-management',
+    component: AppointmentsManagement,
+    meta: {
+      requiresAuth: true,
+      roles: ['provider_unit_manager']
+    },
+  },
+  {
+    path: '/medicos',
+    name: 'doctors',
+    component: Doctors,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/unidades-de-saude',
+    name: 'health-units',
+    component: HealthUnits,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/agentes-de-saude',
+    name: 'health-agents',
+    component: HealthAgents,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/pacientes',
+    name: 'patients',
+    component: Patients,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+    },
+  },
+  {
+    path: '/procedimentos',
+    name: 'procedures',
+    component: Procedures,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/configuracoes',
+    name: 'settings',
+    component: Settings,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/especialistas',
+    name: 'specialists',
+    component: Specialists,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/unidades-solicitantes',
+    name: 'requesting-units',
+    component: RequestingUnits,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/unidades-prestadoras',
+    name: 'provider-units',
+    component: ProviderUnits,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer']
+    },
+  },
+  {
+    path: '/usuarios',
+    name: 'users',
+    component: Users,
+    meta: {
+      requiresAuth: true,
+      roles: ['admin']
+    },
+  },
+  {
+    path: '/solicitacoes',
+    name: 'solicitations',
+    component: Solicitations,
+    meta: {
+      requiresAuth: true,
+      roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+    },
+  },
+]
