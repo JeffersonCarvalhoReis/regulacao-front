@@ -60,8 +60,8 @@
             <hr>
 
             <strong>Médico: </strong> <span class="uppercase">{{ props.appointmentData.doctor }}</span><br>
-            <div v-if="!isExam">
-              <strong>Procedimento: </strong> <span class="uppercase tracking-widest">{{ props.appointmentData.procedure}}</span><br>
+            <div v-if="isExam">
+              <strong>Procedimento:</strong> <span class="uppercase tracking-widest">{{ props.appointmentData.procedure}}</span><br>
             </div>
             <div v-else>
               <strong>Especialidade: </strong> <span class="uppercase tracking-widest">{{ props.appointmentData.specialist}}</span><br>
@@ -91,7 +91,7 @@ const emit = defineEmits(['close'])
 const title = ref('Comprovante de Agendamento');
 const recomendation = ref('Atenção! O atendimento será por ordem de chegada');
 const editRecomendationDialog = ref(false);
-const isExam = computed(() => !!props.appointmentData.solicitation.solicitation_type == 'exam' )
+const isExam = computed(() => props.appointmentData.solicitation.solicitation_type == 'exam' )
 
 const handleSaveRecomendation = value => {
   recomendation.value = value;
