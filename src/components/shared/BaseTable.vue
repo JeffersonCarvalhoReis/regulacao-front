@@ -6,11 +6,12 @@
 
     <!-- Data Table -->
     <v-data-table-server
+      class="uppercase"
       v-model:items-per-page="options.itemsPerPage"
       v-model:options="options"
       :headers="headers"
       density="compact"
-      :header-props="{ class: 'text-blue-600 font-semibold text-sm' }"
+      :header-props="{ class: 'text-ita-blue font-semibold text-sm normal-case' }"
       item-value="id"
       :items="items"
       :items-length="totalItems"
@@ -176,7 +177,7 @@
     loading: { type: Boolean, default: false },
     tab: { type: String, default: 'finalizadas' },
     edit: { type: Boolean, default: true },
-    classEdit: { type: String, default: 'text-blue-600 bg-white/0/0 border-0 ml-1 h-full'},
+    classEdit: { type: String, default: 'text-ita-blue bg-white/0/0 border-0 ml-1 h-full'},
     register: { type: Boolean, default: false },
     showDelete: { type: Boolean, default: true },
     iconRegister: { type: String, default: 'mdi-plus' },
@@ -185,7 +186,7 @@
     iconEdit: { type: String, default: 'mdi-pencil' },
     textEdit: { type: String, default: 'Editar' },
     newAction: { type: Boolean, default: false},
-    classNewAction: { type: String, default: 'text-blue-600 bg-white/0 border-0'},
+    classNewAction: { type: String, default: 'text-ita-green bg-white/0 border-0 ml-1 h-full'},
     iconNewAction: { type: String, default: 'mdi-plus'},
     textNewAction: { type: String, default: 'Ação'},
     tooltipTextDelete: { type: String, default: 'Não é possivel excluir pois há outros registros vinculados' },

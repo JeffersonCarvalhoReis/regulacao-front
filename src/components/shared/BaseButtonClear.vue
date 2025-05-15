@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    class="bg-orange-600 hover:bg-orange-700 text-white"
+    class="bg-ita-yellow hover:bg-yellow-400 text-white"
     :prepend-icon="buttonIcon"
     @click="emit('clear')"
   >

@@ -14,6 +14,7 @@
         :error-messages="errorMessages"
         :label="label"
         :readonly="readonly"
+        :class="classField"
         maxlength="10"
         persistent-hint
         placeholder="dd/mm/aaaa"
@@ -50,7 +51,8 @@
     errorMessages: { type: String, default: null },
     modelValue: { type: [Date, String, null], default: null },
     classDatePicker: { type: String, default: 'absolute left-[-175px]'},
-    readonly: { type: Boolean, default: false }
+    readonly: { type: Boolean, default: false },
+    classField: {type: String, required: false}
   });
 
   const emit = defineEmits(['update:modelValue']);

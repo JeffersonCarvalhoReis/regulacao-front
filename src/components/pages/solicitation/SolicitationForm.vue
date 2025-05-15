@@ -68,7 +68,7 @@
 
         <div class="grid grid-cols-3 gap-2">
             <v-autocomplete
-            class="col-span-2"
+            class="col-span-2 required"
             v-model="patient_id"
             density="compact"
             :error-messages="errors.patient_id"
@@ -87,6 +87,7 @@
 
           <v-select
             v-model="solicitation_type"
+            class="required"
             density="compact"
             :error-messages="errors.solicitation_type"
             item-title="label"
@@ -97,6 +98,7 @@
           />
           <v-select
             v-model="is_first_time"
+            class="required"
             density="compact"
             :error-messages="errors.is_first_time"
             item-title="label"
@@ -107,6 +109,7 @@
           />
           <v-select
             v-model="is_urgent"
+            class="required"
             density="compact"
             :error-messages="errors.is_urgent"
             item-title="label"
@@ -121,6 +124,7 @@
           >
             <v-autocomplete
             v-model="specialist_id"
+            class="required"
             density="compact"
             :error-messages="errors.specialist_id"
             item-title="name"
@@ -138,6 +142,7 @@
           <v-autocomplete
             :disabled="!solicitation_type"
             v-model="procedure_id"
+            :class="{ 'required': solicitation_type}"
             density="compact"
             :error-messages="errors.procedure_id"
             item-title="name"
@@ -149,6 +154,7 @@
           </div>
           <v-autocomplete
             v-model="requesting_unit_id"
+            class="required"
             density="compact"
             :error-messages="errors.requesting_unit_id"
             item-title="name"
@@ -169,7 +175,7 @@
             accept=".pdf,.jpg,.jpeg,.png"
           />
           <v-textarea
-            class="col-span-3"
+            class="col-span-3 required"
             density="compact"
             v-model="reason"
             :error-messages="errors.reason"

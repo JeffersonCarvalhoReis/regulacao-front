@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    class="bg-blue-500 hover:bg-blue-700 text-white"
+    class="bg-ita-blue hover:bg-blue-700 text-white"
     :prepend-icon="buttonIcon"
     @click="emit('register')"
   >

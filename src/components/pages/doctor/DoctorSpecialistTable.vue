@@ -29,7 +29,7 @@
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const iconRemoveSpecialist = 'mdi-delete';
-  const classRemoveSpecialist = 'text-red-600 bg-white border-0';
+  const classRemoveSpecialist = 'text-red-600 bg-white/0 border-0  ml-1 h-full';
   const textRemoveSpecialist = 'Remover especialidade desse médico';
   const specialists = ref(props.modelValue.specialists);
   const specialistsReversed = computed(() => [...specialists.value].reverse());

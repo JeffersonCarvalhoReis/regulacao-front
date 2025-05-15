@@ -13,6 +13,12 @@ import ProviderUnits from '@/pages/ProviderUnits.vue'
 import Users from '@/pages/Users.vue'
 import Solicitations from '@/pages/Solicitations.vue'
 import AppointmentsManagement from '@/pages/AppointmentsManagement.vue'
+import Companions from '@/pages/Companions.vue'
+import Hospitals from '@/pages/Hospitals.vue'
+import Cities from '@/pages/Cities.vue'
+import Vehicles from '@/pages/Vehicles.vue'
+import Drivers from '@/pages/Drivers.vue'
+import Travels from '@/pages/Travels.vue'
 // import { auth, redirectIfAuthenticated } from './guard'
 
 export default [
@@ -149,6 +155,55 @@ export default [
     meta: {
       requiresAuth: true,
       roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+    },
+  },
+
+  {
+    path: '/acompanhantes',
+    name: 'companions',
+    component: Companions,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/hospitais',
+    name: 'hospitals',
+    component: Hospitals,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/cidades',
+    name: 'cities',
+    component: Cities,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/veiculos',
+    name: 'vehicles',
+    component: Vehicles,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/motoristas',
+    name: 'drivers',
+    component: Drivers,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/viagens',
+    name: 'travels',
+    component: Travels,
+    meta: {
+      requiresAuth: true,
     },
   },
 ]

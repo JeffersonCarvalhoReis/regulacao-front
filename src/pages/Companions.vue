@@ -1,7 +1,7 @@
 <template>
-  <patient-table ref="patientTableRef" :edit="true" :show-delete="true">
+  <companion-table ref="companionTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
-      <base-button-register @register="registerPatient = true" />
+      <base-button-register @register="registerCompanion = true" />
       <v-badge color="error" :content="badgeCounter" v-if="badgeCounter > 0" >
        <base-button-filter @filters="dialogFilter = true"/>
       </v-badge>
@@ -12,13 +12,13 @@
         @clear="clear"
       />
     </div>
-  </patient-table>
+  </companion-table>
   <v-dialog
-    v-model="registerPatient"
+    v-model="registerCompanion"
     class="z-999"
     transition="dialog-transition"
   >
-    <patient-form @close="registerPatient = false" @save="submit" />
+    <companion-form @close="registerCompanion = false" @save="submit" />
   </v-dialog>
   <v-dialog
     v-model="dialogFilter"
@@ -29,17 +29,17 @@
   </v-dialog>
 </template>
 <script setup>
-  import { usePatientApi } from '@/composables/modules/usePatientModule';
+  import { useCompanionApi } from '@/composables/modules/useCompanionModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
 
-  const { create } = usePatientApi();
+  const { create } = useCompanionApi();
   const { showFeedback } = useSweetAlertFeedback();
 
-  const patientTableRef = ref(null);
-  const registerPatient = ref(false)
+  const companionTableRef = ref(null);
+  const registerCompanion = ref(false)
   const clear = () => {
-    patientTableRef.value?.clearFilters();
-    patientTableRef.value?.refetch();
+    companionTableRef.value?.clearFilters();
+    companionTableRef.value?.refetch();
     badgeCounter.value = 0
 
   }
@@ -47,8 +47,8 @@
   const submit = async val => {
     const success = await showFeedback(() => create(val));
     if (success) {
-      patientTableRef.value?.refetch();
-      registerPatient.value = false;
+      companionTableRef.value?.refetch();
+      registerCompanion.value = false;
     }
   }
   //filters
@@ -65,9 +65,9 @@
   }).length;
   };
   const submitFilters = async val => {
-    patientTableRef.value?.setFilter('', val);
+    companionTableRef.value?.setFilter('', val);
     badgeCounter.value = countNotNullKeys(val);
-    patientTableRef.value?.refetch();
+    companionTableRef.value?.refetch();
     dialogFilter.value = false
   }
 </script>

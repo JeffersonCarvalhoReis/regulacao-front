@@ -28,7 +28,7 @@
             v-model="time"
             density="compact"
             variant="outlined"
-            label="Escolha uma horário"
+            label="Escolha um horário"
             @update:model-value="onTimeInput"
             @keypress="onlyNumbers"
             :error-messages="errors.time"

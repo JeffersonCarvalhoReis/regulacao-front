@@ -20,10 +20,14 @@ declare module 'vue-router/auto-routes' {
   export interface RouteNamedMap {
     '/Appointments': RouteRecordInfo<'/Appointments', '/Appointments', Record<never, never>, Record<never, never>>,
     '/AppointmentsManagement': RouteRecordInfo<'/AppointmentsManagement', '/AppointmentsManagement', Record<never, never>, Record<never, never>>,
+    '/Cities': RouteRecordInfo<'/Cities', '/Cities', Record<never, never>, Record<never, never>>,
+    '/Companions': RouteRecordInfo<'/Companions', '/Companions', Record<never, never>, Record<never, never>>,
     '/Doctors': RouteRecordInfo<'/Doctors', '/Doctors', Record<never, never>, Record<never, never>>,
+    '/Drivers': RouteRecordInfo<'/Drivers', '/Drivers', Record<never, never>, Record<never, never>>,
     '/HealthAgents': RouteRecordInfo<'/HealthAgents', '/HealthAgents', Record<never, never>, Record<never, never>>,
     '/HealthUnits': RouteRecordInfo<'/HealthUnits', '/HealthUnits', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
+    '/Hospitals': RouteRecordInfo<'/Hospitals', '/Hospitals', Record<never, never>, Record<never, never>>,
     '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
     '/Patients': RouteRecordInfo<'/Patients', '/Patients', Record<never, never>, Record<never, never>>,
     '/Procedures': RouteRecordInfo<'/Procedures', '/Procedures', Record<never, never>, Record<never, never>>,
@@ -32,6 +36,8 @@ declare module 'vue-router/auto-routes' {
     '/Settings': RouteRecordInfo<'/Settings', '/Settings', Record<never, never>, Record<never, never>>,
     '/Solicitations': RouteRecordInfo<'/Solicitations', '/Solicitations', Record<never, never>, Record<never, never>>,
     '/Specialists': RouteRecordInfo<'/Specialists', '/Specialists', Record<never, never>, Record<never, never>>,
+    '/Travels': RouteRecordInfo<'/Travels', '/Travels', Record<never, never>, Record<never, never>>,
     '/Users': RouteRecordInfo<'/Users', '/Users', Record<never, never>, Record<never, never>>,
+    '/Vehicles': RouteRecordInfo<'/Vehicles', '/Vehicles', Record<never, never>, Record<never, never>>,
   }
 }

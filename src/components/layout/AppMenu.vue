@@ -123,6 +123,44 @@
             title="Usuários"
           />
         </div>
+        <v-list-subheader >TFD</v-list-subheader>
+
+        <app-menu-item
+          :to="{name: 'companions'}"
+          :active="$route.name === 'companions'"
+          prepend-icon="mdi-card-account-details"
+          title="Acompanhantes"
+        />
+        <app-menu-item
+          :to="{name: 'hospitals'}"
+          :active="$route.name === 'hospitals'"
+          prepend-icon="mdi-hospital-building"
+          title="Hospitais"
+        />
+        <app-menu-item
+          :to="{name: 'cities'}"
+          :active="$route.name === 'cities'"
+          prepend-icon="mdi-city"
+          title="Cidades"
+        />
+        <app-menu-item
+          :to="{name: 'drivers'}"
+          :active="$route.name === 'drivers'"
+          prepend-icon="mdi-badge-account"
+          title="Motoristas"
+        />
+        <app-menu-item
+          :to="{name: 'vehicles'}"
+          :active="$route.name === 'vehicles'"
+          prepend-icon="mdi-car-estate"
+          title="Veículos"
+        />
+        <app-menu-item
+          :to="{name: 'travels'}"
+          :active="$route.name === 'travels'"
+          prepend-icon="mdi-map-marker-distance"
+          title="Viagens"
+        />
       </v-list>
     </v-navigation-drawer>
 </template>
