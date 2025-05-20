@@ -2,7 +2,7 @@
   <v-layout>
   <!-- Área principal do app com a toolbar integrada -->
   <v-app-bar
-    class="z-20 bg-blue-500 border-gray-200 border-b text-white shadow-sm"
+    class="z-20 bg-ita-blue border-gray-200 border-b text-white shadow-sm"
     flat
   >
     <v-btn
@@ -12,7 +12,7 @@
     >
       <v-icon> mdi-menu</v-icon>
     </v-btn>
-    <div class=" bg-blue-300 rounded-full flex items-center justify-center w-10 h-10 p-1 ml-4">
+    <div class=" bg-blue-300 border-1 border- rounded-full flex items-center justify-center w-12 h-12 p-1 ml-4">
       <img src="@/assets/images/brasao.svg"  class="w-8/12" alt="brasão da prefeitura de itaguaçu da bahia">
     </div>
     <v-app-bar-title class="md:hidden lg:block">

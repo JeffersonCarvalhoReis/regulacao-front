@@ -13,6 +13,15 @@ import ProviderUnits from '@/pages/ProviderUnits.vue'
 import Users from '@/pages/Users.vue'
 import Solicitations from '@/pages/Solicitations.vue'
 import AppointmentsManagement from '@/pages/AppointmentsManagement.vue'
+import Companions from '@/pages/Companions.vue'
+import Hospitals from '@/pages/Hospitals.vue'
+import Cities from '@/pages/Cities.vue'
+import Vehicles from '@/pages/Vehicles.vue'
+import Drivers from '@/pages/Drivers.vue'
+import Travels from '@/pages/Travels.vue'
+import PatientsTfd from '@/pages/PatientsTfd.vue'
+import Deceased from '@/pages/Deceased.vue'
+import BpaSettings from '@/pages/BpaSettings.vue'
 // import { auth, redirectIfAuthenticated } from './guard'
 
 export default [
@@ -86,7 +95,7 @@ export default [
     component: Patients,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+      roles: ['tfd','regulation_officer', 'reception', 'provider_unit_manager']
     },
   },
   {
@@ -149,6 +158,88 @@ export default [
     meta: {
       requiresAuth: true,
       roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+    },
+  },
+
+  {
+    path: '/acompanhantes',
+    name: 'companions',
+    component: Companions,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/hospitais',
+    name: 'hospitals',
+    component: Hospitals,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/cidades',
+    name: 'cities',
+    component: Cities,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/veiculos',
+    name: 'vehicles',
+    component: Vehicles,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/motoristas',
+    name: 'drivers',
+    component: Drivers,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/viagens',
+    name: 'travels',
+    component: Travels,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/pacientes-tfd',
+    name: 'patients-tfd',
+    component: PatientsTfd,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+    {
+    path: '/falecidos',
+    name: 'deceased',
+    component: Deceased,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+      {
+    path: '/bpa-definicoes',
+    name: 'bpa-settings',
+    component: BpaSettings,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
     },
   },
 ]

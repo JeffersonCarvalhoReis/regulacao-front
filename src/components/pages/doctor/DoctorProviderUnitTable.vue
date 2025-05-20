@@ -29,7 +29,7 @@ const {  loadingList, refetch, update } = useDoctorApi();
 const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
 const iconRemoveProviderUnit = 'mdi-delete';
-const classRemoveProviderUnit = 'text-red-600 bg-white border-0';
+const classRemoveProviderUnit = 'text-red-600 bg-white/0 border-0  ml-1 h-full';
 const textRemoveProviderUnit = 'Remover unidade desse médico';
 const providerUnits = ref(props.modelValue.provider_units);
 const providerUnitsReversed = computed(() => [...providerUnits.value].reverse());

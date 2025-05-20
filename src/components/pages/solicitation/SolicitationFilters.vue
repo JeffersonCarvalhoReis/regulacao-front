@@ -73,25 +73,33 @@
         <v-divider />
         <h2 class="font-bold text-lg">Dados da Solicitação</h2>
         <div class="grid grid-cols-2 gap-2">
-          <v-select
-            v-model="filterForm.is_first_time"
-            density="compact"
-            item-title="label"
-            item-value="value"
-            :items="isFirstTimeOptions"
-            label="Retorno"
-            variant="outlined"
-          />
-          <v-select
-            v-model="filterForm.is_urgent"
-            density="compact"
-            item-title="label"
-            item-value="value"
-            :items="isUrgentOptions"
-            label="Urgente"
-            variant="outlined"
-          />
-
+           <div class="col-span-2 grid grid-cols-4 gap-2">
+             <v-text-field
+             class="col-span-2"
+              v-model="filterForm.cid"
+              density="compact"
+              label="CID"
+              variant="outlined"
+            />
+            <v-select
+              v-model="filterForm.is_first_time"
+              density="compact"
+              item-title="label"
+              item-value="value"
+              :items="isFirstTimeOptions"
+              label="Retorno"
+              variant="outlined"
+            />
+            <v-select
+              v-model="filterForm.is_urgent"
+              density="compact"
+              item-title="label"
+              item-value="value"
+              :items="isUrgentOptions"
+              label="Urgente"
+              variant="outlined"
+            />
+          </div>
           <v-autocomplete
             v-model="filterForm.specialist_id"
             density="compact"

@@ -123,6 +123,70 @@
             title="Usuários"
           />
         </div>
+        <div v-if="['tfd'].includes(role)">
+        <v-list-subheader >TFD</v-list-subheader>
+        <app-menu-item
+          :to="{name: 'patients'}"
+          :active="$route.name === 'patients'"
+          prepend-icon="mdi-card-account-details"
+          title="Pacientes"
+        />
+       <app-menu-item
+          :to="{name: 'patients-tfd'}"
+          :active="$route.name === 'patients-tfd'"
+          prepend-icon="mdi-text-box-search"
+          title="Histórico Pacientes TFD"
+        />
+        <app-menu-item
+          :to="{name: 'companions'}"
+          :active="$route.name === 'companions'"
+          prepend-icon="mdi-card-account-details"
+          title="Acompanhantes"
+        />
+        <app-menu-item
+          :to="{name: 'deceased'}"
+          :active="$route.name === 'deceased'"
+          prepend-icon="mdi-cross"
+          title="Lista de Falecidos"
+        />
+        <app-menu-item
+          :to="{name: 'hospitals'}"
+          :active="$route.name === 'hospitals'"
+          prepend-icon="mdi-hospital-building"
+          title="Hospitais"
+        />
+        <app-menu-item
+          :to="{name: 'cities'}"
+          :active="$route.name === 'cities'"
+          prepend-icon="mdi-city"
+          title="Cidades"
+        />
+        <app-menu-item
+          :to="{name: 'drivers'}"
+          :active="$route.name === 'drivers'"
+          prepend-icon="mdi-badge-account"
+          title="Motoristas"
+        />
+        <app-menu-item
+          :to="{name: 'vehicles'}"
+          :active="$route.name === 'vehicles'"
+          prepend-icon="mdi-car-estate"
+          title="Veículos"
+        />
+        <app-menu-item
+          :to="{name: 'travels'}"
+          :active="$route.name === 'travels'"
+          prepend-icon="mdi-map-marker-distance"
+          title="Viagens"
+        />
+       <app-menu-item
+          :to="{name: 'bpa-settings'}"
+          :active="$route.name === 'bpa-settings'"
+          prepend-icon="mdi-map-marker-distance"
+          title="Definições do BPA"
+        />
+        </div>
+
       </v-list>
     </v-navigation-drawer>
 </template>

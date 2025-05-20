@@ -16,6 +16,7 @@
         <InfoGroup title="Dados da Solicitação">
           <div v-if="isExam">Exame: {{ props.solicitationData.procedure }}</div>
           <div v-if="!isExam">Consulta com {{ props.solicitationData.specialist }}</div>
+          <div v-if=" props.solicitationData.cid " class="uppercase">Cid: {{ props.solicitationData.cid }}</div>
           <div :class="{'text-red-500': isUrgent }">Urgência: {{ isUrgentLabel }}</div>
           <div>Retorno: {{ isReturnLabel }}</div>
           <div>Data da Solicitação: {{ formatDate(props.solicitationData.solicitation_date) }}</div>

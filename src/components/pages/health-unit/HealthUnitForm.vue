@@ -1,14 +1,22 @@
 <template>
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
-      <v-form>
-
+      <v-form class="flex gap-4">
         <v-text-field
           v-model="name"
           density="compact"
           :error-messages="errors.name"
           label="Nome"
           placeholder="Nome da unidade de saúde"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="cnes"
+          density="compact"
+          type="number"
+          :error-messages="errors.cnes"
+          label="CNES"
+          placeholder="CNES da Unidade"
           variant="outlined"
         />
       </v-form>
@@ -42,6 +50,7 @@
 
   const schema = yup.object({
     name: yup.string().required('Nome da unidade é obrigatório'),
+    cnes: yup.string().nullable()
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
@@ -49,6 +58,7 @@
   });
 
   const { value: name } = useField('name');
+  const { value: cnes } = useField('cnes')
 
   onMounted(() => {
     if (isEditing.value) {

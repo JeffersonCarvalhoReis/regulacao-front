@@ -3,22 +3,9 @@
     <div class="flex gap-2">
       <base-button-register @register="registerPatient = true" />
       <v-badge color="error" :content="badgeCounter" v-if="badgeCounter > 0" >
-      <v-btn
-        class="bg-emerald-600 hover:bg-emerald-700 text-white"
-        prepend-icon="mdi-filter-variant"
-        @click="dialogFilter = true"
-      >
-        Filtros
-      </v-btn>
-    </v-badge>
-      <v-btn
-          v-else
-          class="bg-emerald-600 hover:bg-emerald-700 text-white"
-          prepend-icon="mdi-filter-variant"
-          @click="dialogFilter = true"
-        >
-          Filtros
-      </v-btn>
+       <base-button-filter @filters="dialogFilter = true"/>
+      </v-badge>
+      <base-button-filter v-else @filters="dialogFilter = true"/>
       <base-button-clear
         button-icon="mdi-filter-remove-outline"
         button-text="Limpar Filtros"

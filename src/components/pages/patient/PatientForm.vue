@@ -5,7 +5,7 @@
         <div class="grid grid-cols-3 gap-2">
           <v-text-field
             v-model="name"
-            class="col-span-2"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.name"
             label="Nome"
@@ -15,6 +15,7 @@
           />
 
           <v-text-field
+            class="required"
             v-model="cns"
             density="compact"
             :error-messages="errors.cns"
@@ -29,7 +30,7 @@
 
           <v-text-field
             v-model="mother_name"
-            class="col-span-2"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.mother_name"
             label="Nome da Mãe"
@@ -40,6 +41,7 @@
 
           <v-text-field
             v-model="cpf"
+            class="required"
             density="compact"
             :error-messages="errors.cpf"
             label="CPF"
@@ -53,6 +55,7 @@
 
           <v-select
             v-model="gender"
+            class="required"
             density="compact"
             :error-messages="errors.gender"
             item-title="label"
@@ -62,6 +65,7 @@
             variant="outlined"
           />
           <v-select
+            class="required"
             v-model="race"
             density="compact"
             :error-messages="errors.race"
@@ -72,11 +76,13 @@
 
           <base-input-date-picker
             v-model="birth_date"
+            class-field="required"
             :error-messages="errors.birth_date"
             label="Data de Nascimento"
           />
 
           <v-text-field
+            class="required"
             v-model="phone"
             density="compact"
             :error-messages="errors.phone"
@@ -90,6 +96,7 @@
           />
 
           <v-autocomplete
+            class="required"
             v-model="health_agent_id"
             density="compact"
             :error-messages="errors.health_agent_id"
@@ -101,6 +108,7 @@
           />
 
           <v-text-field
+            class="required"
             v-model="street"
             density="compact"
             :error-messages="errors.street"
@@ -111,7 +119,7 @@
           />
 
           <v-text-field
-            class="col-span-2"
+            class="col-span-2 required"
             v-model="neighborhood"
             density="compact"
             :error-messages="errors.neighborhood"
@@ -129,6 +137,21 @@
             placeholder="Informações adicionais sobre o paciente"
             variant="outlined"
           />
+          <div class="flex gap-5">
+          <v-checkbox
+              v-model="is_deceased"
+              label="Falecido"
+              color="primary"
+              density="compact"
+            />
+            <base-input-date-picker
+              v-if="is_deceased"
+              v-model="date_of_dead"
+              class-field="required"
+              :error-messages="errors.date_of_dead"
+              label="Data do Falecimento"
+            />
+          </div>
         </div>
 
       </v-form>
@@ -202,10 +225,18 @@
     gender: yup.string().required('Gênero é obrigatório'),
     birth_date: yup.date().required('Data de nascimento é obrigatória'),
     phone: yup.string().required('Telefone é obrigatório'),
-    health_agent_id: yup.number().nullable().required('Agente de saúde é obrigatório'),
+    health_agent_id: yup.number().required('Agente de saúde é obrigatório'),
     street: yup.string().required('Rua é obrigatória'),
     neighborhood: yup.string().required('Bairro é obrigatório'),
     observation: yup.string().nullable(),
+    is_deceased: yup.boolean().nullable(),
+    date_of_dead: yup.date()
+      .when('is_deceased', {
+      is: true,
+      then: (schema) => schema
+      .required('Data do falecimento é obrigatória'),
+      otherwise: (schema) => schema.nullable()
+    })
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
@@ -224,6 +255,8 @@
   const { value: street } = useField('street');
   const { value: neighborhood } = useField('neighborhood');
   const { value: observation } = useField('observation');
+  const { value: is_deceased } = useField('is_deceased')
+  const { value: date_of_dead } = useField('date_of_dead');
 
   const onSubmit = handleSubmit(values => {
     emit('save', values)
@@ -232,4 +265,10 @@
   const clear = () => {
     resetForm()
   }
+
+  watch(() => is_deceased.value, (newValue) => {
+    if(newValue && !props.modelValue.is_deceased) {
+      date_of_dead.value = new Date();
+    }
+  })
 </script>

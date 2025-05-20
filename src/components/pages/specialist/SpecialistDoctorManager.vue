@@ -53,7 +53,7 @@
 
   const title = 'Gerenciar Médicos da Especialidade';
   const iconRemoveDoctor = 'mdi-delete';
-  const classRemoveDoctor = 'text-red-600 bg-white border-0';
+  const classRemoveDoctor = 'text-red-600 bg-white/0 border-0  ml-1 h-full';
   const textRemoveDoctor = 'Remover médico dessa especialidade';
   const dialogAddDoctors = ref(false)
   const doctors = ref([]);

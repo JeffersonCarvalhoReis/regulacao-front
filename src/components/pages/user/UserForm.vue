@@ -67,6 +67,16 @@
           label="Função"
           variant="outlined"
         />
+          <v-autocomplete
+            v-model="health_unit_id"
+            :error-messages="errors.health_unit_id"
+            density="compact"
+            item-title="name"
+            item-value="id"
+            :items="healthUnitData"
+            label="Unidade de Saúde"
+            variant="outlined"
+          />
         <v-autocomplete
             v-if="role == 'provider_unit_manager'"
             v-model="provider_unit_id"
@@ -74,7 +84,7 @@
             density="compact"
             item-title="name"
             item-value="id"
-            :items="data"
+            :items="providerUnitData"
             label="Unidade Prestadora"
             variant="outlined"
           />
@@ -96,6 +106,7 @@
   import { useRoles } from '@/composables/utils/useRoles';
   import { usePasswordStrength } from '@/composables/utils/usePasswordStrength';
   import { useProviderUnitApi } from '@/composables/modules/useProviderUnitModule';
+  import { useHealthUnitApi } from '@/composables/modules/useHealthUnitModule';
   import { useField, useForm } from 'vee-validate'
   import * as yup from 'yup'
 
@@ -103,7 +114,8 @@
     modelValue: { type: Object, default: () => ({}) },
   });
 
-  const { data, refetch, params } = useProviderUnitApi()
+  const { data: providerUnitData, refetch: providerUnitFetch, params: providerUnitParams } = useProviderUnitApi();
+  const { data: healthUnitData , refetch: healthUnitFetch, params: healthUnitParams } = useHealthUnitApi();
 
   const emit = defineEmits(['close', 'save']);
   const showPassword = ref(false)
@@ -116,6 +128,7 @@
   const schema = computed(() =>
   yup.object({
     user: yup.string().required('Usuário é obrigatório'),
+    health_unit_id: yup.string().nullable(),
     provider_unit_id: yup
         .number()
         .when('role', {
@@ -161,6 +174,7 @@
   const { value: passwordConfirm } = useField('passwordConfirm')
   const { value: role } = useField('role')
   const { value: provider_unit_id } = useField('provider_unit_id')
+  const { value: health_unit_id } = useField('health_unit_id')
 
   const {
     textPasswordStrength,
@@ -173,9 +187,13 @@
     if (isEditing.value) {
       resetForm({ values: props.modelValue })
     }
-    params.value.per_page = -1;
+    providerUnitParams.value.per_page = -1;
+    healthUnitParams.value.per_page = -1;
     await nextTick();
-    refetch();
+    await Promise.all([
+      providerUnitFetch(),
+      healthUnitFetch()
+    ])
   });
 
   const onSubmit = handleSubmit(values => {

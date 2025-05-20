@@ -6,11 +6,12 @@
 
     <!-- Data Table -->
     <v-data-table-server
+      class="uppercase"
       v-model:items-per-page="options.itemsPerPage"
       v-model:options="options"
       :headers="headers"
       density="compact"
-      :header-props="{ class: 'text-blue-600 font-semibold text-sm' }"
+      :header-props="{ class: 'text-ita-blue font-semibold text-sm normal-case' }"
       item-value="id"
       :items="items"
       :items-length="totalItems"
@@ -30,11 +31,11 @@
         </slot>
       </template>
       <template #item.view="{ item }">
-        <v-tooltip text="Visualizar todos os dados">
+        <v-tooltip :text="textView">
           <template #activator="{ props }">
             <v-btn
-              class="text-blue-500"
-              icon="mdi-eye"
+              :class="classView"
+              :icon="iconView"
               variant="text"
               v-bind="props"
               @click="emit('view-item',item)"
@@ -176,16 +177,19 @@
     loading: { type: Boolean, default: false },
     tab: { type: String, default: 'finalizadas' },
     edit: { type: Boolean, default: true },
-    classEdit: { type: String, default: 'text-blue-600 bg-white/0/0 border-0 ml-1 h-full'},
+    classEdit: { type: String, default: 'text-ita-blue bg-white/0/0 border-0 ml-1 h-full'},
     register: { type: Boolean, default: false },
     showDelete: { type: Boolean, default: true },
     iconRegister: { type: String, default: 'mdi-plus' },
     iconDelete: { type: String, default: 'mdi-delete' },
+    iconView: { type: String, default: 'mdi-eye'},
+    textView: { type: String, default: 'Visualizar todos os dados'},
+    classView: { type: String, default: 'text-blue-500'},
     textDelete: { type: String, default: 'Excluir' },
     iconEdit: { type: String, default: 'mdi-pencil' },
     textEdit: { type: String, default: 'Editar' },
     newAction: { type: Boolean, default: false},
-    classNewAction: { type: String, default: 'text-blue-600 bg-white/0 border-0'},
+    classNewAction: { type: String, default: 'text-ita-green bg-white/0 border-0 ml-1 h-full'},
     iconNewAction: { type: String, default: 'mdi-plus'},
     textNewAction: { type: String, default: 'Ação'},
     tooltipTextDelete: { type: String, default: 'Não é possivel excluir pois há outros registros vinculados' },
@@ -269,7 +273,6 @@
 
 
   onMounted(() => {
-    // Ensure dark mode is applied if system preference is dark
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       theme.global.name.value = 'dark'
     }
@@ -286,5 +289,9 @@
 
 :deep(tbody > tr:hover) {
   background-color: #e0f2fe; /* Tailwind blue-100 */
+}
+
+:deep(.v-data-table-footer) {
+  @apply  normal-case
 }
 </style>

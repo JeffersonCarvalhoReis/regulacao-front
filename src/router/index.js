@@ -41,6 +41,7 @@ router.beforeEach(async (to, from, next) => {
     if(meStore.role == 'admin') return next({ name: 'users' })
     if(meStore.role == 'reception') return next({ name: 'patients' })
     if(meStore.role == 'provider_unit_manager') return next({ name: 'appointments-management' })
+    if(meStore.role == 'tfd') return next({ name: 'patients' })
     return next({ name: 'home' })
   }
 
@@ -48,6 +49,7 @@ router.beforeEach(async (to, from, next) => {
     if(meStore.role == 'admin') return next({ name: 'users' })
     if(meStore.role == 'reception') return next({ name: 'patients' })
     if(meStore.role == 'provider_unit_manager') return next({ name: 'appointments-management' })
+    if(meStore.role == 'tfd') return next({ name: 'patients' })
     return next({ name: 'home' });
   }
 

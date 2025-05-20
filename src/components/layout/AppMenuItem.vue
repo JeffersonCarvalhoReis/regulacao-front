@@ -2,9 +2,9 @@
 <template>
   <v-list-item :to="to" :active="active" :class="classes" active-class="bg-blue-100">
     <template #prepend>
-      <v-icon :class="active ? 'text-blue-500 ' : ''">{{ icon }}</v-icon>
+      <v-icon :class="active ? 'text-ita-blue ' : ''">{{ icon }}</v-icon>
     </template>
-    <v-list-item-title :class="active ? 'text-blue-500 ' : ''">
+    <v-list-item-title :class="active ? 'text-ita-blue ' : ''">
       {{ title }}
     </v-list-item-title>
   </v-list-item>
@@ -18,7 +18,7 @@ defineProps({
   title: String,
   classes: {
     type: String,
-    default: 'hover:bg-blue-100 hover:text-blue-500 text-slate-700'
+    default: 'hover:bg-blue-100 hover:text-ita-blue text-slate-700'
   }
 });
 </script>
