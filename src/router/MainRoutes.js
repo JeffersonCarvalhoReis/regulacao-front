@@ -19,6 +19,9 @@ import Cities from '@/pages/Cities.vue'
 import Vehicles from '@/pages/Vehicles.vue'
 import Drivers from '@/pages/Drivers.vue'
 import Travels from '@/pages/Travels.vue'
+import PatientsTfd from '@/pages/PatientsTfd.vue'
+import Deceased from '@/pages/Deceased.vue'
+import BpaSettings from '@/pages/BpaSettings.vue'
 // import { auth, redirectIfAuthenticated } from './guard'
 
 export default [
@@ -92,7 +95,7 @@ export default [
     component: Patients,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+      roles: ['tfd','regulation_officer', 'reception', 'provider_unit_manager']
     },
   },
   {
@@ -164,6 +167,7 @@ export default [
     component: Companions,
     meta: {
       requiresAuth: true,
+      roles: ['tfd']
     },
   },
   {
@@ -172,6 +176,7 @@ export default [
     component: Hospitals,
     meta: {
       requiresAuth: true,
+      roles: ['tfd']
     },
   },
   {
@@ -180,6 +185,7 @@ export default [
     component: Cities,
     meta: {
       requiresAuth: true,
+      roles: ['tfd']
     },
   },
   {
@@ -188,6 +194,7 @@ export default [
     component: Vehicles,
     meta: {
       requiresAuth: true,
+      roles: ['tfd']
     },
   },
   {
@@ -196,6 +203,7 @@ export default [
     component: Drivers,
     meta: {
       requiresAuth: true,
+      roles: ['tfd']
     },
   },
   {
@@ -204,6 +212,34 @@ export default [
     component: Travels,
     meta: {
       requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+  {
+    path: '/pacientes-tfd',
+    name: 'patients-tfd',
+    component: PatientsTfd,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+    {
+    path: '/falecidos',
+    name: 'deceased',
+    component: Deceased,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
+    },
+  },
+      {
+    path: '/bpa-definicoes',
+    name: 'bpa-settings',
+    component: BpaSettings,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd']
     },
   },
 ]

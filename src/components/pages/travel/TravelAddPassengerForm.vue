@@ -96,7 +96,6 @@
           color="primary"
           density="compact"
           :messages="priorityText"
-
         />
       </v-form>
     </v-card-text>
@@ -116,6 +115,7 @@
   import { usePatientApi } from '@/composables/modules/usePatientModule';
   import { useCompanionApi } from '@/composables/modules/useCompanionModule';
   import { useHospitalApi } from '@/composables/modules/useHospitalModule';
+  import { usePatientLabel } from '@/composables/utils/usePatientLabel';
   import { useField, useForm } from 'vee-validate'
   import * as yup from 'yup'
 
@@ -128,6 +128,7 @@
   const emit = defineEmits(['close', 'save']);
   const autocompleteKey = ref(0);
   const textTransform = 'uppercase';
+  const currentHospitalCity = ref(null)
   const priorityText = ref('')
   const title = computed(() =>
     isEditing.value ? 'Editar Passageiros' : 'Cadastrar Passageiros'
@@ -135,10 +136,11 @@
 
   const { data: patientData, refetch: patientFetch, params: patientParams } = usePatientApi();
   const { data: companionData, refetch: companionFetch, params: companionParams } = useCompanionApi();
-  const { data: hospitalData, refetch: hospitalFetch, params: hospitalParams } = useHospitalApi();
+  const { data: hospitalData, refetch: hospitalFetch, params: hospitalParams, setFilter, clearFilters } = useHospitalApi();
   const { formatDate } = useFormatDate();
   const { calculateAge } = useCalculateAge();
   const { onlyNumbers } = useOnlyNumbers();
+  const { patientLabel } = usePatientLabel();
   const isEditing = computed(() => !!props.modelValue?.id);
 
   const schema = yup.object({
@@ -210,15 +212,6 @@
       appointment_time.value = digits
     }
   };
-    const patientLabel = (patient) => {
-    if(!patient) return '';
-
-    const date = formatDate(patient.birth_date);
-    const age = calculateAge(patient.birth_date);
-    return `${patient.name} - DN: ${date} - ${age} anos`
-
-  }
-
 
   watch(patient_id, (newId) => {
   if (!newId) return;
@@ -235,6 +228,16 @@
     priorityText.value = 'Paciente com mais de 60 anos'
   }
 },{ immediate: false});
+
+watch(() => props.travelData.city_id, async (newValue) => {
+   currentHospitalCity.value = newValue
+    hospitalParams.value.per_page = -1;
+    setFilter('city_id', currentHospitalCity.value)
+
+    await nextTick();
+    await hospitalFetch()
+},{ immediate: true })
+
   onMounted( async () => {
     patientParams.value.per_page = -1;
     companionParams.value.per_page = -1;
@@ -243,7 +246,6 @@
     await Promise.all([
       patientFetch(),
       companionFetch(),
-      hospitalFetch(),
     ])
 
   if (isEditing.value) {
@@ -260,6 +262,9 @@
     }
   });
 
+      onUnmounted(() => {
+      clearFilters
+    })
   const onSubmit = handleSubmit(values => {
     emit('save', values)
   });

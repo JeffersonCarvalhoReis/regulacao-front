@@ -31,11 +31,11 @@
         </slot>
       </template>
       <template #item.view="{ item }">
-        <v-tooltip text="Visualizar todos os dados">
+        <v-tooltip :text="textView">
           <template #activator="{ props }">
             <v-btn
-              class="text-blue-500"
-              icon="mdi-eye"
+              :class="classView"
+              :icon="iconView"
               variant="text"
               v-bind="props"
               @click="emit('view-item',item)"
@@ -182,6 +182,9 @@
     showDelete: { type: Boolean, default: true },
     iconRegister: { type: String, default: 'mdi-plus' },
     iconDelete: { type: String, default: 'mdi-delete' },
+    iconView: { type: String, default: 'mdi-eye'},
+    textView: { type: String, default: 'Visualizar todos os dados'},
+    classView: { type: String, default: 'text-blue-500'},
     textDelete: { type: String, default: 'Excluir' },
     iconEdit: { type: String, default: 'mdi-pencil' },
     textEdit: { type: String, default: 'Editar' },
@@ -270,7 +273,6 @@
 
 
   onMounted(() => {
-    // Ensure dark mode is applied if system preference is dark
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       theme.global.name.value = 'dark'
     }
@@ -287,5 +289,9 @@
 
 :deep(tbody > tr:hover) {
   background-color: #e0f2fe; /* Tailwind blue-100 */
+}
+
+:deep(.v-data-table-footer) {
+  @apply  normal-case
 }
 </style>

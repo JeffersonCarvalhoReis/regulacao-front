@@ -5,7 +5,8 @@ export function useRoles () {
       'admin': 'Adminstrador',
       'regulation_officer': 'Regulador',
       'reception': 'Recepção',
-      'provider_unit_manager' : 'Unidade Prestadora'
+      'provider_unit_manager' : 'Unidade Prestadora',
+      'tfd' : 'TFD'
     }
     return mapRole[role] || 'Usuário'
   };
@@ -15,6 +16,8 @@ export function useRoles () {
     { value: 'regulation_officer', name: 'Regulador' },
     { value: 'reception', name: 'Recepção' },
     { value: 'provider_unit_manager', name: 'Usuário Unidade Prestadora' },
+    { value: 'tfd', name: 'TFD' },
+
   ]
 
   return {

@@ -3,66 +3,62 @@
     <v-card-text>
       <v-form>
         <div class="flex justify-end gap-4 mb-4">
-          <v-btn
+          <base-button-register
             v-if="!isEditing"
-            prepend-icon="mdi-account-box-plus-outline"
-            class="rounded-sm text-white hover:bg-blue-700 bg-blue-500"
-            @click="dialogPatientForm = true"
-            >
-            Cadastrar Paciente
+            button-icon="mdi-account-box-plus-outline"
+            button-text="Cadastrar Paciente"
+            @register="dialogPatientForm = true"
+          >
             <v-tooltip
-            activator="parent"
+              activator="parent"
             >
-           Cadastrar novo paciente caso não encontre na lista
+              Cadastrar novo paciente caso não encontre na lista
             </v-tooltip>
-          </v-btn>
+          </base-button-register>
+
           <div v-if="['regulation_officer'].includes(role)">
             <div v-if="solicitation_type == 'consultation'">
-              <v-btn
-              v-if="!isEditing"
-              prepend-icon="mdi-medical-bag"
-              class="rounded-sm text-white hover:bg-blue-700 bg-blue-500"
-              @click="dialogSpecialistForm = true"
-            >
-              Cadastrar Especialidade
-              <v-tooltip
-              activator="parent"
+              <base-button-register
+                v-if="!isEditing"
+                button-icon="mdi-medical-bag"
+                button-text="Cadastrar Especialidade"
+                @register="dialogSpecialistForm = true"
               >
-              Clique para cadastrar nova especialidade caso não encontre na lista
-              </v-tooltip>
-            </v-btn>
+                <v-tooltip
+                activator="parent"
+                >
+                Clique para cadastrar nova especialidade caso não encontre na lista
+                </v-tooltip>
+              </base-button-register>
             </div>
             <div v-else>
-              <v-btn
-              v-if="!isEditing"
-              prepend-icon="mdi-clipboard-list-outline"
-              class="rounded-sm text-white hover:bg-blue-700 bg-blue-500"
-              @click="dialogProcedureForm = true"
+              <base-button-register
+                v-if="!isEditing"
+                button-icon="mdi-clipboard-list-outline"
+                button-text="Cadastrar Procedimento"
+                @register="dialogProcedureForm = true"
               >
-              Cadastrar Procedimento
-              <v-tooltip
-              activator="parent"
-              >
-              Cadastrar novo procedimento caso não encontre na lista
-              </v-tooltip>
-            </v-btn>
+                <v-tooltip
+                  activator="parent"
+                >
+                 Cadastrar novo procedimento caso não encontre na lista
+                </v-tooltip>
+              </base-button-register>
             </div>
           </div>
           <div v-if="['regulation_officer'].includes(role)">
-            <v-btn
-            v-if="!isEditing"
-            prepend-icon="mdi-office-building-plus-outline"
-            class="rounded-sm text-white hover:bg-blue-700 bg-blue-500"
-            @click="dialogRequestingUnitForm = true"
+            <base-button-register
+              v-if="!isEditing"
+              button-icon="mdi-office-building-plus-outline"
+              button-text="Cadastrar Unidade Solicitante"
+              @register="dialogRequestingUnitForm = true"
             >
-            Cadastrar Unidade Solicitante
-
-            <v-tooltip
-            activator="parent"
-            >
-            Cadastrar nova unidade solicitante caso não encontre na lista
-            </v-tooltip>
-          </v-btn>
+              <v-tooltip
+               activator="parent"
+              >
+               Cadastrar nova unidade solicitante caso não encontre na lista
+              </v-tooltip>
+            </base-button-register>
           </div>
         </div>
 
@@ -84,40 +80,50 @@
             :error-messages="errors.solicitation_date"
             label="Data da Solicitação"
           />
+          <div class="col-span-3 grid grid-cols-6 gap-2">
+            <v-select
+              v-model="solicitation_type"
+              class="required col-span-2"
+              density="compact"
+              :error-messages="errors.solicitation_type"
+              item-title="label"
+              item-value="value"
+              :items="solicitationTypeOptions"
+              label="Tipo de Solicitação"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="cid"
+              class="col-span-2"
+              density="compact"
+              :error-messages="errors.cid"
+              label="CID"
+              variant="outlined"
+            />
+            <v-select
+              v-model="is_first_time"
+              class="required "
+              density="compact"
+              :error-messages="errors.is_first_time"
+              item-title="label"
+              item-value="value"
+              :items="isFirstTimeOptions"
+              label="Retorno"
+              variant="outlined"
+            />
+            <v-select
+              v-model="is_urgent"
+              class="required"
+              density="compact"
+              :error-messages="errors.is_urgent"
+              item-title="label"
+              item-value="value"
+              :items="isUrgentOptions"
+              label="Urgente"
+              variant="outlined"
+            />
+          </div>
 
-          <v-select
-            v-model="solicitation_type"
-            class="required"
-            density="compact"
-            :error-messages="errors.solicitation_type"
-            item-title="label"
-            item-value="value"
-            :items="solicitationTypeOptions"
-            label="Tipo de Solicitação"
-            variant="outlined"
-          />
-          <v-select
-            v-model="is_first_time"
-            class="required"
-            density="compact"
-            :error-messages="errors.is_first_time"
-            item-title="label"
-            item-value="value"
-            :items="isFirstTimeOptions"
-            label="Retorno"
-            variant="outlined"
-          />
-          <v-select
-            v-model="is_urgent"
-            class="required"
-            density="compact"
-            :error-messages="errors.is_urgent"
-            item-title="label"
-            item-value="value"
-            :items="isUrgentOptions"
-            label="Urgente"
-            variant="outlined"
-          />
           <div
           class="flex items-start gap-1"
           v-if="solicitation_type == 'consultation'"
@@ -170,7 +176,7 @@
             label="Anexo"
             :error-messages="errors.attachment"
             prepend-inner-icon="mdi-paperclip"
-            prepend-icon=""
+            prepend-icon
             variant="outlined"
             accept=".pdf,.jpg,.jpeg,.png"
           />
@@ -228,6 +234,7 @@
   import { useProcedureApi } from '@/composables/modules/useProcedureModule';
   import { useRequestingUnitApi } from '@/composables/modules/useRequestingUnitModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+  import { usePatientLabel } from '@/composables/utils/usePatientLabel';
   import { useMeStore } from '@/stores/me';
   import { useField, useForm } from 'vee-validate'
   import * as yup from 'yup'
@@ -244,7 +251,7 @@
   const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate } = useRequestingUnitApi();
   const { showFeedback } = useSweetAlertFeedback();
   const { calculateAge } = useCalculateAge();
-  const { formatDate } = useFormatDate();
+  const { patientLabel } = usePatientLabel();
 
   const meStore = useMeStore();
   const role = meStore.role
@@ -273,14 +280,6 @@
     { label: 'Não', value: 0 }
   ];
 
-  const patientLabel = (patient) => {
-    if(!patient) return '';
-
-    const date = formatDate(patient.birth_date);
-    const age = calculateAge(patient.birth_date);
-    return `${patient.name} - DN: ${date} - ${age} anos`
-
-  }
 
   onMounted(async () => {
     patientParams.value.per_page = -1;
@@ -307,6 +306,7 @@
 
   const schema = yup.object({
     patient_id: yup.number().required('Paciente é obrigatório'),
+    cid: yup.string().nullable(),
     solicitation_type: yup.string().required('Tipo de solicitação é obrigatório'),
     solicitation_date: yup.date().required('Data da solicitação é obrigatório'),
     is_first_time: yup.number().required('Obrigátorio identificar se é retorno'),
@@ -395,6 +395,7 @@
   const { value: procedure_id } = useField('procedure_id');
   const { value: requesting_unit_id } = useField('requesting_unit_id');
   const { value: attachment } = useField('attachment');
+  const { value: cid } = useField('cid')
 
   const onSubmit = handleSubmit(values => {
     if(values.solicitation_type == 'consultation') delete values.procedure_id

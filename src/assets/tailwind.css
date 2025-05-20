@@ -4,10 +4,29 @@
 * {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
+    font-family: opensans, Roboto, sans-serif;
 }
 @font-face {
     font-family: 'Roboto';
-    src: url('@/assets/fonts/Roboto/Roboto-Regular.ttf') format('ttf');
+    src: url('fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+  }
+@font-face {
+  font-family: 'OpenSans';
+  src: url('fonts/OpenSans/OpenSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter/Inter_28pt-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+    font-family: 'Neuropol';
+    src: url('fonts/Neuropol/Neuropol.otf') format('opentype');
     font-weight: 400;
     font-style: normal;
   }

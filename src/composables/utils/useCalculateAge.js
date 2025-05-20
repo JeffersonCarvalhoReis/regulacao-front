@@ -1,8 +1,9 @@
 export function useCalculateAge() {
 
-  const calculateAge = (date) => {
-    const today = new Date();
-    const birthDate = new Date(date);
+  const calculateAge = (birthDateString, deathDateString = null) => {
+    const today = deathDateString ? new Date(deathDateString) : new Date();
+    const birthDate = new Date(birthDateString);
+
     let age = today.getFullYear() - birthDate.getFullYear();
 
     const monthDiff = today.getMonth() - birthDate.getMonth();

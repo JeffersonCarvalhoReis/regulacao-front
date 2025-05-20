@@ -123,13 +123,31 @@
             title="Usuários"
           />
         </div>
+        <div v-if="['tfd'].includes(role)">
         <v-list-subheader >TFD</v-list-subheader>
-
+        <app-menu-item
+          :to="{name: 'patients'}"
+          :active="$route.name === 'patients'"
+          prepend-icon="mdi-card-account-details"
+          title="Pacientes"
+        />
+       <app-menu-item
+          :to="{name: 'patients-tfd'}"
+          :active="$route.name === 'patients-tfd'"
+          prepend-icon="mdi-text-box-search"
+          title="Histórico Pacientes TFD"
+        />
         <app-menu-item
           :to="{name: 'companions'}"
           :active="$route.name === 'companions'"
           prepend-icon="mdi-card-account-details"
           title="Acompanhantes"
+        />
+        <app-menu-item
+          :to="{name: 'deceased'}"
+          :active="$route.name === 'deceased'"
+          prepend-icon="mdi-cross"
+          title="Lista de Falecidos"
         />
         <app-menu-item
           :to="{name: 'hospitals'}"
@@ -161,6 +179,14 @@
           prepend-icon="mdi-map-marker-distance"
           title="Viagens"
         />
+       <app-menu-item
+          :to="{name: 'bpa-settings'}"
+          :active="$route.name === 'bpa-settings'"
+          prepend-icon="mdi-map-marker-distance"
+          title="Definições do BPA"
+        />
+        </div>
+
       </v-list>
     </v-navigation-drawer>
 </template>

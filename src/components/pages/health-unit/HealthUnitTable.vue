@@ -110,7 +110,12 @@
         key: 'name',
         sortable: true,
         align: 'left',
-
+      },
+     {
+        title: 'CNES da Unidade',
+        key: 'cnes',
+        sortable: false,
+        align: 'left',
       },
 
     ];

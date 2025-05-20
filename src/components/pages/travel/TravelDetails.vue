@@ -30,6 +30,7 @@
       :hideDefaultFooter="true"
       @edit-item="handleEditPassengers"
       @delete-item="handleRemovePassenger"
+      @view-item="handleView"
     >
     <template #item.date="{ item }">
           {{ formatDate(item.date) }}
@@ -50,6 +51,12 @@
     @save="updatePassengers"
      />
   </v-dialog>
+  <v-dialog
+    v-model="dialogBpa"
+    class="z-999"
+  >
+    <BpaForm @close="dialogBpa = false"></BpaForm>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -67,8 +74,12 @@
   const title = 'Viagem Agendada'
   const textTransform = 'uppercase'
   const selectedPassengers = ref({})
-  const dialogEditPassengers = ref(false)
+  const dialogEditPassengers = ref(false);
+  const dialogBpa = ref(false);
 
+  const handleView = () => {
+    dialogBpa.value = true
+  }
   const handleEditPassengers = async (value) => {
     dialogEditPassengers.value = true;
     selectedPassengers.value = value;

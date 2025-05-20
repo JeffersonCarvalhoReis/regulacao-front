@@ -137,6 +137,21 @@
             placeholder="Informações adicionais sobre o paciente"
             variant="outlined"
           />
+          <div class="flex gap-5">
+          <v-checkbox
+              v-model="is_deceased"
+              label="Falecido"
+              color="primary"
+              density="compact"
+            />
+            <base-input-date-picker
+              v-if="is_deceased"
+              v-model="date_of_dead"
+              class-field="required"
+              :error-messages="errors.date_of_dead"
+              label="Data do Falecimento"
+            />
+          </div>
         </div>
 
       </v-form>
@@ -214,6 +229,14 @@
     street: yup.string().required('Rua é obrigatória'),
     neighborhood: yup.string().required('Bairro é obrigatório'),
     observation: yup.string().nullable(),
+    is_deceased: yup.boolean().nullable(),
+    date_of_dead: yup.date()
+      .when('is_deceased', {
+      is: true,
+      then: (schema) => schema
+      .required('Data do falecimento é obrigatória'),
+      otherwise: (schema) => schema.nullable()
+    })
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
@@ -232,6 +255,8 @@
   const { value: street } = useField('street');
   const { value: neighborhood } = useField('neighborhood');
   const { value: observation } = useField('observation');
+  const { value: is_deceased } = useField('is_deceased')
+  const { value: date_of_dead } = useField('date_of_dead');
 
   const onSubmit = handleSubmit(values => {
     emit('save', values)
@@ -240,4 +265,10 @@
   const clear = () => {
     resetForm()
   }
+
+  watch(() => is_deceased.value, (newValue) => {
+    if(newValue && !props.modelValue.is_deceased) {
+      date_of_dead.value = new Date();
+    }
+  })
 </script>
