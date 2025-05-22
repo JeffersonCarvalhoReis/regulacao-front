@@ -246,9 +246,9 @@
   })
 
   const { data: patientData, refetch: patientFetch, params: patientParams, create: patientCreate } = usePatientApi();
-  const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate } = useSpecialistApi();
-  const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate } = useProcedureApi();
-  const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate } = useRequestingUnitApi();
+  const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate, setSort: sortSpecialist } = useSpecialistApi();
+  const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate, setSort: sortProcedure} = useProcedureApi();
+  const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate, setSort: sortRequestingUnit} = useRequestingUnitApi();
   const { showFeedback } = useSweetAlertFeedback();
   const { calculateAge } = useCalculateAge();
   const { patientLabel } = usePatientLabel();
@@ -286,6 +286,9 @@
     specialistParams.value.per_page = -1;
     procedureParams.value.per_page = -1;
     requestingUnitParams.value.per_page = -1;
+    sortSpecialist('name')
+    sortProcedure('name')
+    sortRequestingUnit('name')
     await nextTick();
     await Promise.all([
       patientFetch(),
