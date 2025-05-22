@@ -31,5 +31,6 @@ jobs:
             git pull --rebase origin main
 
             # Suba o container do frontend
-            docker compose up -d --build frontend
+            cd /regulacao/regulacao-back
+            docker compose up -d --build
           EOF
