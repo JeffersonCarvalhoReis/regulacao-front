@@ -186,7 +186,7 @@ const printConfirmation = () => {
         <h1 style="text-align:center;">Comprovante de Agendamento</h1>
         <hr>
         <div class="header">
-          <img src="/src/assets/images/brasao.svg" alt="Brasão Itaguaçu">
+          <img src="/images/brasao.svg" alt="Brasão Itaguaçu">
           <div>
             <p><strong>Prefeitura Municipal de Itaguaçu da Bahia</strong></p>
             <p><strong>Secretaria Municipal de Saúde de Itaguaçu da Bahia</strong></p>

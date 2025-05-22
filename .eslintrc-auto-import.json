@@ -91,6 +91,7 @@
     "usePrintIframe": true,
     "useBooleanLabel": true,
     "useDownloadFile": true,
-    "useCalculateAge": true
+    "useCalculateAge": true,
+    "usePatientLabel": true
   }
 }

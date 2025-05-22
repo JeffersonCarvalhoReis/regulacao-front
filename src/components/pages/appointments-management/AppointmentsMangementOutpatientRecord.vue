@@ -30,6 +30,7 @@
           <LabeledLineGroup>
             <LabeledLine label="Nome" :value="appointmentData.patient" />
             <LabeledLine label="SUS" :value="appointmentData.solicitation.patient_cns" />
+            <LabeledLine label="CPF" :value="appointmentData.solicitation.patient_cpf" />
           </LabeledLineGroup>
           <LabeledLineGroup>
             <LabeledLine label="Endereço" :value="`${appointmentData.solicitation.patient_street} - ${appointmentData.solicitation.patient_neighborhood}`" />
@@ -53,6 +54,7 @@
           <LabeledLineGroup>
             <LabeledLine label="Telefone" :value="appointmentData.solicitation.patient_phone"/>
             <LabeledLine label="ACS" :value="appointmentData.solicitation.patient_acs" />
+            <LabeledLine label="Unidade de Saúde" :value="appointmentData.solicitation.patient_health_unit" />
           </LabeledLineGroup>
           <LabeledLineGroup>
             <LabeledLine label="Médico" :value="appointmentData.doctor"/>
