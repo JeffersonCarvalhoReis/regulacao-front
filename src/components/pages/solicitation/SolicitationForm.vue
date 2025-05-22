@@ -282,13 +282,15 @@
 
 
   onMounted(async () => {
+
     patientParams.value.per_page = -1;
     specialistParams.value.per_page = -1;
     procedureParams.value.per_page = -1;
     requestingUnitParams.value.per_page = -1;
-    sortSpecialist('name')
-    sortProcedure('name')
-    sortRequestingUnit('name')
+    specialistParams.value.sort = 'name';
+    procedureParams.value.sort = 'name';
+    requestingUnitParams.value.sort = 'name';
+
     await nextTick();
     await Promise.all([
       patientFetch(),
