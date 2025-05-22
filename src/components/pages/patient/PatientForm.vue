@@ -135,7 +135,7 @@
             placeholder="Informações adicionais sobre o paciente"
             variant="outlined"
           />
-          <div class="flex gap-5">
+          <div class="flex gap-5" v-if="isEditing">
           <v-checkbox
               v-model="is_deceased"
               label="Falecido"
