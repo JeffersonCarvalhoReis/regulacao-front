@@ -55,7 +55,7 @@
   const { data: specialistData, refetch: refetchSpecialist, params: paramsSpecialist } = useSpecialistApi();
 
   const emit = defineEmits(['close', 'save']);
-  const title = 'Cadastrar Medico'
+  const title = 'Cadastrar Médico'
 
   const schema = yup.object({
     name: yup.string().required('Nome da especialidade é obrigatório'),
