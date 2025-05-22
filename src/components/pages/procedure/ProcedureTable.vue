@@ -33,6 +33,7 @@
 <script setup>
   import { useProcedureApi } from '@/composables/modules/useProcedureModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+  import { useMeStore } from '@/stores/me';
   import debounce from 'lodash/debounce'
 
   const props = defineProps({
@@ -43,6 +44,8 @@
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, update, destroy } = useProcedureApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
+  const meStore = useMeStore();
+  const role = meStore.role
   const options = ref({});
   const viewProcedureDetails = ref(false);
   const procedureData = ref({});
@@ -113,7 +116,7 @@
       },
 
     ];
-    if(props.edit || props.showDelete) {
+    if(role == 'regulation_officer' && (props.edit || props.showDelete)) {
       baseHeaders.push({
         title: 'Ações',
         value: 'action',

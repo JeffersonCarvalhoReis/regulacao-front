@@ -104,7 +104,7 @@ export default [
     component: Procedures,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['reception','regulation_officer']
     },
   },
   {
@@ -121,7 +121,7 @@ export default [
     component: Specialists,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['reception','regulation_officer']
     },
   },
   {
