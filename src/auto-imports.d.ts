@@ -70,6 +70,7 @@ declare global {
   const useModel: typeof import('vue')['useModel']
   const useOnlyNumbers: typeof import('./composables/utils/useOnlyNumbers.js')['useOnlyNumbers']
   const usePasswordStrength: typeof import('./composables/utils/usePasswordStrength.js')['usePasswordStrength']
+  const usePatientLabel: typeof import('./composables/utils/usePatientLabel.js')['usePatientLabel']
   const usePhoneFormatter: typeof import('./composables/utils/usePhoneFormatter.js')['usePhoneFormatter']
   const usePrintIframe: typeof import('./composables/utils/usePrintIframe.js')['usePrintIframe']
   const useRoles: typeof import('./composables/utils/useRoles.js')['useRoles']
@@ -158,6 +159,7 @@ declare module 'vue' {
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useOnlyNumbers: UnwrapRef<typeof import('./composables/utils/useOnlyNumbers.js')['useOnlyNumbers']>
     readonly usePasswordStrength: UnwrapRef<typeof import('./composables/utils/usePasswordStrength.js')['usePasswordStrength']>
+    readonly usePatientLabel: UnwrapRef<typeof import('./composables/utils/usePatientLabel.js')['usePatientLabel']>
     readonly usePhoneFormatter: UnwrapRef<typeof import('./composables/utils/usePhoneFormatter.js')['usePhoneFormatter']>
     readonly usePrintIframe: UnwrapRef<typeof import('./composables/utils/usePrintIframe.js')['usePrintIframe']>
     readonly useRoles: UnwrapRef<typeof import('./composables/utils/useRoles.js')['useRoles']>
