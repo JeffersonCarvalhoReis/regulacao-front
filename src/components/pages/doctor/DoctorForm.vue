@@ -6,6 +6,7 @@
           v-model="name"
           :error-messages="errors.name"
           density="compact"
+          class="required"
           label="Nome"
           placeholder="Nome do Médico"
           variant="outlined"
