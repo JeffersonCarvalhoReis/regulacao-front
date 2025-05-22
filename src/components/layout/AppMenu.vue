@@ -47,19 +47,19 @@
           title="Agendamentos"
         />
         <v-list-subheader
-          v-if="['regulation_officer'].includes(role)"
+          v-if="['reception','regulation_officer'].includes(role)"
           >
           Controle de Procedimentos
         </v-list-subheader>
         <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
+          v-if="['reception','regulation_officer'].includes(role)"
           :to="{name: 'procedures'}"
           :active="$route.name === 'procedures'"
           prepend-icon="mdi-clipboard-list-outline"
           title="Procedimentos"
         />
         <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
+          v-if="['reception','regulation_officer'].includes(role)"
           :to="{name: 'specialists'}"
           :active="$route.name === 'specialists'"
           prepend-icon="mdi-medical-bag"
