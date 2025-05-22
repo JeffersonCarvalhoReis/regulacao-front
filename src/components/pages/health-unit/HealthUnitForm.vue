@@ -6,6 +6,7 @@
           v-model="name"
           density="compact"
           :error-messages="errors.name"
+          class="required"
           label="Nome"
           placeholder="Nome da unidade de saúde"
           variant="outlined"

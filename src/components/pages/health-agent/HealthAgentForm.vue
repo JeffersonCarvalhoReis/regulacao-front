@@ -6,7 +6,7 @@
           <v-text-field
             v-model="name"
             :error-messages="errors.name"
-            class="col-span-2"
+            class="col-span-2 required"
             density="compact"
             label="Nome"
             placeholder="Nome do agente"
@@ -16,6 +16,7 @@
           <v-autocomplete
             v-model="health_unit_id"
             :error-messages="errors.health_unit_id"
+            class="required"
             density="compact"
             item-title="name"
             item-value="id"

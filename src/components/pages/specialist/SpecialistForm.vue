@@ -5,6 +5,7 @@
         <v-text-field
           v-model="name"
           :error-messages="errors.name"
+          class="required"
           density="compact"
           label="Nome"
           placeholder="Nome da Especialidade"

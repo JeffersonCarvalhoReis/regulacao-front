@@ -2,11 +2,11 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <v-form>
-
         <v-text-field
           v-model="name"
           density="compact"
           :error-messages="errors.name"
+          class="required"
           label="Nome"
           placeholder="Nome da Unidade Solicitante"
           variant="outlined"
