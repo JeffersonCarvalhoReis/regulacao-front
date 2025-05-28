@@ -265,7 +265,7 @@
   const procedure_min_age = computed(() => procedureData.value.find(v => v.id === procedure_id.value)?.min_age)
   const specialist_max_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.max_age)
   const specialist_min_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.min_age)
-  const loading = ref(false)
+
 
   const solicitationTypeOptions = [
     { label: 'Consulta', value: 'consultation' },
@@ -280,7 +280,6 @@
     { label: 'Não', value: 0 }
   ];
 
- await Promise.resolve( loading.value == true)
   onMounted(async () => {
 
     patientParams.value.per_page = -1;
@@ -301,7 +300,6 @@
     if (isEditing.value) {
       resetForm({ values: props.modelValue })
     }
-    loading.value = true;
   });
 
   const emit = defineEmits(['close', 'save']);
