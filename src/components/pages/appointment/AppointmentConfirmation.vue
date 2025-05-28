@@ -59,14 +59,14 @@
           <strong>Profissional do Atendimento:</strong><br>
             <hr>
 
-            <strong>Médico: </strong> <span class="uppercase">{{ props.appointmentData.doctor }}</span><br>
+            <strong v-if="props.appointmentData.doctor">Médico: </strong> <span class="uppercase">{{ props.appointmentData.doctor }}</span><br>
             <div v-if="isExam">
               <strong>Procedimento:</strong> <span class="uppercase tracking-widest">{{ props.appointmentData.procedure}}</span><br>
             </div>
             <div v-else>
               <strong>Especialidade: </strong> <span class="uppercase tracking-widest">{{ props.appointmentData.specialist}}</span><br>
             </div>
-            <p><strong>Recomendações:</strong> <span class="uppercase">{{ recomendation }}</span></p>
+            <p><strong>Recomendações:</strong> <span class="uppercase whitespace-break-spaces">{{ recomendation }}</span></p>
           </div>
         </v-card-text>
     </div>

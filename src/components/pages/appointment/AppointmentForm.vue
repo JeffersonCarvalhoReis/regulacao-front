@@ -20,12 +20,14 @@
         <div class="grid grid-cols-2 gap-2 mt-4">
           <base-input-date-picker
             v-model="date"
+            class-field="required"
             class-date-picker="absolute right-[-175px] top-[-175px]"
             :error-messages="errors.date"
             label="Data"
           />
           <v-text-field
             v-model="time"
+            class="required"
             density="compact"
             variant="outlined"
             label="Escolha um horário"
@@ -38,6 +40,7 @@
 
         <v-autocomplete
           v-model="provider_unit_id"
+          class="required"
           density="compact"
           :error-messages="errors.provider_unit_id"
           item-title="name"
@@ -157,7 +160,7 @@
       return true;
     }),
     provider_unit_id: yup.number().required('Unidade prestadora é obrigatório'),
-    doctor_id: yup.number().required('Médico é obrigatório'),
+    doctor_id: yup.number().nullable(),
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
