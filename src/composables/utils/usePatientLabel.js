@@ -3,7 +3,9 @@ export function usePatientLabel() {
     const { calculateAge } = useCalculateAge();
 
     const patientLabel = (patient) => {
-    if(!patient) return '';
+
+    if (!patient || !patient.name || !patient.birth_date) return '';
+
 
     const date = formatDate(patient.birth_date);
     const age = calculateAge(patient.birth_date);

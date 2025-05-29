@@ -63,16 +63,18 @@
         </div>
 
         <div class="grid grid-cols-3 gap-2">
-            <v-autocomplete
-            class="col-span-2 required"
+          <v-autocomplete
             v-model="patient_id"
-            density="compact"
-            :error-messages="errors.patient_id"
+            :items="patientData"
+            :loading="isLoading"
+            class="col-span-2"
             :item-title="patientLabel"
             item-value="id"
-            :items="patientData"
             label="Paciente"
             variant="outlined"
+            density="compact"
+            @update:search="onSearch"
+            :error-messages="errors.patient_id"
           />
 
           <base-input-date-picker
@@ -237,6 +239,7 @@
   import { usePatientLabel } from '@/composables/utils/usePatientLabel';
   import { useMeStore } from '@/stores/me';
   import { useField, useForm } from 'vee-validate'
+  import debounce from 'lodash/debounce';
   import * as yup from 'yup'
 
 
@@ -245,9 +248,9 @@
     modelValue: { type: Object, default: () => ({}) },
   })
 
-  const { data: patientData, refetch: patientFetch, params: patientParams, create: patientCreate } = usePatientApi();
-  const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate, setSort: sortSpecialist } = useSpecialistApi();
-  const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate, setSort: sortProcedure} = useProcedureApi();
+  const { data: patientData, refetch: patientFetch, params: patientParams, create: patientCreate, setFilter: patientFilter, isLoading, clearFilters } = usePatientApi();
+  const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate } = useSpecialistApi();
+  const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate } = useProcedureApi();
   const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate, setSort: sortRequestingUnit} = useRequestingUnitApi();
   const { showFeedback, showFeedbackLoading } = useSweetAlertFeedback();
   const { calculateAge } = useCalculateAge();
@@ -282,7 +285,6 @@
 
   onMounted(async () => {
 
-    patientParams.value.per_page = -1;
     specialistParams.value.per_page = -1;
     procedureParams.value.per_page = -1;
     requestingUnitParams.value.per_page = -1;
@@ -294,7 +296,7 @@
 
     await showFeedbackLoading(
       async () => await Promise.all([
-        patientFetch(),
+        loadPatient(),
         specialistFetch(),
         procedureFetch(),
         requestingUnitFetch()
@@ -304,11 +306,27 @@
         erroTitle: 'Falha ao Carregar dados'
        }
     )
-
-    if (isEditing.value) {
-      resetForm({ values: props.modelValue })
-    }
   });
+
+  const loadPatient = async () => {
+    if (isEditing.value) {
+      patientFilter('id', props.modelValue?.patient_id);
+      await patientFetch();
+      await nextTick();
+      resetForm({ values: props.modelValue })
+    } else {
+      patientFetch()
+    }
+  }
+
+  const onSearch = debounce(async v => {
+      clearFilters();
+      const name = v.split('-');
+      patientFilter('name', name[0]);
+      await nextTick()
+      patientFetch()
+    }, 250);
+
 
   const emit = defineEmits(['close', 'save']);
 
@@ -438,6 +456,7 @@
       dialogProcedureForm.value = false;
     }
   }
+
   const submitNewRequestingUnit = async val => {
     const success = await showFeedback(() => requestingUnitCreate(val));
     if (success) {
@@ -445,9 +464,7 @@
       dialogRequestingUnitForm.value = false;
     }
   }
-  watch(() => patient_id.value, () => {
-    console.log(patient_age.value)
-  })
+
   const clear = () => {
     resetForm()
   }
