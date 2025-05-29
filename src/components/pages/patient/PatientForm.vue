@@ -189,6 +189,7 @@
 
   onMounted(async () => {
     params.value.per_page = -1
+    params.value.sort = 'name'
     await nextTick()
     await refetch()
 
