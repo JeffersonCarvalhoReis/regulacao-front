@@ -3,15 +3,9 @@
     <v-card-text class="flex flex-col gap-2">
       <h2 class="font-bold text-lg">Dados do Patiente</h2>
       <div class="grid grid-cols-2 gap-2">
-        <v-autocomplete
-            v-model="filterForm.patient_id"
-            density="compact"
-            item-title="name"
-            item-value="id"
-            :items="patientData"
-            label="Paciente"
-            variant="outlined"
-          />
+        <PatientInput
+          v-model="filterForm.patient_id"
+        />
         <v-select
           v-model="filterForm.gender"
           density="compact"
@@ -25,12 +19,10 @@
           v-model="filterForm.cns"
           density="compact"
           label="CNS"
-          maxlength="18"
+          maxlength="15"
           placeholder="Número do cartão do SUS"
           variant="outlined"
           @keypress="onlyNumbers"
-          @paste="event => handlePaste(event, formatCns, val => filterForm.cns = val, { maxDigits: 15 })"
-          @update:model-value="val => filterForm.cns = formatCns(val)"
         />
         <v-text-field
           v-model="filterForm.cpf"
@@ -155,18 +147,16 @@
   import { useProcedureApi } from '@/composables/modules/useProcedureModule';
   import { useRequestingUnitApi } from '@/composables/modules/useRequestingUnitModule';
   import { useSpecialistApi } from '@/composables/modules/useSpecialistModule';
-  import { usePatientApi } from '@/composables/modules/usePatientModule';
   import { useUserApi } from '@/composables/modules/useUserModule';
+  import PatientInput from '@/components/shared/PatientInput.vue';
 
   const { formatCpf } = useFormatCpf();
-  const { formatCns } = useFormatCns();
   const { onlyNumbers, handlePaste } = useOnlyNumbers();
 
   const { data: procedureData, params: procedureParams, refetch: procedureRefetch } = useProcedureApi();
   const { data: userData, params: userParams, refetch: userRefetch } = useUserApi();
   const { data: requestingUnitData, params: requestingUnitParams, refetch: requestingUnitRefetch } = useRequestingUnitApi();
   const { data: specialistData, params: specialistParams, refetch: specialistRefetch } = useSpecialistApi();
-  const { data: patientData, params: patientParams, refetch: patientRefetch } = usePatientApi();
 
   const isFirstTimeOptions = [
     { label: 'Sim', value: 0 },
@@ -187,15 +177,13 @@
     userParams.value.per_page = -1;
     requestingUnitParams.value.per_page = -1;
     specialistParams.value.per_page = -1;
-    patientParams.value.per_page = -1;
     await nextTick();
     await Promise.all([
       procedureRefetch(),
       userRefetch(),
       requestingUnitRefetch(),
       specialistRefetch(),
-      patientRefetch(),
-    ]);
+   ]);
 
   });
 

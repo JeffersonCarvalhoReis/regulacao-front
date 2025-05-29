@@ -152,7 +152,6 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useDownloadFile: UnwrapRef<typeof import('./composables/utils/useDownloadFile.js')['useDownloadFile']>
-    readonly useFormatCns: UnwrapRef<typeof import('./composables/utils/useFormatCns.js')['useFormatCns']>
     readonly useFormatCpf: UnwrapRef<typeof import('./composables/utils/useFormatCpf.js')['useFormatCpf']>
     readonly useFormatDate: UnwrapRef<typeof import('./composables/utils/useFormatDate.js')['useFormatDate']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
