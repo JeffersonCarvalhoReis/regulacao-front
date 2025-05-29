@@ -69,12 +69,10 @@
           v-model="filterForm.cns"
           density="compact"
           label="CNS"
-          maxlength="18"
+          maxlength="15"
           placeholder="Número do cartão do SUS"
           variant="outlined"
           @keypress="onlyNumbers"
-          @paste="event => handlePaste(event, formatCns, val => filterForm.cns = val, { maxDigits: 15 })"
-          @update:model-value="val => filterForm.cns = formatCns(val)"
         />
         <v-text-field
           v-model="filterForm.cpf"
@@ -149,7 +147,6 @@
   import { useHealthUnitApi } from '@/composables/modules/useHealthUnitModule';
 
   const { formatCpf } = useFormatCpf();
-  const { formatCns } = useFormatCns();
   const { onlyNumbers, handlePaste } = useOnlyNumbers();
   const { data: healthAgentData, params: healthAgentParams, refetch: healtAgentRefeth, setFilter: healthAgentFilter } = useHealthAgentApi();
   const { data: healthUnitData, params: healthUnitParams, refetch: healthUnitRefetch } = useHealthUnitApi();
