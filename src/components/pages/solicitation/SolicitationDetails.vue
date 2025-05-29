@@ -63,14 +63,18 @@
   <BaseCard title="Anexo" @close="openAttachment = false">
     <v-card-text class="flex justify-center items-end h-full">
       <iframe
-          ref="attachmentRef"
-          v-if="attachment"
-          :src="attachment"
-          width="100%"
-          height="500px"
-          class="rounded-lg border"
-          @load="handleAdjustIframeContent"
-        ></iframe>
+        v-if="isPDF(attachment)"
+        :src="attachment"
+        width="100%"
+        height="500px"
+        class="rounded-lg border"
+      ></iframe>
+      <img
+        v-else-if="isImage(attachment)"
+        :src="attachment"
+        style="max-width: 100%; height: auto; display: block; margin: auto;"
+        class="rounded-lg border"
+    />
   </v-card-text>
 
     <div class="flex justify-end gap-4 m-4">
@@ -107,7 +111,7 @@ import { useFormatDate } from '@/composables/utils/useFormatDate';
   const emit = defineEmits(['close']);
 
   const { formatDate } = useFormatDate();
-  const { printContent, adjustIframeContent } = usePrintIframe();
+  const { printContent } = usePrintIframe();
   const { downloadFile } = useDownloadFile();
   const { booleanToLabel } = useBooleanLabel();
   const { calculateAge } = useCalculateAge();
@@ -125,12 +129,17 @@ import { useFormatDate } from '@/composables/utils/useFormatDate';
   const handlePrint = ()  => {
     printContent(attachmentRef)
   }
-  const handleAdjustIframeContent = () => {
-    adjustIframeContent(attachmentRef)
-  }
 
   const handleDownloadFile = () => {
     downloadFile(attachment.value)
   }
+
+  const isPDF = (url) => {
+    return url?.toLowerCase().endsWith('.pdf');
+  };
+
+  const isImage = (url) => {
+    return /\.(jpe?g|png|gif|bmp|webp)$/i.test(url || '');
+  };
 
 </script>
