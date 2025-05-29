@@ -72,7 +72,7 @@
       <img
         v-else-if="isImage(attachment)"
         :src="attachment"
-        style="max-width: 100%; height: auto; display: block; margin: auto;"
+        style="max-width: 100%; max-height: 800px; display: block; margin: auto;"
         class="rounded-lg border"
     />
   </v-card-text>
