@@ -3,15 +3,9 @@
     <v-card-text class="flex flex-col gap-2">
       <h2 class="font-bold text-lg">Dados do Patiente</h2>
       <div class="grid grid-cols-2 gap-2">
-        <v-autocomplete
-            v-model="filterForm.patient_id"
-            density="compact"
-            item-title="name"
-            item-value="id"
-            :items="patientData"
-            label="Paciente"
-            variant="outlined"
-          />
+        <PatientInput
+          v-model="filterForm.patient_id"
+        />
         <v-select
           v-model="filterForm.gender"
           density="compact"

@@ -24,18 +24,13 @@
 
       <v-form class="grid grid-cols-2 gap-x-4">
 
-        <v-autocomplete
+        <PatientInput
           :key="autocompleteKey"
           v-model="patient_id"
-          :disabled="isEditing"
           class="required"
           :error-messages="errors.patient_id"
-          density="compact"
-          :item-title="patientLabel"
-          item-value="id"
-          :items="patientData"
-          label="Paciente"
-          variant="outlined"
+          :is-editing="isEditing"
+          :model-value="props.modelValue?.id"
         />
         <v-autocomplete
           :key="autocompleteKey"
@@ -52,6 +47,7 @@
           :key="autocompleteKey"
           v-model="hospital_id"
           :error-messages="errors.hospital_id"
+          class="required"
           density="compact"
           item-title="name"
           item-value="id"
@@ -61,6 +57,7 @@
         />
         <v-text-field
           v-model="kinship"
+          :disabled="!companion_id"
           density="compact"
           variant="outlined"
           label="Parentesco do acompanhante com o paciente"
@@ -70,10 +67,12 @@
           v-model="appointment_date"
           class-date-picker="absolute right-[-175px] top-[-175px]"
           :error-messages="errors.appointment_date"
+          class-field="required"
           label="Data da consulta"
         />
         <v-text-field
           v-model="appointment_time"
+          class="required"
           density="compact"
           variant="outlined"
           label="Horário da consulta"
@@ -87,7 +86,7 @@
           v-model="notes"
           density="compact"
           variant="outlined"
-          label="Observação"
+          label="Motivo"
           :error-messages="errors.notes"
         />
         <v-checkbox
@@ -134,13 +133,11 @@
     isEditing.value ? 'Editar Passageiros' : 'Cadastrar Passageiros'
   );
 
-  const { data: patientData, refetch: patientFetch, params: patientParams } = usePatientApi();
   const { data: companionData, refetch: companionFetch, params: companionParams } = useCompanionApi();
   const { data: hospitalData, refetch: hospitalFetch, params: hospitalParams, setFilter, clearFilters } = useHospitalApi();
   const { formatDate } = useFormatDate();
   const { calculateAge } = useCalculateAge();
   const { onlyNumbers } = useOnlyNumbers();
-  const { patientLabel } = usePatientLabel();
   const isEditing = computed(() => !!props.modelValue?.id);
 
   const schema = yup.object({
@@ -183,7 +180,7 @@
     initialValues:  {
       patient_id: null,
       companion_id: null,
-      appointment_date: '',
+      appointment_date: null,
       appointment_time: '',
       is_priority: false,
       hospital_id: null,
@@ -239,12 +236,10 @@ watch(() => props.travelData.city_id, async (newValue) => {
 },{ immediate: true })
 
   onMounted( async () => {
-    patientParams.value.per_page = -1;
     companionParams.value.per_page = -1;
     hospitalParams.value.per_page = -1;
     await nextTick();
     await Promise.all([
-      patientFetch(),
       companionFetch(),
     ])
 

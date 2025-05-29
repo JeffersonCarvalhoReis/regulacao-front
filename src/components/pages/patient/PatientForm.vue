@@ -20,13 +20,11 @@
             density="compact"
             :error-messages="errors.cns"
             label="CNS"
-            maxlength="18"
+            maxlength="15"
             placeholder="Número do cartão do SUS"
             variant="outlined"
             @keypress="onlyNumbers"
-            @paste="event => handlePaste(event, formatCns, val => cns = val, { maxDigits: 15 })"
-            @update:model-value="val => cns = formatCns(val)"
-          />
+           />
 
           <v-text-field
             v-model="mother_name"
@@ -179,7 +177,6 @@
   })
 
   const { formatCpf } = useFormatCpf();
-  const { formatCns } = useFormatCns();
   const { formatPhone } = usePhoneFormatter();
   const { onlyNumbers, handlePaste } = useOnlyNumbers();
   const { data, refetch, params } = useHealthAgentApi();
@@ -220,7 +217,7 @@
   const schema = yup.object({
     name: yup.string().required('Nome é obrigatório'),
     race: yup.string().required('Raça/Cor é obrigatório'),
-    cns: yup.string().min(18, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
+    cns: yup.string().min(15, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
     mother_name: yup.string().required('Nome da mãe é obrigatório'),
     cpf: yup.string().required('CPF é obrigatório').test('valid-cpf', 'CPF inválido', value => isValidCpf(value)),
     gender: yup.string().required('Gênero é obrigatório'),
