@@ -249,7 +249,7 @@
   const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate, setSort: sortSpecialist } = useSpecialistApi();
   const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate, setSort: sortProcedure} = useProcedureApi();
   const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate, setSort: sortRequestingUnit} = useRequestingUnitApi();
-  const { showFeedback } = useSweetAlertFeedback();
+  const { showFeedback, showFeedbackLoading } = useSweetAlertFeedback();
   const { calculateAge } = useCalculateAge();
   const { patientLabel } = usePatientLabel();
 
@@ -266,7 +266,6 @@
   const specialist_max_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.max_age)
   const specialist_min_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.min_age)
 
-
   const solicitationTypeOptions = [
     { label: 'Consulta', value: 'consultation' },
     { label: 'Exame', value: 'exam' }
@@ -280,6 +279,7 @@
     { label: 'Não', value: 0 }
   ];
 
+
   onMounted(async () => {
 
     patientParams.value.per_page = -1;
@@ -291,11 +291,19 @@
     requestingUnitParams.value.sort = 'name';
 
     await nextTick();
-    await Promise.all([
-      patientFetch(),
-      specialistFetch(),
-      procedureFetch(),
-      requestingUnitFetch()]);
+
+    await showFeedbackLoading(
+      async () => await Promise.all([
+        patientFetch(),
+        specialistFetch(),
+        procedureFetch(),
+        requestingUnitFetch()
+      ]),
+      {
+        loadingText: 'Carregando Dados',
+        erroTitle: 'Falha ao Carregar dados'
+       }
+    )
 
     if (isEditing.value) {
       resetForm({ values: props.modelValue })
