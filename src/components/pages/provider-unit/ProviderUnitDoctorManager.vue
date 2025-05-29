@@ -75,6 +75,7 @@
   onMounted(async () => {
     await updateTable();
     doctorsParams.value.per_page = -1;
+    doctorsParams.value.sort = 'name';
     await nextTick();
     doctorsFetch();
   });
