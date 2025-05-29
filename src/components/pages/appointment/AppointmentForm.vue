@@ -117,6 +117,8 @@
   onMounted(async () => {
     providerUnitParams.value.per_page = -1;
     doctorParams.value.per_page = -1;
+    providerUnitParams.value.sort = 'name';
+    doctorParams.value.sort = 'name';
     await nextTick();
     await Promise.all([
       providerUnitFetch(),
