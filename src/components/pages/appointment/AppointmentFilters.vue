@@ -19,12 +19,10 @@
           v-model="filterForm.cns"
           density="compact"
           label="CNS"
-          maxlength="18"
+          maxlength="15"
           placeholder="Número do cartão do SUS"
           variant="outlined"
           @keypress="onlyNumbers"
-          @paste="event => handlePaste(event, formatCns, val => filterForm.cns = val, { maxDigits: 15 })"
-          @update:model-value="val => filterForm.cns = formatCns(val)"
         />
         <v-text-field
           v-model="filterForm.cpf"
@@ -182,20 +180,17 @@
   import { useProcedureApi } from '@/composables/modules/useProcedureModule';
   import { useRequestingUnitApi } from '@/composables/modules/useRequestingUnitModule';
   import { useSpecialistApi } from '@/composables/modules/useSpecialistModule';
-  import { usePatientApi } from '@/composables/modules/usePatientModule';
   import { useDoctorApi } from '@/composables/modules/useDoctorModule';
   import { useProviderUnitApi } from '@/composables/modules/useProviderUnitModule';
   import { useUserApi } from '@/composables/modules/useUserModule';
 
   const { formatCpf } = useFormatCpf();
-  const { formatCns } = useFormatCns();
   const { onlyNumbers, handlePaste } = useOnlyNumbers();
 
   const { data: procedureData, params: procedureParams, refetch: procedureRefetch } = useProcedureApi();
   const { data: userData, params: userParams, refetch: userRefetch } = useUserApi();
   const { data: requestingUnitData, params: requestingUnitParams, refetch: requestingUnitRefetch } = useRequestingUnitApi();
   const { data: specialistData, params: specialistParams, refetch: specialistRefetch } = useSpecialistApi();
-  const { data: patientData, params: patientParams, refetch: patientRefetch } = usePatientApi();
   const { data: doctorData, params: doctorParams, refetch: doctorRefetch } = useDoctorApi();
   const { data: providerUnitData, params: providerUnitParams, refetch: providerUnitRefetch } = useProviderUnitApi();
 
@@ -218,7 +213,6 @@
     userParams.value.per_page = -1;
     requestingUnitParams.value.per_page = -1;
     specialistParams.value.per_page = -1;
-    patientParams.value.per_page = -1;
     doctorParams.value.per_page = -1;
     providerUnitParams.value.per_page = -1;
     await nextTick();
@@ -227,7 +221,6 @@
       userRefetch(),
       requestingUnitRefetch(),
       specialistRefetch(),
-      patientRefetch(),
       doctorRefetch(),
       providerUnitRefetch(),
     ]);
