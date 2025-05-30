@@ -109,7 +109,6 @@ declare module 'vue' {
     TravelAddPassengerForm: typeof import('./src/components/pages/travel/TravelAddPassengerForm.vue')['default']
     TravelDetails: typeof import('./src/components/pages/travel/TravelDetails.vue')['default']
     TravelForm: typeof import('./src/components/pages/travel/TravelForm.vue')['default']
-    TravelPassengerDetails: typeof import('./src/components/pages/travel/TravelPassengerDetails.vue')['default']
     TravelSearch: typeof import('./src/components/pages/travel/TravelSearch.vue')['default']
     TravelTable: typeof import('./src/components/pages/travel/TravelTable.vue')['default']
     UserDetails: typeof import('./src/components/pages/user/UserDetails.vue')['default']
