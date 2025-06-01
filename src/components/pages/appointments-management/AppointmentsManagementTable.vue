@@ -38,8 +38,9 @@
             :icon-new-action="outpatientRecordIcon"
             :class-new-action="outpatientRecordClass"
             :text-new-action="outpatientRecordText"
-            :condiational-action="true"
-            @delete-item="handleDelete"
+            condiational-action
+            deletable
+            @delete-item="chooseAction"
             @edit-item="handleConfirm"
             @update-options="updateOptions"
             @view-item="viewAppointment"
@@ -70,8 +71,9 @@
             :icon-new-action="outpatientRecordIcon"
             :class-new-action="outpatientRecordClass"
             :text-new-action="outpatientRecordText"
-            :condiational-action="true"
-            @delete-item="handleDelete"
+            condiational-action
+            deletable
+            @delete-item="chooseAction"
             @edit-item="handleConfirm"
             @update-options="updateOptions"
             @view-item="viewAppointment"
@@ -127,7 +129,13 @@
   const updateOptions = newOptions => {
     options.value = { ...newOptions }
   };
-
+  const chooseAction = async (appointment) => {
+    if( appointment.status == 'scheduled') {
+      await handleDelete(appointment)
+    } else {
+      await handleUndo(appointment);
+    }
+  }
   const handleDelete = async appointment => {
     const confirm = await confirmModal(`Confirmar a ausência do paciente <strong>${appointment.patient}</strong>?`, 'Atenção', 'question')
     if(confirm) {
@@ -136,6 +144,16 @@
       refetch()
     }
   };
+
+  const handleUndo = async appointment => {
+
+    const confirm = await confirmModal(`Confirmar ação de voltar ao estado anterior do paciente <strong>${appointment.patient}</strong>?`, 'Atenção', 'question')
+    if(confirm) {
+      appointment.status = 'scheduled'
+      await showFeedback(() => update(appointment.id, appointment)) ;
+      refetch()
+    }
+  }
 
   const handleConfirm = async appointment => {
     const confirm = await confirmModal(`Confirmar a presença do paciente <strong>${appointment.patient}</strong>?`, 'Atenção', 'question', 'bg-green-500 text-white shadow-sm', 'bg-red-500 text-white shadow-sm')

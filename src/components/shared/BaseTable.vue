@@ -1,6 +1,6 @@
 <template>
 <v-card
-  class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6"
+  class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 overflow-auto"
   flat
 >
 
@@ -111,27 +111,25 @@
               </v-btn>
             </template>
           </v-tooltip>
-        <div v-if="handleConditionalActionNot(item)">
           <template v-if="showDelete">
             <span>
               <v-btn
                 v-if="(item?.role != 'admin') || (role == 'super admin')"
-                :class="item.deletable || deletable ? 'text-red-600 bg-white/0 border-0 ml-1 h-full' : 'text-slate-500 border-0 ml-1 h-full'"
+                :class="item.deletable || deletable ? chooseClassDelete(item?.status) : 'text-slate-500 border-0 ml-1 h-full'"
                 :disabled="!(deletable || item.deletable)"
                 icon
                 @click="selectItemDelete(item)"
               >
-                <v-icon>{{ item.deletable || deletable ? iconDelete : 'mdi-delete-off' }}</v-icon>
+                <v-icon>{{ item.deletable || deletable ? chooseIconDelete(item?.status, iconDelete)  : 'mdi-delete-off' }}</v-icon>
               </v-btn>
 
               <v-tooltip
                 activator="parent"
               >
-                {{ item.deletable || deletable ? textDelete : tooltipTextDelete }}
+                {{ item.deletable || deletable ? chooseTextDelete(item?.status, textDelete) : tooltipTextDelete }}
               </v-tooltip>
             </span>
           </template>
-        </div>
         </v-btn-group>
       </template>
 
@@ -234,6 +232,27 @@
     } else {
       return false
     }
+  }
+  const chooseIconDelete = (status, iconDelete) => {
+   const mapIcon = {
+      'not-present' : 'mdi-arrow-u-left-top',
+      'realized' : 'mdi-arrow-u-left-top',
+    }
+    return mapIcon[status] || iconDelete
+  }
+  const chooseClassDelete = (status) => {
+    const mapClass = {
+      'not-present': 'text-ita-yellow bg-white/0 border-0 ml-1 h-full',
+      'realized': 'text-ita-yellow bg-white/0 border-0 ml-1 h-full'
+    }
+    return mapClass[status] || 'text-red-600 bg-white/0 border-0 ml-1 h-full';
+  }
+  const chooseTextDelete = (status, textDelete) => {
+    const mapText = {
+      'not-present': 'Desfazer',
+      'realized': 'Desfazer'
+    }
+    return mapText[status] || textDelete;
   }
   const selectItem = item => {
     selectedItem.value = { ...item };
