@@ -5,14 +5,14 @@
         prepend-icon="mdi-printer"
         color="success"
         :loading="clickPrint"
-        @click="exportToPDF"
+        @click="handleExportToPDF"
       >
         Imprimir
         <v-tooltip activator="parent">Imprimir</v-tooltip>
       </v-btn>
     </div>
     <div class="m-auto">
-      <div ref="printSection" class="printable max-w-4xl flex flex-col items-center">
+      <div ref="printSection" class="max-w-4xl flex flex-col items-center">
         <div class="p-3 mb-4 border flex items-center justify-center gap-10 rounded-md">
           <div class="basis-50">
             <img src="@/assets/images/logo-gestao.png" alt="Logo da prefeitura de itaguaçu da bahia">
@@ -81,21 +81,22 @@
 
 <script setup>
 import { useCalculateAge } from '@/composables/utils/useCalculateAge';
-import jsPDF from 'jspdf';
-import { toPng } from 'html-to-image'
+import { useExportToPdf } from '@/composables/utils/useExportToPdf';
 
 defineProps({
   appointmentData: { type: Object, required: true}
 });
 
 const printSection = ref(null);
-const clickPrint = ref(false)
 
 const { formatDate } = useFormatDate();
 const { calculateAge } = useCalculateAge();
-
+const { exportToPDF, clickPrint } = useExportToPdf();
 const emit = defineEmits(['close']);
 
+const handleExportToPDF = () => {
+  exportToPDF(printSection.value);
+}
 const genderMap = (value) => {
   const gender = {
     'F': 'Feminino',
@@ -104,101 +105,7 @@ const genderMap = (value) => {
   return gender[value] || 'Outro'
 };
 
-async function exportToPDF() {
-  const element = printSection.value;
-  clickPrint.value = true
-
-  try {
-    // Gera imagem PNG do elemento com suporte a estilos modernos
-    const dataUrl = await toPng(element, { cacheBust: true, pixelRatio: 2 });
-
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
-
-    const img = new Image();
-    img.src = dataUrl;
-    img.onload = () => {
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = pdf.getImageProperties(dataUrl);
-
-      // Limites de largura e altura da imagem
-      const maxWidth = pageWidth - 20; // Margens de 5mm em cada lado
-      const maxHeight = pageHeight - 20; // Margens de 5mm em cima e embaixo
-
-      // Tamanho da imagem proporcional à página
-      let imgWidth = imgProps.width;
-      let imgHeight = imgProps.height;
-
-      // Ajuste de largura e altura para garantir que caiba na página
-      if (imgWidth > maxWidth || imgHeight > maxHeight) {
-        const widthRatio = maxWidth / imgWidth;
-        const heightRatio = maxHeight / imgHeight;
-        const ratio = Math.min(widthRatio, heightRatio); // Garante que a imagem caiba na página
-
-        imgWidth = imgWidth * ratio;
-        imgHeight = imgHeight * ratio;
-      }
-
-      // Centraliza a imagem
-      const x = (pageWidth - imgWidth) / 2;
-      const y = 10
-
-      pdf.addImage(dataUrl, 'PNG', x, y, imgWidth, imgHeight);
-      const blob = pdf.output('blob');
-      const blobUrl = URL.createObjectURL(blob);
-      window.open(blobUrl, '_blank');
-    };
-  } catch (error) {
-    console.error('Erro ao exportar para PDF:', error);
-  } finally {
-   setTimeout(() => {
-    clickPrint.value = false
-   }, 500)
-  }
-}
-
 
 
 </script>
 
-<style>
-
-@media print {
-  @page {
-    size: A4;
-    margin: 10px;
-    padding: 0;
-    background-color: white;
-  }
-  body * {
-    visibility: hidden !important;
-  }
-
-  body {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .printable, .printable * {
-    visibility: visible !important;
-  }
-  .printable {
-    position: fixed !important;
-    top: 0;
-  }
-  .printable .bg-blue-300 {
-    background-color: #93c5fd !important; /* cor exata do Tailwind bg-blue-300 */
-  }
-
-  .printable .p-2 {
-    padding: 0.5rem !important;
-  }
-
-  .printable .h-6 {
-    height: 1.5rem !important;
-  }
-}
-</style>
