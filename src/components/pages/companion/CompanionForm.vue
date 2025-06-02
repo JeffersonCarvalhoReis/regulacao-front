@@ -2,15 +2,31 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <v-form>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-4 gap-2">
           <v-text-field
             v-model="name"
-            class="col-span-2 required"
+            class="col-span-3 required"
             density="compact"
             :error-messages="errors.name"
             label="Nome"
             maxlength="100"
             placeholder="Nome completo do paciente"
+            variant="outlined"
+          />
+          <base-input-date-picker
+            v-model="birth_date"
+            class-field="required"
+            :error-messages="errors.birth_date"
+            label="Data de Nascimento"
+          />
+          <v-text-field
+            v-model="mother_name"
+            class="col-span-3 required"
+            density="compact"
+            :error-messages="errors.mother_name"
+            label="Nome da Mãe"
+            maxlength="100"
+            placeholder="Nome completo da mãe"
             variant="outlined"
           />
           <v-text-field
@@ -25,23 +41,20 @@
             @paste="event => handlePaste(event, formatPhone, val => phone = val, { maxDigits: 11 })"
             @update:model-value="val => phone = formatPhone(val)"
           />
-
           <v-text-field
             v-model="cns"
-            class="required"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.cns"
             label="CNS"
-            maxlength="18"
+            maxlength="15"
             placeholder="Número do cartão do SUS"
             variant="outlined"
             @keypress="onlyNumbers"
-            @paste="event => handlePaste(event, formatCns, val => cns = val, { maxDigits: 15 })"
-            @update:model-value="val => cns = formatCns(val)"
           />
           <v-text-field
             v-model="cpf"
-            class="required"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.cpf"
             label="CPF"
@@ -52,27 +65,9 @@
             @paste="event => handlePaste(event, formatCpf, val => cpf = val, { maxDigits: 14 })"
             @update:model-value="val => cpf = formatCpf(val)"
           />
-          <base-input-date-picker
-            v-model="birth_date"
-            class-field="required"
-            :error-messages="errors.birth_date"
-            label="Data de Nascimento"
-          />
-
-          <v-text-field
-            v-model="mother_name"
-            class="required"
-            density="compact"
-            :error-messages="errors.mother_name"
-            label="Nome da Mãe"
-            maxlength="100"
-            placeholder="Nome completo da mãe"
-            variant="outlined"
-          />
-
           <v-text-field
             v-model="street"
-            class=" required"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.street"
             label="Rua"
@@ -83,7 +78,7 @@
 
           <v-text-field
             v-model="neighborhood"
-            class="required"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.neighborhood"
             label="Bairro"
@@ -91,8 +86,27 @@
             placeholder="Bairro ou zona"
             variant="outlined"
           />
+          <v-select
+            v-model="gender"
+            class="col-span-2 required"
+            density="compact"
+            :error-messages="errors.gender"
+            item-title="label"
+            item-value="value"
+            :items="genderOptions"
+            label="Gênero"
+            variant="outlined"
+          />
+          <v-select
+            class="col-span-2 required"
+            v-model="race"
+            density="compact"
+            :error-messages="errors.race"
+            :items="raceOptions"
+            label="Raça/Cor"
+            variant="outlined"
+          />
         </div>
-
       </v-form>
     </v-card-text>
 
@@ -117,12 +131,23 @@
   })
 
   const { formatCpf } = useFormatCpf();
-  const { formatCns } = useFormatCns();
   const { formatPhone } = usePhoneFormatter();
   const { onlyNumbers, handlePaste } = useOnlyNumbers();
   const { isValidCns } = useCnsValidator();
   const { isValidCpf } = useCpfValidator();
   const isEditing = computed(() => !!props.modelValue?.id);
+
+  const genderOptions = [
+  { label: 'Feminino', value: 'F' },
+  { label: 'Masculino', value: 'M' },
+  ];
+  const raceOptions = [
+    'Branco',
+    'Preto',
+    'Pardo',
+    'Amarelo',
+    'Indígena',
+  ];
 
   onMounted(async () => {
     if (isEditing.value) {
@@ -138,10 +163,12 @@
 
   const schema = yup.object({
     name: yup.string().required('Nome é obrigatório'),
-    cns: yup.string().min(18, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
+    cns: yup.string().min(15, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
     mother_name: yup.string().required('Nome da mãe é obrigatório'),
     cpf: yup.string().required('CPF é obrigatório').test('valid-cpf', 'CPF inválido', value => isValidCpf(value)),
     birth_date: yup.date().required('Data de nascimento é obrigatória'),
+    gender: yup.string().required('Gênero é obrigatório'),
+    race: yup.string().required('Raça/Cor é obrigatório'),
     phone: yup.string().nullable(),
     street: yup.string().required('Rua é obrigatória'),
     neighborhood: yup.string().required('Bairro é obrigatório'),
@@ -155,6 +182,8 @@
   const { value: cns } = useField('cns');
   const { value: mother_name } = useField('mother_name');
   const { value: cpf } = useField('cpf');
+  const { value: gender } = useField('gender');
+  const { value: race } = useField('race');
   const { value: birth_date } = useField('birth_date');
   const { value: phone } = useField('phone');
   const { value: street } = useField('street');

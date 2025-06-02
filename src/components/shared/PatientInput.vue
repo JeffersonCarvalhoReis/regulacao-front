@@ -41,7 +41,6 @@ watch(() => props.modelValue, value => {
 const {
   data,
   refetch,
-  params,
   setFilter,
   isLoading,
   clearFilters

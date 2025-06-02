@@ -25,7 +25,7 @@
     class="z-999"
     transition="dialog-transition"
   >
-    <patient-filters @close="dialogFilter = false" @filters="submitFilters" />
+    <companion-filters @close="dialogFilter = false" @filters="submitFilters" />
   </v-dialog>
 </template>
 <script setup>

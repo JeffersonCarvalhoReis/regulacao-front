@@ -23,7 +23,7 @@
             Voltar dia
           </v-tooltip>
         </v-btn>
-          <base-input-date-picker
+        <base-input-date-picker
           v-model="appointmentDate"
           class-date-picker="absolute translate-x-100 translate-y-10"
           label="Data"

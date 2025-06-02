@@ -92,6 +92,7 @@
     "useBooleanLabel": true,
     "useDownloadFile": true,
     "useCalculateAge": true,
-    "usePatientLabel": true
+    "usePatientLabel": true,
+    "useExportToPdf": true
   }
 }

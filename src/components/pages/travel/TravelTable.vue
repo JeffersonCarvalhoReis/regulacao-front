@@ -121,7 +121,7 @@
   };
 
   const search = debounce(async v => {
-    setFilter('name', v);
+    setFilter('', v);
     await nextTick()
     refetch();
   }, 500);

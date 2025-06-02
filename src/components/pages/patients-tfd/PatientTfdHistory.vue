@@ -48,7 +48,7 @@
           {{ formatDate(item.date) }}
         </template>
         <template #item.medical_appointment.companion_name="{ item }">
-              {{ item.medical_appointment.companion_name ?? 'Sem Acompanhante' }}
+              {{ item.medical_appointment.companion_name ? item.medical_appointment.companion_name : 'Sem Acompanhante' }}
         </template>
        </base-table>
     </v-card-text>

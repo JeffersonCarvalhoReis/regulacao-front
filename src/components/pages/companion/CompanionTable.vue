@@ -1,8 +1,8 @@
 <template>
   <div>
-    <patient-search @search-patient="search">
+    <companion-search @search-companion="search">
       <slot />
-    </patient-search>
+    </companion-search>
     <base-table
       class="rounted-t-none"
       :edit="props.edit"
@@ -15,7 +15,7 @@
       @delete-item="handleDelete"
       @edit-item="handleEdit"
       @update-options="updateOptions"
-      @view-item="viewPatient"
+      @view-item="viewCompanion"
     >
     <template #item.birth_date="{ item }">
       {{ formatDate(item.birth_date) }}
@@ -23,17 +23,17 @@
   </base-table>
   </div>
   <v-dialog
-   v-model="viewPatientProfile"
+   v-model="viewCompanionProfile"
    class="z-900"
    >
-    <patient-profile :patient-data="patientData" @close="viewPatientProfile = false" />
+    <companion-profile :companion-data="companionData" @close="viewCompanionProfile = false" />
   </v-dialog>
 
   <v-dialog
-    v-model="editPatient"
+    v-model="editCompanion"
     class="z-999"
   >
-    <companion-form :model-value="selectedPatient" @close="editPatient = false" @save="submit" />
+    <companion-form :model-value="selectedCompanion" @close="editCompanion = false" @save="submit" />
   </v-dialog>
 
 </template>
@@ -53,11 +53,11 @@
   const { formatDate } = useFormatDate();
 
   const options = ref({});
-  const viewPatientProfile = ref(false);
-  const editPatient = ref(false);
-  const selectedPatient = ref({});
-  const patientData = ref({});
-  const tooltipTextDelete = 'Não é possível excluir o paciente enquanto houver solicitações vinculadas a ele.'
+  const viewCompanionProfile = ref(false);
+  const editCompanion = ref(false);
+  const selectedCompanion = ref({});
+  const companionData = ref({});
+  const tooltipTextDelete = 'Não é possível excluir essa pessoa enquanto houver viagens TFD vinculadas a ela.'
 
   const updateOptions = newOptions => {
     options.value = { ...newOptions }
@@ -71,15 +71,15 @@
     }
   };
 
-  const handleEdit = patient => {
-    selectedPatient.value = patient
-    editPatient.value = true
+  const handleEdit = companion => {
+    selectedCompanion.value = companion
+    editCompanion.value = true
   };
 
-  const submit = async patient => {
-    await showFeedback(() => update(patient.id, patient));
+  const submit = async companion => {
+    await showFeedback(() => update(companion.id, companion));
     refetch();
-    editPatient.value = false
+    editCompanion.value = false
   };
 
   const search = debounce(async v => {
@@ -88,9 +88,9 @@
     refetch();
   }, 500);
 
-  const viewPatient = v => {
-    patientData.value = v;
-    viewPatientProfile.value = true;
+  const viewCompanion = v => {
+    companionData.value = v;
+    viewCompanionProfile.value = true;
   };
 
   watch(
@@ -113,7 +113,7 @@
         width: '100px',
       },
       {
-        title: 'Paciente',
+        title: 'Nome',
         key: 'name',
         sortable: true,
         align: 'center',

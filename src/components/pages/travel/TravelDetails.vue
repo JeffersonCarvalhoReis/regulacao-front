@@ -1,6 +1,11 @@
 <template>
 <base-card :title="title" @close="emit('close')">
   <v-card-text>
+    <div class="flex gap-4 justify-end mb-2">
+      <BaseButtonRegister button-text="Controle de Embarque" button-icon="mdi-bus-stop" @register="dialogExportCheckIn = true"/>
+      <BaseButtonRegister button-text="Controle de Passageiros" button-icon="mdi-account" @register="dialogPassengerControl = true"/>
+      <BaseButtonRegister button-text="Controle de Diárias" button-icon="mdi-home" @register="dialogPassengerDailyControl = true"/>
+    </div>
       <BaseSection>
           <InfoGroup title="Partida" class="pt-2">
           <div>Data: {{ formatDate(props.travelData.date) }}</div>
@@ -28,6 +33,7 @@
       :headers="headers"
       :items="props.travelData.patients"
       :hideDefaultFooter="true"
+      :deletable="true"
       @edit-item="handleEditPassengers"
       @delete-item="handleRemovePassenger"
       @view-item="handleView"
@@ -36,7 +42,7 @@
           {{ formatDate(item.date) }}
     </template>
     <template #item.companion_name="{ item }">
-          {{ item.companion_name ?? 'Sem Acompanhante' }}
+          {{ item.companion_name ? item.companion_name : 'Sem Acompanhante' }}
     </template>
   </base-table>
   </base-card>
@@ -52,16 +58,34 @@
      />
   </v-dialog>
   <v-dialog
-    v-model="dialogBpa"
+    v-model="passengerDetails"
     class="z-999"
   >
-    <BpaForm @close="dialogBpa = false"></BpaForm>
+    <TravelPassengerDetails @close="passengerDetails = false" :data="selectedPassengers"/>
+  </v-dialog>
+  <v-dialog
+    v-model="dialogExportCheckIn"
+  >
+  <TravelPassengerCheckInList  @close="dialogExportCheckIn = false" :data="props.travelData" />
+  </v-dialog>
+    <v-dialog
+    v-model="dialogPassengerControl"
+  >
+  <TravelPassengerControl  @close="dialogPassengerControl = false" :data="props.travelData" />
+  </v-dialog>
+      <v-dialog
+    v-model="dialogPassengerDailyControl"
+  >
+  <TravelPassengerDailyControl @close="dialogPassengerDailyControl = false" :data="props.travelData" />
   </v-dialog>
 </template>
 
 <script setup>
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
   import { useAddPassengerApi } from '@/composables/modules/useAddPassagerModule';
+  import TravelPassengerDetails from './TravelPassengerDetails.vue';
+  import TravelPassengerCheckInList from './TravelPassengerCheckInList.vue';
+import TravelPassengerControl from './TravelPassengerControl.vue';
 
   const props = defineProps({
     travelData: { type: Object, default: () => ({}) },
@@ -75,10 +99,14 @@
   const textTransform = 'uppercase'
   const selectedPassengers = ref({})
   const dialogEditPassengers = ref(false);
-  const dialogBpa = ref(false);
+  const passengerDetails = ref(false);
+  const dialogExportCheckIn = ref(false);
+  const dialogPassengerControl = ref(false);
+  const dialogPassengerDailyControl = ref(false);
 
-  const handleView = () => {
-    dialogBpa.value = true
+  const handleView = (v) => {
+    passengerDetails.value = true
+    selectedPassengers.value = v
   }
   const handleEditPassengers = async (value) => {
     dialogEditPassengers.value = true;
