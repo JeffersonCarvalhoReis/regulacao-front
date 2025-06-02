@@ -229,7 +229,7 @@
 watch(() => props.travelData.city_id, async (newValue) => {
    currentHospitalCity.value = newValue
     hospitalParams.value.per_page = -1;
-    hospitalParams.value.filters = { 'city_id': currentHospitalCity.value }
+    hospitalParams.value.filter = { 'city_id': currentHospitalCity.value }
 
     await nextTick();
     await hospitalFetch()

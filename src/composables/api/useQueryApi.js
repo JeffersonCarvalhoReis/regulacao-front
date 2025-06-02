@@ -17,6 +17,7 @@ export function useQueryApi (resource) {
 
     loading.value = true
     error.value = null
+    console.log(params.value )
     try {
       await nextTick();
       const response = await api.get(resource, { params: params.value })

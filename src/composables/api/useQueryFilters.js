@@ -3,7 +3,7 @@ import { ref } from 'vue'
 export function useQueryFilters (defaultParams = {}) {
   const page = ref(defaultParams.page)
   const perPage = ref(defaultParams.per_page)
-  const filters = ref({})
+  const filter = ref({})
   const sort = ref(null)
   const include = ref(null)
 
@@ -16,9 +16,9 @@ export function useQueryFilters (defaultParams = {}) {
     }
 
     // Aplica filtros
-    for (const key in filters.value) {
-      if (filters.value[key] !== '' && filters.value[key] !== null) {
-        newParams[`filter[${key}]`] = filters.value[key]
+    for (const key in filter.value) {
+      if (filter.value[key] !== '' && filter.value[key] !== null) {
+        newParams[`filter[${key}]`] = filter.value[key]
       }
     }
 
@@ -59,21 +59,21 @@ export function useQueryFilters (defaultParams = {}) {
 
   return {
     // filtros principais
-    page, perPage, filters, sort, include,
+    page, perPage, filter, sort, include,
 
     // objeto final que vai pro useQueryApi
     params,
 
     // utilitários
-    setFilter: (key, value) => filters.value[key] = value,
-    clearFilters: () => filters.value = {},
+    setFilter: (key, value) => filter.value[key] = value,
+    clearFilters: () => filter.value = {},
     setSort: val => sort.value = val,
     setInclude: val => include.value = val,
     setTableOptions,
     reset: () => {
       page.value = 1
       perPage.value = 10
-      filters.value = {}
+      filter.value = {}
       sort.value = null
       include.value = null
     },
