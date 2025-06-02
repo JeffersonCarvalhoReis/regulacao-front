@@ -28,7 +28,7 @@ export function useExportToPdf() {
 }
 
 const elementToPng = async (element) => {
-  const dataUrl = await toPng(element, { cacheBust: true, pixelRatio: 2 });
+  const dataUrl = await toPng(element, { cacheBust: true, pixelRatio: 1 });
   const img = new Image();
   img.src = dataUrl;
   return img;
