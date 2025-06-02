@@ -20,7 +20,7 @@
           <div>Data da Consulta: <span class="content"> {{ formatDate(props.data.medical_appointment.appointment_date) }}</span></div>
           <div>Horário do Exame: <span class="content"> {{ props.data.medical_appointment.appointment_time }} </span></div>
           <div>Prioridade: <span class="content"> {{ props.data.medical_appointment.priority ? 'Sim' : 'Não' }}</span></div>
-          <div v-if="props.data.medical_appointment.notes">Observações: <span class="content"> {{ props.data.medical_appointment.notes }}</span></div>
+          <div v-if="props.data.medical_appointment.notes">Motivo: <span class="content"> {{ props.data.medical_appointment.notes }}</span></div>
         </InfoGroup>
       </BaseSection>
     </v-card-text>

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="border-t-6 border-ita-light-blue max-w-320 w-full mx-auto">
+  <v-card class="border-t-6 border-ita-light-blue max-w-350 w-full mx-auto">
     <v-card-title class="flex items-center justify-between text-2xl gap-4">
       <span>
         {{ title }}

@@ -131,6 +131,12 @@
           prepend-icon="mdi-card-account-details"
           title="Pacientes"
         />
+        <app-menu-item
+          :to="{name: 'travels'}"
+          :active="$route.name === 'travels'"
+          prepend-icon="mdi-map-marker-distance"
+          title="Viagens"
+        />
        <app-menu-item
           :to="{name: 'patients-tfd'}"
           :active="$route.name === 'patients-tfd'"
@@ -173,13 +179,8 @@
           prepend-icon="mdi-car-estate"
           title="Veículos"
         />
-        <app-menu-item
-          :to="{name: 'travels'}"
-          :active="$route.name === 'travels'"
-          prepend-icon="mdi-map-marker-distance"
-          title="Viagens"
-        />
        <app-menu-item
+          v-if="false"
           :to="{name: 'bpa-settings'}"
           :active="$route.name === 'bpa-settings'"
           prepend-icon="mdi-map-marker-distance"

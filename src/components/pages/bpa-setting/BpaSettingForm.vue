@@ -20,10 +20,8 @@
           label="CNS"
           placeholder="Cartão Nacional de Saúde"
           variant="outlined"
-          maxlength="18"
+          maxlength="15"
           @keypress="onlyNumbers"
-          @paste="event => handlePaste(event, formatCns, val => cns = val, { maxDigits: 15 })"
-          @update:model-value="val => cns = formatCns(val)"
         />
         <v-text-field
           v-model="cbo"
@@ -65,14 +63,14 @@
 
   const isEditing = computed(() => !!props.modelValue?.id);
 
-  const { formatCns } = useFormatCns();
-  const { onlyNumbers, handlePaste } = useOnlyNumbers();
+
+  const { onlyNumbers } = useOnlyNumbers();
   const { isValidCns } = useCnsValidator();
 
   const schema = yup.object({
     name: yup.string().required('Nome é obrigatório'),
     cbo: yup.string().required('CBO é obrigatório'),
-    cns: yup.string().min(18, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
+    cns: yup.string().min(15, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
   });
 
   const { handleSubmit, errors, resetForm } = useForm({

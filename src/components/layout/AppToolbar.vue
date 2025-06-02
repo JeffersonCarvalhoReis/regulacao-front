@@ -102,6 +102,14 @@
     'health-agents': 'Agentes C. de Saúde',
     'appointments-management': 'Controle de Agendamentos',
     'users': 'Usuários',
+    'travels': 'Viagens',
+    'companions': 'Acompanhantes',
+    'hospitals': 'Hospitais',
+    'cities': 'Cidades',
+    'vehicles': 'Veículos',
+    'driver': 'Motoristas',
+    'patients-tfd': 'Pacientes TFD',
+    'deceased': 'Falecidos',
   };
 
   return titleMap[route.name] || '';

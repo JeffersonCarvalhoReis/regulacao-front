@@ -20,6 +20,7 @@
         placeholder="dd/mm/aaaa"
         prepend-inner-icon="mdi-calendar"
         variant="outlined"
+        :clearable="clearable"
         @keypress="onlyNumbers"
       />
     </template>
@@ -52,7 +53,8 @@
     modelValue: { type: [Date, String, null], default: null },
     classDatePicker: { type: String, default: 'absolute left-[-175px]'},
     readonly: { type: Boolean, default: false },
-    classField: {type: String, required: false}
+    classField: {type: String, required: false},
+    clearable: {type: String, required: false}
   });
 
   const emit = defineEmits(['update:modelValue']);

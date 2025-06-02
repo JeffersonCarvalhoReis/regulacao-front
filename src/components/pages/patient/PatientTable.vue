@@ -56,7 +56,7 @@
   const editPatient = ref(false);
   const selectedPatient = ref({});
   const patientData = ref({});
-  const tooltipTextDelete = 'Não é possível excluir o paciente enquanto houver solicitações vinculadas a ele.'
+  const tooltipTextDelete = 'Não é possível excluir o paciente enquanto houver solicitações ou viagens TFD vinculadas a ele.'
 
   const updateOptions = newOptions => {
     options.value = { ...newOptions }

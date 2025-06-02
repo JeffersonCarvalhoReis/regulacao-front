@@ -1,9 +1,9 @@
 <template>
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
-      <v-form class="grid grid-cols-2 gap-x-4">
+      <v-form class="grid grid-cols-3 gap-x-4">
           <v-text-field
-          class="required col-span-2"
+          class="required col-span-3"
           v-model="vehicle_model"
           density="compact"
           :error-messages="errors.vehicle_model"
@@ -19,6 +19,15 @@
           :error-messages="errors.seat_capacity"
           label="Capacidade"
           placeholder="Quantidade de assentos para passageiros"
+          variant="outlined"
+        />
+       <v-text-field
+          v-model="priority_seats"
+          density="compact"
+          type="number"
+          :error-messages="errors.priority_seats"
+          label="Assento Prioritários"
+          placeholder="Quantos assentos são prioritários"
           variant="outlined"
         />
         <v-text-field
@@ -60,6 +69,7 @@
   const schema = yup.object({
     number_plate: yup.string().nullable(),
     vehicle_model: yup.string().required('Nome do modelo do veículo é obrigatório'),
+    priority_seats: yup.string().nullable(),
     seat_capacity: yup.string().required('Capacidade é obrigatório')
   });
 
@@ -70,6 +80,7 @@
   const { value: number_plate } = useField('number_plate');
   const { value: vehicle_model } = useField('vehicle_model');
   const { value: seat_capacity } = useField('seat_capacity');
+  const { value: priority_seats } = useField('priority_seats')
 
   onMounted(() => {
     if (isEditing.value) {
