@@ -149,7 +149,7 @@
         title: 'Detalhes',
         value: 'view',
         align: 'left',
-        width: '200px',
+        width: '50px',
       },
       {
         title: 'Data da Viagem',
