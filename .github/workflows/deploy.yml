@@ -28,6 +28,7 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ${{ secrets.PROJECT_PATH }}
+            git reset --hard
             git pull --rebase origin main
 
             # Suba o container do frontend
