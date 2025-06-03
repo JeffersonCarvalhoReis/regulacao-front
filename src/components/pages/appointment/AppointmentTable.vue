@@ -146,6 +146,7 @@
   };
 
   const submit = async appointment => {
+
     await showFeedback(() => update(appointment.id, appointment));
     refetch();
     editAppointment.value = false
