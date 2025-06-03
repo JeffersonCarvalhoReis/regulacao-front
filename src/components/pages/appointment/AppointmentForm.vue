@@ -170,7 +170,7 @@
       initialValues: {
       date: null,
       time: '',
-      solicitation_id: props.modelValue?.id || props.solicitationData?.id,
+      solicitation_id: props.modelValue?.solicitation?.id || props.solicitationData?.id,
       provider_unit_id: null,
       doctor_id: null,
     },
