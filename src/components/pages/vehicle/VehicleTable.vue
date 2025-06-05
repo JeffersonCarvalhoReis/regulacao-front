@@ -14,13 +14,9 @@
       :total-items="meta.total"
       @delete-item="handleDelete"
       @update-options="updateOptions"
-      @view-item="viewVehicle"
       @edit-item="handleEdit"
     />
   </div>
-  <v-dialog v-model="viewVehicleDetails">
-    <vehicle-details :vehicle-data="vehicleData" @close="viewVehicleDetails = false" />
-  </v-dialog>
 
   <v-dialog
     v-model="editVehicle"
@@ -44,8 +40,6 @@
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const options = ref({});
-  const viewVehicleDetails = ref(false);
-  const vehicleData = ref({});
   const editVehicle = ref(false);
   const selectedVehicle = ref({});
   const tooltipTextDelete = '.'
@@ -79,11 +73,6 @@
     refetch();
   }, 500);
 
-  const viewVehicle = v => {
-    vehicleData.value = v;
-    viewVehicleDetails.value = true;
-  }
-
   watch(
     () => options.value,
     async newOptions => {
@@ -98,23 +87,10 @@
   const headers = computed( () => {
     const baseHeaders = [
       {
-        title: 'Detalhes',
-        value: 'view',
-        align: 'left',
-        width: '200px',
-      },
-      {
         title: 'Modelo',
         key: 'vehicle_model',
         sortable: true,
         align: 'left',
-
-      },
-      {
-        title: 'Quantidade máxima de passageiros',
-        key: 'seat_capacity',
-        sortable: true,
-        align: 'center',
 
       },
       {
