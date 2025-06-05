@@ -7,7 +7,7 @@
             <div>
               <div>Paciente: {{ props.appointmentData.solicitation.patient }}</div>
               <div>Data de Nascimento: {{ formatDate(props.appointmentData.solicitation.patient_birth_date) }}</div>
-              <div>Idade: {{ calculateAge(props.appointmentData.solicitation.patient_birth_date) }} anos</div>
+              <div>Idade: {{ calculateAge(props.appointmentData.solicitation.patient_birth_date) }}</div>
               <div>CPF: {{ props.appointmentData.solicitation.patient_cpf }}</div>
               <div>SUS: {{ props.appointmentData.solicitation.patient_cns }}</div>
             </div>

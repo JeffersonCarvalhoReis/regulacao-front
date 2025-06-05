@@ -8,7 +8,7 @@
           <div>Nome da mãe: {{ patientData.mother_name }}</div>
           <div>CNS: {{ patientData.cns }}</div>
           <div>Data de Nascimento: {{ formatDate(patientData.birth_date) }}</div>
-          <div>Idade: {{ calculateAge(patientData.birth_date) }} anos</div>
+          <div>Idade: {{ calculateAge(patientData.birth_date) }}</div>
           <div v-if="patientData.observation">Obs.: {{ patientData.observation }}</div>
         </InfoGroup>
 

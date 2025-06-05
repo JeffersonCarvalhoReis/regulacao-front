@@ -22,6 +22,7 @@ export function useAddPassengerApi() {
   return {
     addPassenger: (id, data) => request('post', id, 'patients', data),
     updateCompanion: (id, data) => request('put', id, 'companions', data),
+    movePassenger: (id, data) => request('post', id, 'move-patients', data),
     destroy: (id, data) => request('delete', id, 'patients', data),
     loading,
     error,

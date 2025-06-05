@@ -3,26 +3,26 @@
     <v-card-text>
       <BaseSection>
         <InfoGroup title="Dados Pessoais">
-          <div>CPF: {{ acompanionData.cpf }}</div>
-          <div>Gênero: {{ genderMap(acompanionData.gender) }}</div>
-          <div>Nome da mãe: {{ acompanionData.mother_name }}</div>
-          <div>CNS: {{ acompanionData.cns }}</div>
-          <div>Data de Nascimento: {{ formatDate(acompanionData.birth_date) }}</div>
-          <div>Idade: {{ calculateAge(acompanionData.birth_date) }} anos</div>
-          <div v-if="acompanionData.observation">Obs.: {{ acompanionData.observation }}</div>
+          <div>CPF: {{ props.companionData.cpf }}</div>
+          <div>Gênero: {{ genderMap(companionData.gender) }}</div>
+          <div>Nome da mãe: {{ companionData.mother_name }}</div>
+          <div>CNS: {{ companionData.cns }}</div>
+          <div>Data de Nascimento: {{ formatDate(companionData.birth_date) }}</div>
+          <div>Idade: {{ calculateAge(companionData.birth_date) }}</div>
+          <div v-if="companionData.observation">Obs.: {{ companionData.observation }}</div>
         </InfoGroup>
 
         <v-divider vertical />
 
         <InfoGroup title="Endereço">
-          <div>Rua: {{ acompanionData.street }}</div>
-          <div>Bairro: {{ acompanionData.neighborhood }}</div>
+          <div>Rua: {{ companionData.street }}</div>
+          <div>Bairro: {{ companionData.neighborhood }}</div>
         </InfoGroup>
 
         <v-divider vertical />
 
         <InfoGroup title="Contato">
-          <div>Telefone: {{ acompanionData.phone ? acompanionData.phone : 'Sem número de telefone cadastrado' }}</div>
+          <div>Telefone: {{ companionData.phone ? companionData.phone : 'Sem número de telefone cadastrado' }}</div>
         </InfoGroup>
 
       </BaseSection>
@@ -32,14 +32,14 @@
 
 <script setup>
   const props = defineProps({
-    acompanionData: { type: Object, default: () => ({}) },
+    companionData: { type: Object, required: true },
   });
 
   const { formatDate } = useFormatDate();
   const { calculateAge } = useCalculateAge()
 
   const emit = defineEmits(['close']);
-  const title = computed(() => `Acompanhante: ${props.acompanionData.name}`);
+  const title = computed(() => `Acompanhante: ${props.companionData.name}`);
 
   const genderMap = value => {
     const gender = {

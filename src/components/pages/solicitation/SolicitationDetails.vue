@@ -5,7 +5,7 @@
         <InfoGroup title="Dados do paciente">
           <div>Paciente: {{ props.solicitationData.patient }}</div>
           <div>Data de Nascimento: {{ formatDate(props.solicitationData.patient_birth_date) }}</div>
-          <div>Idade: {{ calculateAge(props.solicitationData.patient_birth_date) }} anos</div>
+          <div>Idade: {{ calculateAge(props.solicitationData.patient_birth_date) }}</div>
           <div>CPF: {{ props.solicitationData.patient_cpf }}</div>
           <div>SUS: {{ props.solicitationData.patient_cns }}</div>
           <div>Telefone: {{ props.solicitationData.patient_phone }}</div>

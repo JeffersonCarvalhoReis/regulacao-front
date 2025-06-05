@@ -110,6 +110,7 @@ declare module 'vue' {
     SpecialistSearch: typeof import('./src/components/pages/specialist/SpecialistSearch.vue')['default']
     SpecialistTable: typeof import('./src/components/pages/specialist/SpecialistTable.vue')['default']
     TravelAddPassengerForm: typeof import('./src/components/pages/travel/TravelAddPassengerForm.vue')['default']
+    TravelChangePassengerDate: typeof import('./src/components/pages/travel/TravelChangePassengerDate.vue')['default']
     TravelDetails: typeof import('./src/components/pages/travel/TravelDetails.vue')['default']
     TravelForm: typeof import('./src/components/pages/travel/TravelForm.vue')['default']
     TravelPassengerCheckInList: typeof import('./src/components/pages/travel/TravelPassengerCheckInList.vue')['default']
