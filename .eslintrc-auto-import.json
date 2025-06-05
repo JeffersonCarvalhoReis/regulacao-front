@@ -93,6 +93,7 @@
     "useDownloadFile": true,
     "useCalculateAge": true,
     "usePatientLabel": true,
-    "useExportToPdf": true
+    "useExportToPdf": true,
+    "useNormalizeFilter": true
   }
 }

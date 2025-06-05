@@ -180,15 +180,8 @@
 
       },
       {
-        title: 'Vagas Restante',
-        key: 'remaining_seats',
-        sortable: true,
-        align: 'left',
-
-      },
-      {
-        title: 'Vagas Prioritarias Restante',
-        key: 'remaining_priority_seats',
+        title: 'Quantidade de Passageiros',
+        key: 'quantity_passengers',
         sortable: true,
         align: 'left',
 

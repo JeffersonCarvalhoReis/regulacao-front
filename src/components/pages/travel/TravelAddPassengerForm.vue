@@ -14,11 +14,7 @@
         <InfoGroup  title="Informações Sobre a Viagem" class="pt-2">
           <div>Motorista: <span :class="textTransform">{{ props.travelData.driver }}</span></div>
           <div>Veículo: <span :class="textTransform">{{ props.travelData.vehicle }}</span></div>
-          <div>Vagas Restantes: {{ props.travelData.remaining_seats }}</div>
-          <div>Vagas Prioritárias Restantes: {{ props.travelData.remaining_priority_seats }}</div>
-          <div v-if="props.travelData.remaining_seats + props.travelData.remaining_priority_seats < 1" class="text-red-500 text-uppercase">
-            Viagem lotada
-          </div>
+          <div>Quantidade de passageiros: {{ props.travelData.quantity_passengers }}</div>
         </InfoGroup>
       </BaseSection>
 
@@ -111,10 +107,8 @@
 </template>
 
 <script setup>
-  import { usePatientApi } from '@/composables/modules/usePatientModule';
   import { useCompanionApi } from '@/composables/modules/useCompanionModule';
   import { useHospitalApi } from '@/composables/modules/useHospitalModule';
-  import { usePatientLabel } from '@/composables/utils/usePatientLabel';
   import { useField, useForm } from 'vee-validate'
   import * as yup from 'yup'
 
@@ -134,7 +128,7 @@
   );
 
   const { data: companionData, refetch: companionFetch, params: companionParams } = useCompanionApi();
-  const { data: hospitalData, refetch: hospitalFetch, params: hospitalParams, setFilter, clearFilters } = useHospitalApi();
+  const { data: hospitalData, refetch: hospitalFetch, params: hospitalParams,  clearFilters } = useHospitalApi();
   const { formatDate } = useFormatDate();
   const { calculateAge } = useCalculateAge();
   const { onlyNumbers } = useOnlyNumbers();
@@ -210,21 +204,24 @@
     }
   };
 
-  watch(patient_id, (newId) => {
+watch(patient_id, (newId) => {
   if (!newId) return;
 
   const selectedPatient = patientData.value.find(p => p.id === newId);
   if (!selectedPatient || !selectedPatient.birth_date) return;
 
-  const age = calculateAge(selectedPatient.birth_date);
+  const ageString = calculateAge(selectedPatient.birth_date);
 
-  if(isEditing.value) return;
+  const match = ageString.match(/^(\d+)/);
+  const ageInYears = match ? parseInt(match[1]) : 0;
 
-  if (age >= 60 ) {
+  if (isEditing.value) return;
+
+  if (ageInYears >= 60) {
     is_priority.value = true;
-    priorityText.value = 'Paciente com mais de 60 anos'
+    priorityText.value = 'Paciente com mais de 60 anos';
   }
-},{ immediate: false});
+}, { immediate: false });
 
 watch(() => props.travelData.city_id, async (newValue) => {
    currentHospitalCity.value = newValue

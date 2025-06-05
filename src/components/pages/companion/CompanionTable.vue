@@ -26,7 +26,7 @@
    v-model="viewCompanionProfile"
    class="z-900"
    >
-    <companion-profile :companion-data="companionData" @close="viewCompanionProfile = false" />
+    <companion-profile :companion-data="selectedCompanion" @close="viewCompanionProfile = false" />
   </v-dialog>
 
   <v-dialog
@@ -56,7 +56,6 @@
   const viewCompanionProfile = ref(false);
   const editCompanion = ref(false);
   const selectedCompanion = ref({});
-  const companionData = ref({});
   const tooltipTextDelete = 'Não é possível excluir essa pessoa enquanto houver viagens TFD vinculadas a ela.'
 
   const updateOptions = newOptions => {
@@ -89,7 +88,7 @@
   }, 500);
 
   const viewCompanion = v => {
-    companionData.value = v;
+    selectedCompanion.value = v;
     viewCompanionProfile.value = true;
   };
 

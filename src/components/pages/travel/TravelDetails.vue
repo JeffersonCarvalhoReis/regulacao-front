@@ -19,11 +19,7 @@
         <InfoGroup  title="Informações Sobre a Viagem" class="pt-2">
           <div>Motorista: <span :class="textTransform">{{ props.travelData.driver }}</span></div>
           <div>Veículo: <span :class="textTransform">{{ props.travelData.vehicle }}</span></div>
-          <div>Vagas Restantes: {{ props.travelData.remaining_seats }}</div>
-          <div>Vagas Prioritárias Restantes: {{ props.travelData.remaining_priority_seats }}</div>
-          <div v-if="props.travelData.remaining_seats + props.travelData.remaining_priority_seats < 1" class="text-red-500 text-uppercase">
-            Viagem lotada
-          </div>
+          <div>Quantidade de passageiros: {{ props.travelData.quantity_passengers }}</div>
         </InfoGroup>
       </BaseSection>
     </v-card-text>
@@ -34,15 +30,23 @@
       :items="props.travelData.patients"
       :hideDefaultFooter="true"
       :deletable="true"
+      new-action
+      :icon-new-action="changeTravelIcon"
+      :class-new-action="changeTravelClass"
+      :text-new-action="changeTravelText"
+      @new-action="handlChangeTravel"
       @edit-item="handleEditPassengers"
       @delete-item="handleRemovePassenger"
       @view-item="handleView"
     >
-    <template #item.date="{ item }">
-          {{ formatDate(item.date) }}
-    </template>
     <template #item.companion_name="{ item }">
           {{ item.companion_name ? item.companion_name : 'Sem Acompanhante' }}
+    </template>
+    <template #item.appointment_date="{ item }">
+      {{ formatDate(item.appointment_date) }}
+    </template>
+        <template #item.appointment_time="{ item }">
+    <span class="lowercase">{{ `${item.appointment_time}h` }}</span>
     </template>
   </base-table>
   </base-card>
@@ -73,10 +77,16 @@
   >
   <TravelPassengerControl  @close="dialogPassengerControl = false" :data="props.travelData" />
   </v-dialog>
-      <v-dialog
+    <v-dialog
     v-model="dialogPassengerDailyControl"
   >
   <TravelPassengerDailyControl @close="dialogPassengerDailyControl = false" :data="props.travelData" />
+  </v-dialog>
+  <v-dialog
+    v-model="dialogChangeTravel"
+    class="z-999"
+  >
+  <TravelChangePassengerDate @close="dialogChangeTravel = false" :patientData="selectedPassengers" :travelId="props.travelData.id" @reload=" handleReload" />
   </v-dialog>
 </template>
 
@@ -85,7 +95,8 @@
   import { useAddPassengerApi } from '@/composables/modules/useAddPassagerModule';
   import TravelPassengerDetails from './TravelPassengerDetails.vue';
   import TravelPassengerCheckInList from './TravelPassengerCheckInList.vue';
-import TravelPassengerControl from './TravelPassengerControl.vue';
+  import TravelPassengerControl from './TravelPassengerControl.vue';
+  import TravelChangePassengerDate from './TravelChangePassengerDate.vue';
 
   const props = defineProps({
     travelData: { type: Object, default: () => ({}) },
@@ -103,14 +114,26 @@ import TravelPassengerControl from './TravelPassengerControl.vue';
   const dialogExportCheckIn = ref(false);
   const dialogPassengerControl = ref(false);
   const dialogPassengerDailyControl = ref(false);
+  const dialogChangeTravel = ref(false);
+  const changeTravelIcon = 'mdi-swap-horizontal';
+  const changeTravelClass = 'text-ita-yellow bg-white/0 border-0 ml-1 h-full';
+  const changeTravelText = 'Trocar Data da Viagem'
 
   const handleView = (v) => {
     passengerDetails.value = true
     selectedPassengers.value = v
   }
+  const handlChangeTravel = (v) => {
+    dialogChangeTravel.value = true;
+    selectedPassengers.value = v
+  }
   const handleEditPassengers = async (value) => {
     dialogEditPassengers.value = true;
     selectedPassengers.value = value;
+  }
+  const handleReload = () => {
+    emit('refresh', props.travelData.id);
+    dialogChangeTravel.value = false;
   }
 
   const updatePassengers = async values => {
@@ -142,16 +165,29 @@ import TravelPassengerControl from './TravelPassengerControl.vue';
       {
         title: 'Nome',
         key: 'name',
-        sortable: true,
+        sortable: false,
         align: 'left',
 
       },
       {
         title: 'Acompanhante',
         key: 'companion_name',
-        sortable: true,
+        sortable: false,
         align: 'left',
 
+      },
+      {
+        title: 'Data da Consulta',
+        key: 'appointment_date',
+        sortable: false,
+        align: 'center',
+      },
+
+      {
+        title: 'Horário da Consulta',
+        key: 'appointment_time',
+        sortable: false,
+        align: 'center',
       },
       {
         title: 'Ações',

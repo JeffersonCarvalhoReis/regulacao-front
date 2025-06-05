@@ -43,7 +43,7 @@
           </LabeledLineGroup>
           <LabeledLineGroup>
             <LabeledLine label="Data de Nasc." :value="formatDate(appointmentData.solicitation.patient_birth_date)" />
-            <LabeledLine label="Idade" :value="`${calculateAge(appointmentData.solicitation.patient_birth_date)} anos`"/>
+            <LabeledLine label="Idade" :value="`${calculateAge(appointmentData.solicitation.patient_birth_date)}`"/>
             <LabeledLine label="Gênero" :value="genderMap(appointmentData.solicitation.patient_gender)" />
           </LabeledLineGroup>
           <LabeledLineGroup>

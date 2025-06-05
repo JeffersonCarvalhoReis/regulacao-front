@@ -57,7 +57,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
   const useBooleanLabel: typeof import('./composables/utils/useBooleanLabel.js')['useBooleanLabel']
-  const useCalculateAge: typeof import('./composables/utils/useCalculateAge.js')['useCalculateAge']
+  const useCalculateAge: typeof import('./composables/utils/useCalculateAge')['useCalculateAge']
   const useCnsValidator: typeof import('./composables/utils/useCnsValidator.js')['useCnsValidator']
   const useCpfValidator: typeof import('./composables/utils/useCpfValidator.js')['useCpfValidator']
   const useCssModule: typeof import('vue')['useCssModule']
@@ -69,9 +69,10 @@ declare global {
   const useFormatDate: typeof import('./composables/utils/useFormatDate.js')['useFormatDate']
   const useId: typeof import('vue')['useId']
   const useModel: typeof import('vue')['useModel']
+  const useNormalizeFilter: typeof import('./composables/utils/useNormalizeFilter.js')['useNormalizeFilter']
   const useOnlyNumbers: typeof import('./composables/utils/useOnlyNumbers.js')['useOnlyNumbers']
   const usePasswordStrength: typeof import('./composables/utils/usePasswordStrength.js')['usePasswordStrength']
-  const usePatientLabel: typeof import('./composables/utils/usePatientLabel.js')['usePatientLabel']
+  const usePatientLabel: typeof import('./composables/utils/usePatientLabel')['usePatientLabel']
   const usePhoneFormatter: typeof import('./composables/utils/usePhoneFormatter.js')['usePhoneFormatter']
   const usePrintIframe: typeof import('./composables/utils/usePrintIframe.js')['usePrintIframe']
   const useRoles: typeof import('./composables/utils/useRoles.js')['useRoles']
@@ -147,7 +148,7 @@ declare module 'vue' {
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useBooleanLabel: UnwrapRef<typeof import('./composables/utils/useBooleanLabel.js')['useBooleanLabel']>
-    readonly useCalculateAge: UnwrapRef<typeof import('./composables/utils/useCalculateAge.js')['useCalculateAge']>
+    readonly useCalculateAge: UnwrapRef<typeof import('./composables/utils/useCalculateAge')['useCalculateAge']>
     readonly useCnsValidator: UnwrapRef<typeof import('./composables/utils/useCnsValidator.js')['useCnsValidator']>
     readonly useCpfValidator: UnwrapRef<typeof import('./composables/utils/useCpfValidator.js')['useCpfValidator']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
@@ -158,9 +159,10 @@ declare module 'vue' {
     readonly useFormatDate: UnwrapRef<typeof import('./composables/utils/useFormatDate.js')['useFormatDate']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useNormalizeFilter: UnwrapRef<typeof import('./composables/utils/useNormalizeFilter.js')['useNormalizeFilter']>
     readonly useOnlyNumbers: UnwrapRef<typeof import('./composables/utils/useOnlyNumbers.js')['useOnlyNumbers']>
     readonly usePasswordStrength: UnwrapRef<typeof import('./composables/utils/usePasswordStrength.js')['usePasswordStrength']>
-    readonly usePatientLabel: UnwrapRef<typeof import('./composables/utils/usePatientLabel.js')['usePatientLabel']>
+    readonly usePatientLabel: UnwrapRef<typeof import('./composables/utils/usePatientLabel')['usePatientLabel']>
     readonly usePhoneFormatter: UnwrapRef<typeof import('./composables/utils/usePhoneFormatter.js')['usePhoneFormatter']>
     readonly usePrintIframe: UnwrapRef<typeof import('./composables/utils/usePrintIframe.js')['usePrintIframe']>
     readonly useRoles: UnwrapRef<typeof import('./composables/utils/useRoles.js')['useRoles']>

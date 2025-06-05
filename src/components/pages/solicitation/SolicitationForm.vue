@@ -248,7 +248,7 @@
     modelValue: { type: Object, default: () => ({}) },
   })
 
-  const { data: patientData, refetch: patientFetch, params: patientParams, create: patientCreate, setFilter: patientFilter, isLoading, clearFilters } = usePatientApi();
+  const { data: patientData, refetch: patientFetch, create: patientCreate, setFilter: patientFilter, isLoading, clearFilters } = usePatientApi();
   const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate } = useSpecialistApi();
   const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate } = useProcedureApi();
   const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate, setSort: sortRequestingUnit} = useRequestingUnitApi();
@@ -263,7 +263,11 @@
   const dialogProcedureForm = ref(false)
   const dialogSpecialistForm = ref(false)
   const dialogRequestingUnitForm = ref(false)
-  const patient_age = computed(() => calculateAge(patientData.value.find(v => v.id == patient_id.value)?.birth_date))
+  const patient_age = computed(() => {
+    const ageLabel = calculateAge(patientData.value.find(v => v.id == patient_id.value)?.birth_date);
+    const match = ageLabel.match(/^(\d+)\s+ano/);
+    return match ? Number(match[1]) : 0;
+  });
   const procedure_max_age = computed(() => procedureData.value.find(v => v.id === procedure_id.value)?.max_age)
   const procedure_min_age = computed(() => procedureData.value.find(v => v.id === procedure_id.value)?.min_age)
   const specialist_max_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.max_age)
