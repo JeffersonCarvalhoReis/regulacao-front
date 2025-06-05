@@ -111,13 +111,6 @@
 
       },
       {
-        title: 'Quantidade máxima de passageiros',
-        key: 'seat_capacity',
-        sortable: true,
-        align: 'center',
-
-      },
-      {
         title: 'Placa',
         key: 'number_plate',
         sortable: true,
