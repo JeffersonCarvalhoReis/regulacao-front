@@ -93,7 +93,7 @@ const exportToPDF = async (columnsRef, travelInfo, fileInfo) => {
   const centerX = pageWidth / 2;
   const lineStartX = centerX - lineWidth / 2;
   const lineEndX = centerX + lineWidth / 2;
-  const lineY = finalY + 30; // posição vertical da linha
+  const lineY = finalY + 10; // posição vertical da linha
   const textY = lineY + 5;   // texto logo abaixo da linha
 
   // Linha de assinatura
