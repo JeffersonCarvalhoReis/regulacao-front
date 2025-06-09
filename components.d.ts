@@ -123,7 +123,6 @@ declare module 'vue' {
     UserForm: typeof import('./src/components/pages/user/UserForm.vue')['default']
     UserSearch: typeof import('./src/components/pages/user/UserSearch.vue')['default']
     UserTable: typeof import('./src/components/pages/user/UserTable.vue')['default']
-    VehicleDetails: typeof import('./src/components/pages/vehicle/VehicleDetails.vue')['default']
     VehicleForm: typeof import('./src/components/pages/vehicle/VehicleForm.vue')['default']
     VehicleSearch: typeof import('./src/components/pages/vehicle/VehicleSearch.vue')['default']
     VehicleTable: typeof import('./src/components/pages/vehicle/VehicleTable.vue')['default']
