@@ -4,7 +4,7 @@
       <BaseButtonRegister button-text="PDF"  button-icon="mdi-printer" :loading="clickPrint" @register="handleExportToPdf"/>
     </div>
     <div ref="listRef" class="p-5 flex flex-col justify-between min-w-320">
-      <div class="h-[1700px]">
+      <div class="min-h-[1700px]">
         <div class="flex items-center w-full m-4 relative">
           <div class="absolute w-20">
             <img src="@/assets/images/brasao.svg" alt="Logo da prefeitura de itaguaçu da bahia">
@@ -83,8 +83,21 @@ const tableRows = computed(() => {
     return rows;
 })
 
+const columns = ['Nº', 'Passageiro', 'Celular', 'Presença'];
+const travelInfo = {
+  city: props.data.city,
+  date: formatLongDate(props.data.date),
+  title: 'Controle de Embarque',
+  signature:  props.data.driver,
+  signatureSubtitle: props.data.vehicle
+}
+const fileInfo = {
+  docX: 105,
+  fileName: `Controle de Embarque - ${formatLongDate(props.data.date)} - ${props.data.city}`,
+  orientation: 'portrait'
+}
 const handleExportToPdf = () => {
-  exportToPDF(listRef.value);
+  exportToPDF(columns, travelInfo, fileInfo);
 }
 </script>
 

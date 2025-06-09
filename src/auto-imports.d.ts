@@ -63,7 +63,7 @@ declare global {
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useDownloadFile: typeof import('./composables/utils/useDownloadFile.js')['useDownloadFile']
-  const useExportToPdf: typeof import('./composables/utils/useExportToPdf.js')['useExportToPdf']
+  const useExportToPdf: typeof import('./composables/utils/useExportToPdf')['useExportToPdf']
   const useFormatCns: typeof import('./composables/utils/useFormatCns.js')['useFormatCns']
   const useFormatCpf: typeof import('./composables/utils/useFormatCpf.js')['useFormatCpf']
   const useFormatDate: typeof import('./composables/utils/useFormatDate.js')['useFormatDate']
@@ -154,7 +154,7 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useDownloadFile: UnwrapRef<typeof import('./composables/utils/useDownloadFile.js')['useDownloadFile']>
-    readonly useExportToPdf: UnwrapRef<typeof import('./composables/utils/useExportToPdf.js')['useExportToPdf']>
+    readonly useExportToPdf: UnwrapRef<typeof import('./composables/utils/useExportToPdf')['useExportToPdf']>
     readonly useFormatCpf: UnwrapRef<typeof import('./composables/utils/useFormatCpf.js')['useFormatCpf']>
     readonly useFormatDate: UnwrapRef<typeof import('./composables/utils/useFormatDate.js')['useFormatDate']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>

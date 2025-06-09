@@ -116,9 +116,22 @@ const tableRows = computed(() => {
     });
     return rows;
 })
+const columns = ['Nº', 'Passageiro', 'SUS', 'Motivo', 'Instituição', 'Data da Consulta', 'Hora da Consulta', 'Celular', 'Endereço' ]
+const travelInfo = {
+  city: props.data.city,
+  date: `${formatLongDate(props.data.date)} - ${props.data.time}h`,
+  title: `Motorista: ${props.data.driver } - ${props.data.vehicle}`,
+  signature:  props.data.driver,
+  signatureSubtitle: props.data.vehicle
 
+}
+const fileInfo = {
+  docX: 148,
+  fileName: `Controle de Passageiros - ${formatLongDate(props.data.date)}`,
+  orientation: 'landscape',
+}
 const handleExportToPdf = () => {
-  exportToPDF(listRef.value);
+  exportToPDF(columns, travelInfo, fileInfo);
 }
 </script>
 
