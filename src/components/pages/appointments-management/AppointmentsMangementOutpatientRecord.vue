@@ -91,11 +91,11 @@ const printSection = ref(null);
 
 const { formatDate } = useFormatDate();
 const { calculateAge } = useCalculateAge();
-const { exportToPDF, clickPrint } = useExportToPdf();
+const { exportToImagePDF, clickPrint } = useExportToPdf();
 const emit = defineEmits(['close']);
 
 const handleExportToPDF = () => {
-  exportToPDF(printSection.value);
+  exportToImagePDF(printSection.value);
 }
 const genderMap = (value) => {
   const gender = {
