@@ -1,6 +1,6 @@
 <template>
   <span>
-  {{ label }}:
+  {{ `${label}:` }}
   </span>
   <div class="flex-grow border-b border-gray-300 pl-1"> {{ value }}</div>
 </template>

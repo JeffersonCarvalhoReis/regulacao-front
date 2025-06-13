@@ -6,6 +6,7 @@
           <div class="flex gap-10">
             <div>
               <div>Paciente: {{ props.appointmentData.solicitation.patient }}</div>
+              <div>Mãe: {{ props.appointmentData.solicitation.patient_mother_name }}</div>
               <div>Data de Nascimento: {{ formatDate(props.appointmentData.solicitation.patient_birth_date) }}</div>
               <div>Idade: {{ calculateAge(props.appointmentData.solicitation.patient_birth_date) }}</div>
               <div>CPF: {{ props.appointmentData.solicitation.patient_cpf }}</div>

@@ -4,6 +4,7 @@
       <BaseSection>
         <InfoGroup title="Dados do paciente">
           <div>Paciente: {{ props.solicitationData.patient }}</div>
+          <div>Mãe: {{ props.solicitationData.patient_mother_name }}</div>
           <div>Data de Nascimento: {{ formatDate(props.solicitationData.patient_birth_date) }}</div>
           <div>Idade: {{ calculateAge(props.solicitationData.patient_birth_date) }}</div>
           <div>CPF: {{ props.solicitationData.patient_cpf }}</div>
