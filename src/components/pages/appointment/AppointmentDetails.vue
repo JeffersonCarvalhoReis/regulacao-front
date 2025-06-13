@@ -113,14 +113,6 @@
           Baixar
           <v-tooltip activator="parent">Baixar</v-tooltip>
         </v-btn>
-        <v-btn
-        prepend-icon="mdi-printer"
-        color="success"
-        @click="handlePrint"
-      >
-        Imprimir
-        <v-tooltip activator="parent">Imprimir</v-tooltip>
-      </v-btn>
     </div>
     </BaseCard>
 </v-dialog>
@@ -137,7 +129,7 @@
   });
 
   const { formatDate } = useFormatDate();
-  const { printContent, adjustIframeContent } = usePrintIframe();
+  const { adjustIframeContent } = usePrintIframe();
   const { downloadFile } = useDownloadFile();
   const { booleanToLabel } = useBooleanLabel();
   const { calculateAge } = useCalculateAge();
@@ -163,9 +155,6 @@
     return statusMap[status] || 'Desconhecido'
   }
 
-  const handlePrint = ()  => {
-    printContent(attachmentRef)
-  };
   const handleAdjustIframeContent = () => {
     adjustIframeContent(attachmentRef)
   };
