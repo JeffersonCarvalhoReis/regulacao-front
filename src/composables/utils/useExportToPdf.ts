@@ -88,7 +88,7 @@ const exportToPDF = async (columnsRef, travelInfo, fileInfo) => {
       tableLineColor: [0, 0, 0],
   });
 
-  const finalY =  doc.lastAutoTable?.finalY ;
+  const finalY =  doc.lastAutoTable?.finalY;
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const lineWidth = 100; // largura da linha da assinatura
