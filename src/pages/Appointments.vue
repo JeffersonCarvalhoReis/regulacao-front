@@ -44,6 +44,7 @@
 };
   const submitFilters = async val => {
     appointmentTableRef.value?.setFilter('', val);
+    appointmentTableRef.value?.filterExport('', val);
     badgeCounter.value = countNotNullKeys(val);
 
     appointmentTableRef.value?.refetch();
