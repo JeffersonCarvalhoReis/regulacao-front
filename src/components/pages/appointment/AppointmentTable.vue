@@ -3,6 +3,12 @@
     <appointment-search @search-appointment="search" @search-appointment-status="searchStatus">
       <slot />
     </appointment-search>
+    <div>
+      <v-btn @click="handleExportAppointments">
+        Exportar Planilha
+
+      </v-btn>
+    </div>
     <v-tabs
         v-model="tab"
         class="bg-white border-t border-x border-gray-200"
@@ -99,6 +105,7 @@
 <script setup>
   import { useAppointmentApi } from '@/composables/modules/useAppointmentModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+  import { useAppointmentExportApi } from '@/composables/modules/useAppointmentExportModule';
   import debounce from 'lodash/debounce'
 
   const props = defineProps({
@@ -107,7 +114,8 @@
 
   });
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, destroy, clearFilters, setSort, update } = useAppointmentApi();
-  const { showFeedback, confirmModal } = useSweetAlertFeedback();
+  const { setFilter: filterExport, exportAppointments, setSort: sortExport, clearFilters: clearFiltersExport } = useAppointmentExportApi();
+  const { showFeedback, confirmModal, showFeedbackLoading } = useSweetAlertFeedback();
   const { formatDate } = useFormatDate();
   const options = ref({});
   const viewAppointmentDetails = ref(false);
@@ -129,9 +137,17 @@
 
   const clearFiltersTab = () => {
     clearFilters();
+    clearFiltersExport();
     setFilter('solicitation_type', tab.value)
+    filterExport('solicitation_type', tab.value)
     setSort('-updated_at')
+    sortExport('-updated_at')
   }
+
+  const handleExportAppointments = async () => {
+    await showFeedbackLoading(() => exportAppointments())
+  }
+
   const handleDelete = async appointment => {
     const confirm = await confirmModal(`Tem certeza que deseja cancelar o agendamento do paciente <strong>${appointment.patient}</strong>?`, 'Atenção');
     if(confirm) {
@@ -146,7 +162,6 @@
   };
 
   const submit = async appointment => {
-
     await showFeedback(() => update(appointment.id, appointment));
     refetch();
     editAppointment.value = false
@@ -154,11 +169,13 @@
 
   const search = debounce(async v => {
     setFilter('search', v);
+    filterExport('search', v)
     await nextTick()
     refetch();
   }, 500);
   const searchStatus = async v => {
     setFilter('status', v);
+    filterExport('status', v);
     await nextTick()
     refetch();
   };
@@ -170,6 +187,7 @@
 
   const handleWatch = debounce(async () => {
     setFilter('solicitation_type', tab.value)
+    filterExport('solicitation_type', tab.value)
     await nextTick()
     setTableOptions(options.value)
     refetch()
@@ -264,6 +282,7 @@
 
   defineExpose({
     setFilter,
+    filterExport,
     refetch,
     clearFiltersTab,
   });
