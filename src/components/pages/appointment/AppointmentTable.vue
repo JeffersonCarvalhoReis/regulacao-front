@@ -3,8 +3,8 @@
     <appointment-search @search-appointment="search" @search-appointment-status="searchStatus">
       <slot />
     </appointment-search>
-    <div>
-      <v-btn @click="handleExportAppointments">
+    <div class="text-right ">
+      <v-btn class="m-2 bg-ita-green hover:bg-green-600 text-white" prepend-icon="mdi-microsoft-excel" @click="handleExportAppointments">
         Exportar Planilha
 
       </v-btn>
