@@ -59,6 +59,18 @@
           label="Médico responsável"
           variant="outlined"
         />
+        <v-select
+          v-if="isEditing"
+          v-model="status"
+          class="col-span-1"
+          density="compact"
+          :error-messages="errors.status"
+          item-title="label"
+          item-value="value"
+          :items="AppointmentStatus"
+          label="Status de Agendamento"
+          variant="outlined"
+        />
         </div>
       </v-form>
     </v-card-text>
@@ -113,6 +125,11 @@
         time.value = digits
       }
     };
+    const AppointmentStatus = [
+        { value: 'scheduled', label: 'Agendado'},
+        { value: 'not-present', label: 'Não compareceu'},
+        { value: 'realized', label: 'Realizado'},
+    ]
 
   onMounted(async () => {
     providerUnitParams.value.per_page = -1;
@@ -163,6 +180,7 @@
     }),
     provider_unit_id: yup.number().required('Unidade prestadora é obrigatório'),
     doctor_id: yup.number().nullable(),
+    status: yup.string().nullable()
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
@@ -180,6 +198,7 @@
   const { value: time } = useField('time');
   const { value: provider_unit_id } = useField('provider_unit_id');
   const { value: doctor_id } = useField('doctor_id');
+  const { value: status } = useField('status');
 
   const onSubmit = handleSubmit(values => {
     emit('save', values)

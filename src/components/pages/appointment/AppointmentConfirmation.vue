@@ -37,8 +37,9 @@
 
             <strong>Dados do Paciente:</strong><br>
             <hr>
-            <strong> Nome: </strong><span class="uppercase">{{ props.appointmentData.patient }}</span><br>
+            <strong>Nome: </strong><span class="uppercase">{{ props.appointmentData.patient }}</span><br>
             <strong>CNS: </strong>{{ props.appointmentData.solicitation.patient_cns }}<br>
+            <strong>ACS: </strong><span class="uppercase">{{ props.appointmentData.solicitation.health_agent}}</span><br>
             <strong>Data de Nasc.: </strong>{{ formatDate(props.appointmentData.solicitation.patient_birth_date) }}<br>
             <strong>Celular: </strong>{{ props.appointmentData.solicitation.patient_phone }}<br>
             <strong>Endereço: </strong><span class="uppercase">{{ props.appointmentData.solicitation.patient_street }} - {{ props.appointmentData.solicitation.patient_neighborhood }}</span><br>
@@ -61,10 +62,10 @@
 
             <strong v-if="props.appointmentData.doctor">Médico: </strong> <span class="uppercase">{{ props.appointmentData.doctor }}</span><br>
             <div v-if="isExam">
-              <strong>Procedimento:</strong> <span class="uppercase tracking-widest">{{ props.appointmentData.procedure}}</span><br>
+              <strong>Procedimento:</strong> <span class="uppercase">{{ props.appointmentData.procedure}}</span><br>
             </div>
             <div v-else>
-              <strong>Especialidade: </strong> <span class="uppercase tracking-widest">{{ props.appointmentData.specialist}}</span><br>
+              <strong>Especialidade: </strong> <span class="uppercase">{{ props.appointmentData.specialist}}</span><br>
             </div>
             <p><strong>Recomendações:</strong> <span class="uppercase whitespace-break-spaces">{{ recomendation }}</span></p>
           </div>
@@ -103,6 +104,7 @@ const printConfirmation = () => {
   if (!printContent) return;
 
   const clonedContent = printContent.cloneNode(true);
+  const splittedContent = clonedContent.querySelector('.leading-6').innerHTML.split('<hr>').slice(1, 7).join('<hr>')
 
   const printWindow = window.open('', '_blank', 'width=800,height=600');
 
@@ -127,7 +129,7 @@ const printConfirmation = () => {
             margin-bottom: 20px;
           }
           .header img {
-            width: 80px;
+            width: 70px;
             margin-right: 20px;
           }
           .header div {
@@ -150,9 +152,10 @@ const printConfirmation = () => {
             letter-spacing: 1px;
           }
           .info-block {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             line-height: 1.6;
           }
+
           @media print {
             @page {
               margin: 0;
@@ -193,10 +196,10 @@ const printConfirmation = () => {
           </div>
         </div>
         <hr>
-        <div class="info-block text-spacing text-uppercase">
-          ${clonedContent.querySelector('.leading-6').innerHTML.split('<hr>').slice(1, 7).join('<hr>')}
+        <div class="info-block mb">
+          ${splittedContent}
         </div>
-
+        <hr>
         <script>
           window.onload = function() {
             window.print();
