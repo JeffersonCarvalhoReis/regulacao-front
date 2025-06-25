@@ -1,8 +1,10 @@
 <template>
-  <span>
-  {{ `${label}:` }}
-  </span>
-  <div class="flex-grow border-b border-gray-300 pl-1"> {{ value }}</div>
+  <span class="whitespace-nowrap">{{ `${label}:` }}</span>
+    <div
+      class="flex-grow pl-1 text-sm leading-[1.5rem] bg-[linear-gradient(to_bottom,transparent_calc(100%-1px),#6b7280_calc(100%-1px))] bg-[length:100%_1.5rem] bg-repeat-y"
+    >
+      {{ value }}
+    </div>
 </template>
 
 <script setup>

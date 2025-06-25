@@ -65,13 +65,13 @@
             <LabeledLine label="Data da Consulta" :value="formatDate(appointmentData.date)" />
           </LabeledLineGroup>
         </div>
-        <div class="border border-gray-300 p-0 w-full flex flex-col">
-          <div class="p-2 bg-blue-300 w-full flex justify-center border-b border-gray-300">
+        <div class="border border-gray-500 p-0 w-full flex flex-col">
+          <div class="p-2 bg-blue-300 w-full flex justify-center border-b border-gray-500">
             <div class="uppercase font-bold">
               Anamnese/Exame Físico/Sus. Diagnóstica
             </div>
           </div>
-          <div v-for="i in 35" :key="i" class="border-b border-gray-300 h-6"></div>
+          <div v-for="i in 35" :key="i" class="border-b border-gray-500 h-6"></div>
         </div>
       </div>
     </div>

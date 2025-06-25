@@ -48,6 +48,24 @@
         <template #item.appointment_time="{ item }">
     <span class="lowercase">{{ `${item.appointment_time}h` }}</span>
     </template>
+    <template #item.command="{ item }">
+        <v-tooltip
+          text="Ver Comanda"
+        >
+          <template #activator="{ props }">
+            <v-btn
+              v-bind="props"
+              class="text-ita-green bg-white/0 border-0 ml-1 h-full"
+              divided
+              variant="outlined"
+              icon
+              @click="handleOpenCommand(item)"
+            >
+              <v-icon> mdi-text-box</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
+    </template>
   </base-table>
   </base-card>
   <v-dialog
@@ -88,6 +106,12 @@
   >
   <TravelChangePassengerDate @close="dialogChangeTravel = false" :patientData="selectedPassengers" :travelId="props.travelData.id" @reload=" handleReload" />
   </v-dialog>
+  <v-dialog
+    v-model="dialogCommand"
+    class="z-999"
+  >
+  <TravelPassengerCommand @close="dialogCommand = false" :patientData="selectedPassengers"  />
+  </v-dialog>
 </template>
 
 <script setup>
@@ -97,6 +121,7 @@
   import TravelPassengerCheckInList from './TravelPassengerCheckInList.vue';
   import TravelPassengerControl from './TravelPassengerControl.vue';
   import TravelChangePassengerDate from './TravelChangePassengerDate.vue';
+import TravelPassengerCommand from './TravelPassengerCommand.vue';
 
   const props = defineProps({
     travelData: { type: Object, default: () => ({}) },
@@ -115,6 +140,7 @@
   const dialogPassengerControl = ref(false);
   const dialogPassengerDailyControl = ref(false);
   const dialogChangeTravel = ref(false);
+  const dialogCommand = ref(false);
   const changeTravelIcon = 'mdi-swap-horizontal';
   const changeTravelClass = 'text-ita-yellow bg-white/0 border-0 ml-1 h-full';
   const changeTravelText = 'Trocar Data da Viagem'
@@ -134,6 +160,11 @@
   const handleReload = () => {
     emit('refresh', props.travelData.id);
     dialogChangeTravel.value = false;
+  }
+
+  const handleOpenCommand = (v) => {
+    dialogCommand.value = true;
+    selectedPassengers.value = v
   }
 
   const updatePassengers = async values => {
@@ -160,7 +191,7 @@
         title: 'Detalhes',
         value: 'view',
         align: 'left',
-        width: '200px',
+        width: '100px',
       },
       {
         title: 'Nome',
@@ -182,10 +213,15 @@
         sortable: false,
         align: 'center',
       },
-
       {
         title: 'Horário da Consulta',
         key: 'appointment_time',
+        sortable: false,
+        align: 'center',
+      },
+      {
+        title: 'Comanda',
+        key: 'command',
         sortable: false,
         align: 'center',
       },
