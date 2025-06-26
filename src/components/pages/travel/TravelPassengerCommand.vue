@@ -51,8 +51,8 @@
                 <LabeledLine label="SUS" :value="patientData.cns"/>
               </LabeledLineGroup>
               <LabeledLineGroup>
-                <LabeledLine label="Data da Entrada" />
-                <LabeledLine label="Data da Saída" />
+                <LabeledLine label="Data da Entrada" :value="datePaceholder"/>
+                <LabeledLine label="Data da Saída" :value="datePaceholder"/>
               </LabeledLineGroup>
               <LabeledLineGroup>
               <LabeledLine label="Valor em R$"/>
@@ -63,8 +63,8 @@
               <p>Obs.: A Prefeitura não se responsabiliza pela permanência de pessoas nessa pousada sem a devida autorização</p>
               <div class="grid grid-cols-2 gap-x-16 text-center mt-8">
                 <div class="border-b border-gray-500 pl-1"></div>
-                <LabeledLineGroup>
-                  <LabeledLine label="Data"/>
+                <LabeledLineGroup class="text-left">
+                  <LabeledLine label="Data" :value="datePaceholder"/>
                 </LabeledLineGroup>
                 <span>Serviço Social</span>
               </div>
@@ -84,6 +84,7 @@
   const { exportToImagePDF, clickPrint } = useExportToPdf();
 
   const printSection = ref(null);
+  const datePaceholder = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
 
   const handleExportToPDF = () => {
     exportToImagePDF(printSection.value, 2);

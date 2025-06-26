@@ -2,9 +2,10 @@
   <!-- <v-layout> -->
     <v-navigation-drawer
       v-model="drawer"
-      class="border-r border-gray-200 bg-slate-100 z-10 pb-6"
+      class="border-r border-gray-200 bg-slate-100 pb-6 "
       expand-on-hover
       flat
+      @update:modelValue="val => { if (!val) emit('close') }"
       :mobile-breakpoint="768"
       :rail="$vuetify.display.width >= 768"
     >
@@ -197,8 +198,20 @@
 
   const meStore = useMeStore();
   const role = meStore.role
-  const drawer = ref(false);
+  const drawer = ref(true);
 
+  const props = defineProps({
+    open: {
+      type: Boolean,
+      default: true
+    }
+  });
+
+  const emit = defineEmits(['close']);
+
+  watch(() => props.open, (val) => {
+    drawer.value = val;
+  });
   onMounted(() => {
     if (window.innerWidth >= 768) {
       drawer.value = true;
@@ -218,5 +231,9 @@
 .v-navigation-drawer.v-navigation-drawer--is-hovering * {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+}
+
+:deep(.v-navigation-drawer__scrim) {
+  z-index: 9 !important;
 }
 </style>
