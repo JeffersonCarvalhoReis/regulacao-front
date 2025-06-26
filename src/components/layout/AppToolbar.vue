@@ -8,7 +8,7 @@
     <v-btn
       class="md:hidden"
       icon
-      @click="emit('menu')"
+      @click="openMenu = true"
     >
       <v-icon> mdi-menu</v-icon>
     </v-btn>
@@ -62,7 +62,7 @@
       </v-list>
     </v-menu>
   </v-app-bar>
-  <app-menu />
+  <app-menu :open="openMenu" @close="openMenu = false" />
 
   <v-main class="overflor-hidden">
       <v-container fluid>
@@ -82,6 +82,7 @@
   const meStore = useMeStore();
   const route = useRoute();
   const router = useRouter();
+  const openMenu = ref(false);
   const role = computed(() => meStore.role);
   const userName = computed(() => meStore.user);
 
