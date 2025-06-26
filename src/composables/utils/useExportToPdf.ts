@@ -115,7 +115,7 @@ const exportToPDF = async (columnsRef, travelInfo, fileInfo) => {
   }, 3000)
 };
 
- const exportToImagePDF = async (printSection) => {
+ const exportToImagePDF = async (printSection, times = 1) => {
     const element = printSection;
     clickPrint.value = true
 
@@ -124,7 +124,7 @@ const exportToPDF = async (columnsRef, travelInfo, fileInfo) => {
       const pdf = newPDF();
 
       img.onload = () => {
-        const page = pageAdjustment(img, pdf);
+        const page = pageAdjustment(img, pdf, times);
         const blob = page.output('blob');
         const blobUrl = URL.createObjectURL(blob);
         window.open(blobUrl, '_blank');
@@ -153,7 +153,7 @@ const newPDF = () => {
     });
   }
 
-const pageAdjustment = (img, pdf) => {
+const pageAdjustment = (img, pdf, times = 1) => {
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
       const imgProps = pdf.getImageProperties(img.src);
@@ -177,9 +177,12 @@ const pageAdjustment = (img, pdf) => {
 
       // Centraliza a imagem
       const x = (pageWidth - imgWidth) / 2;
-      const y = 10
+      let y = 10
+      for (let index = 0; index < times; index++) {
+       pdf.addImage(img.src, 'PNG', x, y, imgWidth, imgHeight);
+       y += imgHeight + 20;
+      }
 
-      pdf.addImage(img.src, 'PNG', x, y, imgWidth, imgHeight);
 
       return pdf;
   }

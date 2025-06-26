@@ -114,6 +114,7 @@ declare module 'vue' {
     TravelDetails: typeof import('./src/components/pages/travel/TravelDetails.vue')['default']
     TravelForm: typeof import('./src/components/pages/travel/TravelForm.vue')['default']
     TravelPassengerCheckInList: typeof import('./src/components/pages/travel/TravelPassengerCheckInList.vue')['default']
+    TravelPassengerCommand: typeof import('./src/components/pages/travel/TravelPassengerCommand.vue')['default']
     TravelPassengerControl: typeof import('./src/components/pages/travel/TravelPassengerControl.vue')['default']
     TravelPassengerDailyControl: typeof import('./src/components/pages/travel/TravelPassengerDailyControl.vue')['default']
     TravelPassengerDetails: typeof import('./src/components/pages/travel/TravelPassengerDetails.vue')['default']
