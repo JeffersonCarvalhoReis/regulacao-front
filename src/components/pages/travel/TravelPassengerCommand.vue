@@ -44,6 +44,9 @@
                 <LabeledLine label="Cidade" value="Itaguaçu da Bahia"/>
               </LabeledLineGroup>
               <LabeledLineGroup>
+                <LabeledLine label="Hospital" :value="patientData.hospital_name"/>
+              </LabeledLineGroup>
+              <LabeledLineGroup>
                 <LabeledLine label="Motivo do Tratamento" :value="patientData.notes"/>
               </LabeledLineGroup>
               <LabeledLineGroup>
