@@ -15,6 +15,7 @@
           <div>Motorista: <span :class="textTransform">{{ props.travelData.driver }}</span></div>
           <div>Veículo: <span :class="textTransform">{{ props.travelData.vehicle }}</span></div>
           <div>Quantidade de passageiros: {{ props.travelData.quantity_passengers }}</div>
+          <div>Quantidade de assentos ocupados: {{ occupiedSeats()}}</div>
         </InfoGroup>
       </BaseSection>
 
@@ -130,7 +131,7 @@
   const { data: companionData, refetch: companionFetch, params: companionParams } = useCompanionApi();
   const { data: hospitalData, refetch: hospitalFetch, params: hospitalParams,  clearFilters } = useHospitalApi();
   const { formatDate } = useFormatDate();
-  const { calculateAge } = useCalculateAge();
+  const { calculateAge, ageLabel } = useCalculateAge();
   const { onlyNumbers } = useOnlyNumbers();
   const isEditing = computed(() => !!props.modelValue?.id);
 
@@ -203,6 +204,17 @@
       appointment_time.value = digits
     }
   };
+  const occupiedSeats = () => {
+    const patients = props.travelData.patients;
+    let infant = 0
+
+    patients.forEach(patient => {
+      const result = ageLabel(patient.birth_date)
+      if(result == 'Criança de colo') infant++
+    });
+    return props.travelData.quantity_passengers - infant;
+  }
+
 
 watch(patient_id, (newId) => {
   if (!newId) return;

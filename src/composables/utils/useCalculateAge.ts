@@ -1,5 +1,5 @@
 export function useCalculateAge() {
-  const calculateAge = (birthDateString, deathDateString = null) => {
+  const calculateAge = (birthDateString: string, deathDateString = null) => {
     const today = deathDateString ? new Date(deathDateString) : new Date();
     const birthDate = new Date(birthDateString);
 
@@ -29,6 +29,12 @@ export function useCalculateAge() {
     }
 
     // 1 ano ou mais
+    const years = ageInYears(today, birthDate);
+
+    return years === 1 ? '1 ano' : `${years} anos`;
+  };
+
+  const ageInYears = (today: Date, birthDate: Date) => {
     let years = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     const d = today.getDate() - birthDate.getDate();
@@ -37,10 +43,20 @@ export function useCalculateAge() {
       years--;
     }
 
-    return years === 1 ? '1 ano' : `${years} anos`;
-  };
+    return years;
+  }
 
+  const ageLabel = (birthDateString: string) => {
+    const today = new Date();
+    const birthDate = new Date(birthDateString);
+    const years = ageInYears(today, birthDate);
+
+    if(years <= 4) return 'Criança de colo';
+    if(years < 18) return 'Menor de idade';
+    return null
+  }
   return {
+    ageLabel,
     calculateAge
   };
 }
