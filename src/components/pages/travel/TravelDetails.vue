@@ -20,6 +20,7 @@
           <div>Motorista: <span :class="textTransform">{{ props.travelData.driver }}</span></div>
           <div>Veículo: <span :class="textTransform">{{ props.travelData.vehicle }}</span></div>
           <div>Quantidade de passageiros: {{ props.travelData.quantity_passengers }}</div>
+          <div>Quantidade de assentos ocupados: {{ occupiedSeats()}}</div>
         </InfoGroup>
       </BaseSection>
     </v-card-text>
@@ -39,6 +40,9 @@
       @delete-item="handleRemovePassenger"
       @view-item="handleView"
     >
+    <template #item.name="{ item }">
+          {{ `${item.name }${ageStringLabel(item.birth_date)}` }}
+    </template>
     <template #item.companion_name="{ item }">
           {{ item.companion_name ? item.companion_name : 'Sem Acompanhante' }}
     </template>
@@ -121,7 +125,7 @@
   import TravelPassengerCheckInList from './TravelPassengerCheckInList.vue';
   import TravelPassengerControl from './TravelPassengerControl.vue';
   import TravelChangePassengerDate from './TravelChangePassengerDate.vue';
-import TravelPassengerCommand from './TravelPassengerCommand.vue';
+  import TravelPassengerCommand from './TravelPassengerCommand.vue';
 
   const props = defineProps({
     travelData: { type: Object, default: () => ({}) },
@@ -130,6 +134,7 @@ import TravelPassengerCommand from './TravelPassengerCommand.vue';
   const { formatDate } = useFormatDate();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
   const { updateCompanion, destroy: removePassenger } = useAddPassengerApi();
+  const { ageLabel } = useCalculateAge();
 
   const title = 'Viagem Agendada'
   const textTransform = 'uppercase'
@@ -143,7 +148,24 @@ import TravelPassengerCommand from './TravelPassengerCommand.vue';
   const dialogCommand = ref(false);
   const changeTravelIcon = 'mdi-swap-horizontal';
   const changeTravelClass = 'text-ita-yellow bg-white/0 border-0 ml-1 h-full';
-  const changeTravelText = 'Trocar Data da Viagem'
+  const changeTravelText = 'Trocar Data da Viagem';
+
+  const ageStringLabel = (date) => {
+    const stringLabel = ageLabel(date);
+    if(!stringLabel) return '';
+    return ` - ${stringLabel}`
+  }
+
+  const occupiedSeats = () => {
+    const patients = props.travelData.patients;
+    let infant = 0
+
+    patients.forEach(patient => {
+      const result = ageLabel(patient.birth_date)
+      if(result == 'Criança de colo') infant++
+    });
+    return props.travelData.quantity_passengers - infant;
+  }
 
   const handleView = (v) => {
     passengerDetails.value = true
