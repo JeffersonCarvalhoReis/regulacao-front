@@ -42,6 +42,7 @@
     { value: 'scheduled', label: 'Agendados'},
     { value: 'not-present', label: 'Não comparecidos'},
     { value: 'realized', label: 'Realizados'},
+    { value: 'pending', label: 'Pendentes'},
     ]
 
 </script>

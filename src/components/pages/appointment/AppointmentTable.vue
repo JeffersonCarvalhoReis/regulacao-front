@@ -47,6 +47,9 @@
           <template #item.date="{ item }">
           {{ formatDate(item.date) }}
         </template>
+        <template #item.action="{ item }" >
+          {{item.status}}
+          </template>
         </base-table>
 
       </v-tabs-window-item>

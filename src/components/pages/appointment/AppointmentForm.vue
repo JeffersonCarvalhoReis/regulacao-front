@@ -129,6 +129,7 @@
         { value: 'scheduled', label: 'Agendado'},
         { value: 'not-present', label: 'Não compareceu'},
         { value: 'realized', label: 'Realizado'},
+        { value: 'pending', label: 'Pendente'},
     ]
 
   onMounted(async () => {

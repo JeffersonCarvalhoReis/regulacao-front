@@ -45,92 +45,94 @@
       </template>
       <!-- Actions Column -->
       <template #item.action="{ item }">
-        <v-btn-group
-          divided
-          variant="outlined"
-        >
-        <div v-if="handleConditionalAction(item)">
-          <v-tooltip
-            v-if="newAction"
-            :text="textNewAction"
+        <slot name="item.action" :item="item">
+          <v-btn-group
+            divided
+            variant="outlined"
           >
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                :class="currentStatus(item) ? 'text-slate-500 border-0 ml-1 h-full' : classNewAction"
-                :disabled="currentStatus(item)"
-                icon
-                @click.stop="selectItemNewAction(item)"
-              >
-                <v-icon>{{ currentStatus(item) ? 'mdi-account-off' : iconNewAction }}</v-icon>
-              </v-btn>
+          <div v-if="handleConditionalAction(item)">
+            <v-tooltip
+              v-if="newAction"
+              :text="textNewAction"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  :class="currentStatus(item) ? 'text-slate-500 border-0 ml-1 h-full' : classNewAction"
+                  :disabled="currentStatus(item)"
+                  icon
+                  @click.stop="selectItemNewAction(item)"
+                >
+                  <v-icon>{{ currentStatus(item) ? 'mdi-account-off' : iconNewAction }}</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+          </div>
+          <div v-if="handleConditionalActionNot(item)">
+            <template
+             v-if="edit"
+            >
+              <span>
+                <v-btn
+                  v-if="(item?.role != 'admin')"
+                  v-bind="props"
+                  :disabled="!(deletable || item.deletable || editOn)"
+                  :class="item.deletable || deletable || editOn ? classEdit : 'text-slate-500 border-0  ml-1 h-full'"
+                  icon
+                  @click.stop="selectItem(item)"
+                >
+                    <v-icon>
+                      {{ item.deletable || deletable  || editOn ? iconEdit : 'mdi-pencil-off' }}
+                    </v-icon>
+                </v-btn>
+                <v-tooltip
+                 activator="parent"
+                >
+
+                    {{ item.deletable || deletable || editOn ? textEdit : 'Não é possível editar' }}
+                </v-tooltip>
+              </span>
             </template>
-          </v-tooltip>
-        </div>
-        <div v-if="handleConditionalActionNot(item)">
-          <template
-           v-if="edit"
-          >
-            <span>
-              <v-btn
-                v-if="(item?.role != 'admin')"
-                v-bind="props"
-                :disabled="!(deletable || item.deletable || editOn)"
-                :class="item.deletable || deletable || editOn ? classEdit : 'text-slate-500 border-0  ml-1 h-full'"
-                icon
-                @click.stop="selectItem(item)"
-              >
-                  <v-icon>
-                    {{ item.deletable || deletable  || editOn ? iconEdit : 'mdi-pencil-off' }}
-                  </v-icon>
-              </v-btn>
-              <v-tooltip
-               activator="parent"
-              >
-
-                  {{ item.deletable || deletable || editOn ? textEdit : 'Não é possível editar' }}
-              </v-tooltip>
-            </span>
-          </template>
-        </div>
+          </div>
 
 
-          <v-tooltip
-            v-if="register"
-            text="Cadastrar"
-          >
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                class="text-green-600 bg-white/0order-0"
-                icon
-                size="large"
-                @click.stop="selectItemRegister(item)"
-              >
-                <v-icon>{{ iconRegister }}</v-icon>
-              </v-btn>
+            <v-tooltip
+              v-if="register"
+              text="Cadastrar"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  class="text-green-600 bg-white/0order-0"
+                  icon
+                  size="large"
+                  @click.stop="selectItemRegister(item)"
+                >
+                  <v-icon>{{ iconRegister }}</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+            <template v-if="showDelete">
+              <span>
+                <v-btn
+                  v-if="(item?.role != 'admin') || (role == 'super admin')"
+                  :class="item.deletable || deletable ? chooseClassDelete(item?.status) : 'text-slate-500 border-0 ml-1 h-full'"
+                  :disabled="!(deletable || item.deletable)"
+                  icon
+                  @click="selectItemDelete(item)"
+                >
+                  <v-icon>{{ item.deletable || deletable ? chooseIconDelete(item?.status, iconDelete)  : 'mdi-delete-off' }}</v-icon>
+                </v-btn>
+
+                <v-tooltip
+                  activator="parent"
+                >
+                  {{ item.deletable || deletable ? chooseTextDelete(item?.status, textDelete) : tooltipTextDelete }}
+                </v-tooltip>
+              </span>
             </template>
-          </v-tooltip>
-          <template v-if="showDelete">
-            <span>
-              <v-btn
-                v-if="(item?.role != 'admin') || (role == 'super admin')"
-                :class="item.deletable || deletable ? chooseClassDelete(item?.status) : 'text-slate-500 border-0 ml-1 h-full'"
-                :disabled="!(deletable || item.deletable)"
-                icon
-                @click="selectItemDelete(item)"
-              >
-                <v-icon>{{ item.deletable || deletable ? chooseIconDelete(item?.status, iconDelete)  : 'mdi-delete-off' }}</v-icon>
-              </v-btn>
-
-              <v-tooltip
-                activator="parent"
-              >
-                {{ item.deletable || deletable ? chooseTextDelete(item?.status, textDelete) : tooltipTextDelete }}
-              </v-tooltip>
-            </span>
-          </template>
-        </v-btn-group>
+          </v-btn-group>
+        </slot>
       </template>
 
       <!-- No Data Slot -->

@@ -150,7 +150,8 @@
     const statusMap = {
       'scheduled' : 'Agendado',
       'realized' : 'Realizado',
-      'not-present' : 'Não Compareceu'
+      'not-present' : 'Não Compareceu',
+      'pending' : 'Pendente'
     }
     return statusMap[status] || 'Desconhecido'
   }
