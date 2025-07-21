@@ -48,7 +48,39 @@
           {{ formatDate(item.date) }}
         </template>
         <template #item.action="{ item }" >
-          {{item.status}}
+          <v-btn-group
+            divided
+            variant="outlined"
+          >
+          <v-tooltip
+              text="Aceitar"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  class="text-green-500 border-0 ml-1 h-full"
+                  flat
+                  icon
+                >
+                  <v-icon>mdi-check</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip
+              text="Recusar"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  class="text-red-500 border-0 ml-1 h-full"
+                  flat
+                  icon
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+            </v-btn-group>
           </template>
         </base-table>
 

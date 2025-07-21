@@ -45,7 +45,10 @@
       </template>
       <!-- Actions Column -->
       <template #item.action="{ item }">
-        <slot name="item.action" :item="item">
+        <template v-if="item.status === 'pending'">
+          <slot name="item.action" :item="item" />
+        </template>
+        <template v-else>
           <v-btn-group
             divided
             variant="outlined"
@@ -132,7 +135,7 @@
               </span>
             </template>
           </v-btn-group>
-        </slot>
+        </template>
       </template>
 
       <!-- No Data Slot -->
