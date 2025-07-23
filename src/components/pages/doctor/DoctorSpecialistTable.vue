@@ -1,18 +1,18 @@
 <template>
-    <base-table
-      class="rounted-t-none"
-      :headers="headers"
-      :items="specialistsReversed"
-      :loading="loadingList"
-      :show-delete="false"
-      :edit="false"
-      hide-default-footer
-      :newAction="true"
-      :iconNewAction="iconRemoveSpecialist"
-      :classNewAction="classRemoveSpecialist"
-      :textNewAction="textRemoveSpecialist"
-      @new-action="handleRemoveSpecialist"
-    />
+  <base-table
+    class="rounted-t-none"
+    :class-new-action="classRemoveSpecialist"
+    :edit="false"
+    :headers="headers"
+    hide-default-footer
+    :icon-new-action="iconRemoveSpecialist"
+    :items="specialistsReversed"
+    :loading="loadingList"
+    :new-action="true"
+    :show-delete="false"
+    :text-new-action="textRemoveSpecialist"
+    @new-action="handleRemoveSpecialist"
+  />
 </template>
 
 <script setup>
@@ -25,7 +25,7 @@
 
   const emit = defineEmits(['update-table']);
 
-  const {  loadingList, refetch, update } = useDoctorApi();
+  const { loadingList, refetch, update } = useDoctorApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const iconRemoveSpecialist = 'mdi-delete';
@@ -34,18 +34,18 @@
   const specialists = ref(props.modelValue.specialists);
   const specialistsReversed = computed(() => [...specialists.value].reverse());
 
-  const removeSpecialist = async (specialist) => {
+  const removeSpecialist = async specialist => {
     specialists.value = specialists.value.filter(s => s.id !== specialist.id);
     const specialistsToUpdate = {
-      specialist_ids: specialists.value.map(s => s.id)
+      specialist_ids: specialists.value.map(s => s.id),
     }
-    const response = await update(props.modelValue.id,  specialistsToUpdate );
+    const response = await update(props.modelValue.id, specialistsToUpdate );
     emit('update-table', specialistsToUpdate )
     return response;
   };
 
-const handleRemoveSpecialist = async (specialist) => {
-  const confirm = await confirmModal(`Tem certeza que deseja remover a especialidade <strong>${specialist.name}</strong> do médico <strong>${props.modelValue.name}</strong>?`, 'Atenção');
+  const handleRemoveSpecialist = async specialist => {
+    const confirm = await confirmModal(`Tem certeza que deseja remover a especialidade <strong>${specialist.name}</strong> do médico <strong>${props.modelValue.name}</strong>?`, 'Atenção');
     if(confirm) {
       await showFeedback(() => removeSpecialist(specialist)) ;
       refetch()
@@ -66,14 +66,14 @@ const handleRemoveSpecialist = async (specialist) => {
         value: 'action',
         width: '200px',
         align: 'center',
-      }
+      },
 
     ];
     return baseHeaders
   });
 
-  watch(() => props.modelValue, (newVal) => {
+  watch(() => props.modelValue, newVal => {
     specialists.value = newVal.specialists
 
-  }, { deep: true});
+  }, { deep: true });
 </script>

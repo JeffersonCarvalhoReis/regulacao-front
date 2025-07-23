@@ -15,8 +15,8 @@
           />
 
           <v-text-field
-            class="required"
             v-model="cns"
+            class="required"
             density="compact"
             :error-messages="errors.cns"
             label="CNS"
@@ -24,7 +24,7 @@
             placeholder="Número do cartão do SUS"
             variant="outlined"
             @keypress="onlyNumbers"
-           />
+          />
 
           <v-text-field
             v-model="mother_name"
@@ -63,8 +63,8 @@
             variant="outlined"
           />
           <v-select
-            class="required"
             v-model="race"
+            class="required"
             density="compact"
             :error-messages="errors.race"
             :items="raceOptions"
@@ -80,8 +80,8 @@
           />
 
           <v-text-field
-            class="required"
             v-model="phone"
+            class="required"
             density="compact"
             :error-messages="errors.phone"
             label="Telefone"
@@ -94,8 +94,8 @@
           />
 
           <v-autocomplete
-            class="required"
             v-model="health_agent_id"
+            class="required"
             density="compact"
             :error-messages="errors.health_agent_id"
             item-title="name"
@@ -106,8 +106,8 @@
           />
 
           <v-text-field
-            class="required"
             v-model="street"
+            class="required"
             density="compact"
             :error-messages="errors.street"
             label="Rua"
@@ -117,8 +117,8 @@
           />
 
           <v-text-field
-            class="col-span-2 required"
             v-model="neighborhood"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.neighborhood"
             label="Bairro"
@@ -135,12 +135,12 @@
             placeholder="Informações adicionais sobre o paciente"
             variant="outlined"
           />
-          <div class="flex gap-5" v-if="isEditing">
-          <v-checkbox
+          <div v-if="isEditing" class="flex gap-5">
+            <v-checkbox
               v-model="is_deceased"
-              label="Falecido"
               color="primary"
               density="compact"
+              label="Falecido"
             />
             <base-input-date-picker
               v-if="is_deceased"
@@ -230,11 +230,11 @@
     is_deceased: yup.boolean().nullable(),
     date_of_dead: yup.date()
       .when('is_deceased', {
-      is: true,
-      then: (schema) => schema
-      .required('Data do falecimento é obrigatória'),
-      otherwise: (schema) => schema.nullable()
-    })
+        is: true,
+        then: schema => schema
+          .required('Data do falecimento é obrigatória'),
+        otherwise: schema => schema.nullable(),
+      }),
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
@@ -264,7 +264,7 @@
     resetForm()
   }
 
-  watch(() => is_deceased.value, (newValue) => {
+  watch(() => is_deceased.value, newValue => {
     if(newValue && !props.modelValue.is_deceased) {
       date_of_dead.value = new Date();
     }

@@ -9,7 +9,7 @@
     v-model="registerProviderUnit"
     class="z-999"
   >
-    <provider-unit-form @close="registerProviderUnit = false" @save="submit"/>
+    <provider-unit-form @close="registerProviderUnit = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const providerUnitTableRef = ref(null);
 
 
-  const submit = async (providerUnit) => {
+  const submit = async providerUnit => {
     const success = await showFeedback(() => create(providerUnit));
     if (success) {
       providerUnitTableRef.value?.refetch();

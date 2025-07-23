@@ -10,10 +10,10 @@
           <div>Veículo: <span class="content"> {{ props.data.vehicle }}</span></div>
         </InfoGroup>
         <v-divider vertical />
-          <InfoGroup title="Dados da consulta">
+        <InfoGroup title="Dados da consulta">
           <div>Paciente: <span class="content"> {{ props.data.medical_appointment.patient_name }}</span></div>
           <div>Acompanhante: <span class="content"> {{ props.data.medical_appointment.companion_name ?? 'Sem Acompanhante' }}</span></div>
-          <div v-if="props.data.medical_appointment.companion_name  && props.data.medical_appointment.kinship">
+          <div v-if="props.data.medical_appointment.companion_name && props.data.medical_appointment.kinship">
             Parentesco do Acompanhante: <span class="content"> {{ props.data.medical_appointment.kinship }} </span>
           </div>
           <div>Hospital: <span class="content"> {{ props.data.medical_appointment.hospital_name }}</span></div>

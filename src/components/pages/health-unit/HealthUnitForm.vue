@@ -4,9 +4,9 @@
       <v-form class="flex gap-4">
         <v-text-field
           v-model="name"
+          class="required"
           density="compact"
           :error-messages="errors.name"
-          class="required"
           label="Nome"
           placeholder="Nome da unidade de saúde"
           variant="outlined"
@@ -14,10 +14,10 @@
         <v-text-field
           v-model="cnes"
           density="compact"
-          type="number"
           :error-messages="errors.cnes"
           label="CNES"
           placeholder="CNES da Unidade"
+          type="number"
           variant="outlined"
         />
       </v-form>
@@ -51,7 +51,7 @@
 
   const schema = yup.object({
     name: yup.string().required('Nome da unidade é obrigatório'),
-    cnes: yup.string().nullable()
+    cnes: yup.string().nullable(),
   });
 
   const { handleSubmit, errors, resetForm } = useForm({

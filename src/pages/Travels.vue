@@ -1,5 +1,5 @@
 <template>
-  <travel-table ref='travelTableRef' :edit="true" :show-delete="true">
+  <travel-table ref="travelTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerTravel = true" />
 
@@ -9,7 +9,7 @@
     v-model="registerTravel"
     class="z-999"
   >
-    <travel-form @close="registerTravel = false"  @save="submit" />
+    <travel-form @close="registerTravel = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const travelTableRef = ref(null);
 
 
-  const submit = async (travel) => {
+  const submit = async travel => {
     const success = await showFeedback(() => create(travel));
     if (success) {
       travelTableRef.value?.refetch();

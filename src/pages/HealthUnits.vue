@@ -1,5 +1,5 @@
 <template>
-  <health-unit-table ref='healthUnitTableRef' :edit="true" :show-delete="true">
+  <health-unit-table ref="healthUnitTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerHealthUnit = true" />
     </div>
@@ -22,7 +22,7 @@
   const healthUnitTableRef = ref(null);
 
 
-  const submit = async (healthUnit) => {
+  const submit = async healthUnit => {
     const success = await showFeedback(() => create(healthUnit));
     if (success) {
       healthUnitTableRef.value?.refetch();

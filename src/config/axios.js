@@ -1,5 +1,5 @@
 import axios from 'axios';
-import router from "@/router";
+import router from '@/router';
 import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
 import { useAuthStore } from '@/stores/authStore';
 import { useMeStore } from '@/stores/me'
@@ -32,7 +32,7 @@ const inactivityDelay = 2 * 60 * 60 * 1000;
 // const inactivityDelay = 4 * 1000;
 const { showInactivityAlert } = useSweetAlertFeedback();
 
-function desconectUser() {
+function desconectUser () {
   const mestore = useMeStore();
   const authStore = useAuthStore();
   authStore.hasSession = false;
@@ -44,7 +44,7 @@ function desconectUser() {
 let logoutTimeout = null;
 
 // Função para reiniciar o timeout
-function resetLogoutTimeout() {
+function resetLogoutTimeout () {
   if (logoutTimeout) clearTimeout(logoutTimeout);
   if (router.currentRoute.value.name !== 'login'){
     logoutTimeout = setTimeout(() => {

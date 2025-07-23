@@ -2,11 +2,11 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <BaseSection>
-        <InfoGroup title="Dados da Solicitação" >
+        <InfoGroup title="Dados da Solicitação">
           <div class="grid grid-cols-3 gap-x-10">
             <div>Paciente: {{ props.modelValue.solicitation?.patient || props.solicitationData.patient }}</div>
             <div v-if="isExam">Exame: {{ props.modelValue.solicitation?.procedure || props.solicitationData.procedure }}</div>
-            <div v-if="!isExam">Consulta com {{ props.modelValue.solicitation?.specialist || props.solicitationData.specialist}}</div>
+            <div v-if="!isExam">Consulta com {{ props.modelValue.solicitation?.specialist || props.solicitationData.specialist }}</div>
             <div :class="{'text-red-500': isUrgent }">Urgência: {{ isEditing ? isUrgentToEditLabel : isUrgentLabel }}</div>
             <div>Unidade Solicitante: {{ props.modelValue.solicitation?.requesting_unit || props.solicitationData.requesting_unit }} </div>
             <div>Data da Solicitação: {{ formatDate(props.modelValue.solicitation?.solicitation_date || props.solicitationData.solicitation_date) }}</div>
@@ -20,8 +20,8 @@
         <div class="grid grid-cols-2 gap-2 mt-4">
           <base-input-date-picker
             v-model="date"
-            class-field="required"
             class-date-picker="absolute right-[-175px] top-[-175px]"
+            class-field="required"
             :error-messages="errors.date"
             label="Data"
           />
@@ -29,48 +29,48 @@
             v-model="time"
             class="required"
             density="compact"
-            variant="outlined"
-            label="Escolha um horário"
-            @update:model-value="onTimeInput"
-            @keypress="onlyNumbers"
             :error-messages="errors.time"
+            label="Escolha um horário"
             maxlength="5"
             prepend-inner-icon="mdi-clock-time-four-outline"
+            variant="outlined"
+            @keypress="onlyNumbers"
+            @update:model-value="onTimeInput"
           />
 
-        <v-autocomplete
-          v-model="provider_unit_id"
-          class="required"
-          density="compact"
-          :error-messages="errors.provider_unit_id"
-          item-title="name"
-          item-value="id"
-          :items="providerUnitData"
-          label="Unidade prestadora"
-          variant="outlined"
+          <v-autocomplete
+            v-model="provider_unit_id"
+            class="required"
+            density="compact"
+            :error-messages="errors.provider_unit_id"
+            item-title="name"
+            item-value="id"
+            :items="providerUnitData"
+            label="Unidade prestadora"
+            variant="outlined"
           />
-        <v-autocomplete
-          v-model="doctor_id"
-          density="compact"
-          :error-messages="errors.doctor_id"
-          item-title="name"
-          item-value="id"
-          :items="doctorData"
-          label="Médico responsável"
-          variant="outlined"
-        />
-        <v-select
-          v-if="isEditing"
-          v-model="status"
-          class="col-span-1"
-          density="compact"
-          :error-messages="errors.status"
-          item-title="label"
-          item-value="value"
-          :items="AppointmentStatus"
-          label="Status de Agendamento"
-          variant="outlined"
-        />
+          <v-autocomplete
+            v-model="doctor_id"
+            density="compact"
+            :error-messages="errors.doctor_id"
+            item-title="name"
+            item-value="id"
+            :items="doctorData"
+            label="Médico responsável"
+            variant="outlined"
+          />
+          <v-select
+            v-if="isEditing"
+            v-model="status"
+            class="col-span-1"
+            density="compact"
+            :error-messages="errors.status"
+            item-title="label"
+            item-value="value"
+            :items="AppointmentStatus"
+            label="Status de Agendamento"
+            variant="outlined"
+          />
         </div>
       </v-form>
     </v-card-text>
@@ -114,23 +114,23 @@
   const isExam = computed(() => props.modelValue.solicitation?.solicitation_type || props.solicitationData.solicitation_type === 'exam');
   const isUrgent = computed(() => props.modelValue.solicitation?.is_urgent == true || props.solicitationData.is_urgent == true );
 
-  const onTimeInput = (val) => {
+  const onTimeInput = val => {
     let digits = val.replace(/\D/g, '')
 
     if (digits.length > 4) digits = digits.slice(0, 4)
 
     if (digits.length >= 3) {
-        time.value = `${digits.slice(0, 2)}:${digits.slice(2)}`
-      } else {
-        time.value = digits
-      }
-    };
-    const AppointmentStatus = [
-        { value: 'scheduled', label: 'Agendado'},
-        { value: 'not-present', label: 'Não compareceu'},
-        { value: 'realized', label: 'Realizado'},
-        { value: 'pending', label: 'Pendente'},
-    ]
+      time.value = `${digits.slice(0, 2)}:${digits.slice(2)}`
+    } else {
+      time.value = digits
+    }
+  };
+  const AppointmentStatus = [
+    { value: 'scheduled', label: 'Agendado' },
+    { value: 'not-present', label: 'Não compareceu' },
+    { value: 'realized', label: 'Realizado' },
+    { value: 'pending', label: 'Pendente' },
+  ]
 
   onMounted(async () => {
     providerUnitParams.value.per_page = -1;
@@ -155,38 +155,38 @@
   const schema = yup.object({
     date: yup.date().required('Data do agendamento é obrigatório'),
     time: yup
-    .string()
-    .required('Horário é obrigatório')
-    .test('dynamic-time-validation', 'Horário inválido', value => {
-      if (!value) return false;
-      if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
+      .string()
+      .required('Horário é obrigatório')
+      .test('dynamic-time-validation', 'Horário inválido', value => {
+        if (!value) return false;
+        if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
 
-      const [h, m = ''] = value.split(':');
+        const [h, m = ''] = value.split(':');
 
-      if (h.length > 0) {
-        const hour = parseInt(h);
-        if (isNaN(hour)) return false;
-        if (h.length === 1 && hour > 2) return false;
-        if (h.length === 2 && hour > 23) return false;
-      }
+        if (h.length > 0) {
+          const hour = parseInt(h);
+          if (isNaN(hour)) return false;
+          if (h.length === 1 && hour > 2) return false;
+          if (h.length === 2 && hour > 23) return false;
+        }
 
-      if (m.length > 0) {
-        const minute = parseInt(m);
-        if (isNaN(minute)) return false;
-        if (m.length === 1 && minute > 5) return false;
-        if (m.length === 2 && minute > 59) return false;
-      }
+        if (m.length > 0) {
+          const minute = parseInt(m);
+          if (isNaN(minute)) return false;
+          if (m.length === 1 && minute > 5) return false;
+          if (m.length === 2 && minute > 59) return false;
+        }
 
-      return true;
-    }),
+        return true;
+      }),
     provider_unit_id: yup.number().required('Unidade prestadora é obrigatório'),
     doctor_id: yup.number().nullable(),
-    status: yup.string().nullable()
+    status: yup.string().nullable(),
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
-      validationSchema: schema,
-      initialValues: {
+    validationSchema: schema,
+    initialValues: {
       date: null,
       time: '',
       solicitation_id: props.modelValue?.solicitation?.id || props.solicitationData?.id,

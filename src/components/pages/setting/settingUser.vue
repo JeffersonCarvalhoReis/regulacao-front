@@ -5,8 +5,8 @@
       autocomplete="on"
     >
       <v-card
-        flat
         class="border border-gray-200 shadow-sm"
+        flat
       >
         <v-card-title>
           <h1 class="text-2xl font-bold mb-2">
@@ -22,9 +22,9 @@
             <v-col>
               <v-text-field
                 v-model="user"
-                label="Usuário"
-                :error-messages="updateErrors.user"
                 autocomplete="username"
+                :error-messages="updateErrors.user"
+                label="Usuário"
                 variant="outlined"
               />
             </v-col>
@@ -33,11 +33,11 @@
             <v-col>
               <v-text-field
                 v-model="currentPassword"
-                :type="showCurrentPassword ? 'text' : 'password'"
-                :error-messages="updateErrors.currentPassword"
-                autocomplete="current-password"
-                label="Senha atual"
                 :append-inner-icon="showCurrentPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                autocomplete="current-password"
+                :error-messages="updateErrors.currentPassword"
+                label="Senha atual"
+                :type="showCurrentPassword ? 'text' : 'password'"
                 variant="outlined"
                 @click:append-inner="showCurrentPassword = !showCurrentPassword"
                 @keydown.space.prevent
@@ -48,46 +48,47 @@
             <v-col>
               <v-text-field
                 v-model="newPassword"
-                :type="showPassword ? 'text' : 'password'"
-                :error-messages="updateErrors.newPassword"
-                autocomplete="new-password"
-                label="Nova senha"
                 :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                autocomplete="new-password"
+                :error-messages="updateErrors.newPassword"
+                label="Nova senha"
+                :type="showPassword ? 'text' : 'password'"
                 variant="outlined"
                 @click:append-inner="showPassword = !showPassword"
                 @keydown.space.prevent
               />
 
-              <div class="max-w-100 relative mt-7"
+              <div
                 v-if="newPassword?.length > 0 "
+                class="max-w-100 relative mt-7"
               >
                 <div
-                class="mt-1 text-sm font-medium absolute bottom-2"
-                :class="colorPasswordStrength"
+                  class="mt-1 text-sm font-medium absolute bottom-2"
+                  :class="colorPasswordStrength"
                 >
                   Força da senha: {{ textPasswordStrength }}
                 </div>
                 <!-- Barra visual -->
                 <div
-                    class="h-2 rounded mt-1 bg-gray-300 absolute max-w-100 w-full bottom-0 z-0"
+                  class="h-2 rounded mt-1 bg-gray-300 absolute max-w-100 w-full bottom-0 z-0"
                 />
                 <div
-                    class="h-2 rounded mt-1 transition-all duration-300 absolute bottom-0 z-10"
+                  class="h-2 rounded mt-1 transition-all duration-300 absolute bottom-0 z-10"
                   :class="[colorPasswordBar]"
                 />
-               </div>
+              </div>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <v-text-field
                 v-model="passwordConfirm"
-                :disabled="!newPassword"
-                :type="showPassword ? 'text' : 'password'"
-                :error-messages="updateErrors.passwordConfirm"
-                autocomplete="new-password"
-                label="Confirmar nova senha"
                 :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                autocomplete="new-password"
+                :disabled="!newPassword"
+                :error-messages="updateErrors.passwordConfirm"
+                label="Confirmar nova senha"
+                :type="showPassword ? 'text' : 'password'"
                 variant="outlined"
                 @click:append-inner="showPassword = !showPassword"
                 @keydown.space.prevent
@@ -96,7 +97,7 @@
           </v-row>
         </v-card-text>
         <div
-        class="flex justify-end gap-2 m-6"
+          class="flex justify-end gap-2 m-6"
         >
           <v-btn
             color="primary"
@@ -136,7 +137,7 @@
       v-model="dialogDelete"
       class="z-999"
     >
-    <SettingDeleteUser @close="dialogDelete = false" />
+      <SettingDeleteUser @close="dialogDelete = false" />
     </v-dialog>
   </div>
 </template>
@@ -149,16 +150,16 @@
   import { useField, useForm } from 'vee-validate'
   import * as yup from 'yup'
 
-const meStore = useMeStore();
-const isAdmin = meStore.role === 'admin';
-const showPassword = ref(false);
-const showCurrentPassword = ref(false);
-const dialogDelete = ref(false);
+  const meStore = useMeStore();
+  const isAdmin = meStore.role === 'admin';
+  const showPassword = ref(false);
+  const showCurrentPassword = ref(false);
+  const dialogDelete = ref(false);
 
-const { showFeedback } = useSweetAlertFeedback();
-const { updateUser, getUser } = useUserApi();
+  const { showFeedback } = useSweetAlertFeedback();
+  const { updateUser, getUser } = useUserApi();
 
-const updateSchema = yup.object({
+  const updateSchema = yup.object({
     user: yup.string().required('Usuário é obrigatório'),
     currentPassword: yup
       .string()
@@ -217,25 +218,25 @@ const updateSchema = yup.object({
 
   });
 
-  const submit = handleUpdateSubmit(  async values => {
+  const submit = handleUpdateSubmit( async values => {
     const success = await showFeedback(() => updateUser(values));
     if (success) {
-     meStore.user = user.value;
+      meStore.user = user.value;
     }
 
   });
 
-  watch(newPassword, (val) => {
+  watch(newPassword, val => {
     if (val === '') {
       newPassword.value = null
       passwordConfirm.value = null
     }
     if (val) {
-    setFieldTouched('currentPassword', true)
-    validateUpdateField('currentPassword')
+      setFieldTouched('currentPassword', true)
+      validateUpdateField('currentPassword')
 
-    setFieldTouched('passwordConfirm', true)
-    validateUpdateField('passwordConfirm')
+      setFieldTouched('passwordConfirm', true)
+      validateUpdateField('passwordConfirm')
     }
   });
  </script>

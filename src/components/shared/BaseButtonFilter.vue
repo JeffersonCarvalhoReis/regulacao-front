@@ -4,13 +4,13 @@
     :prepend-icon="props.buttonIcon"
     @click="emit('filters')"
   >
-  {{ buttonText}}
+    {{ buttonText }}
   </v-btn>
 </template>
 <script setup>
- const props = defineProps({
+  const props = defineProps({
     buttonText: { type: String, default: 'Filtros' },
-    buttonIcon: { type: String, default: 'mdi-filter-variant'},
+    buttonIcon: { type: String, default: 'mdi-filter-variant' },
   })
   const emit = defineEmits(['filters'])
 </script>

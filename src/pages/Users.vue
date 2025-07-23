@@ -1,5 +1,5 @@
 <template>
-  <user-table ref='userTableRef' :edit="true" :show-delete="true">
+  <user-table ref="userTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerUser = true" />
     </div>
@@ -22,7 +22,7 @@
   const userTableRef = ref(null);
 
 
-  const submit = async (user) => {
+  const submit = async user => {
     const success = await showFeedback(() => create(user));
     if (success) {
       userTableRef.value?.refetch();

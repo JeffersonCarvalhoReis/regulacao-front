@@ -17,15 +17,15 @@
       @update-options="updateOptions"
       @view-item="viewCompanion"
     >
-    <template #item.birth_date="{ item }">
-      {{ formatDate(item.birth_date) }}
-    </template>
-  </base-table>
+      <template #item.birth_date="{ item }">
+        {{ formatDate(item.birth_date) }}
+      </template>
+    </base-table>
   </div>
   <v-dialog
-   v-model="viewCompanionProfile"
-   class="z-900"
-   >
+    v-model="viewCompanionProfile"
+    class="z-900"
+  >
     <companion-profile :companion-data="selectedCompanion" @close="viewCompanionProfile = false" />
   </v-dialog>
 

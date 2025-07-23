@@ -14,108 +14,108 @@
             </div>
             <div>
               <div>Telefone: {{ props.appointmentData.solicitation.patient_phone }}</div>
-              <div >Agente Comunitário de Saúde: {{ props.appointmentData.solicitation.health_agent }}</div>
+              <div>Agente Comunitário de Saúde: {{ props.appointmentData.solicitation.health_agent }}</div>
               <div>Unidade de Saúde: {{ props.appointmentData.solicitation.health_unit }}</div>
             </div>
           </div>
         </InfoGroup>
       </BaseSection>
-        <BaseSection>
-          <InfoGroup title="Dados do Agendamento">
-            <div class="flex gap-10">
-              <div>
-                <div>Data da Consulta: {{ formatDate(props.appointmentData.date) }}</div>
-                <div>Hora da Consulta: {{ props.appointmentData.time }}</div>
-                <div>Status do Agendamento: {{ status(props.appointmentData.status) }}</div>
-              </div>
-              <div>
-                <div>Unidade Prestadora: {{ props.appointmentData.provider_unit }}</div>
-                <div>Médico Responsável: {{ props.appointmentData.doctor }}</div>
-              </div>
-              <div>
-                <div>Data do Agendamento: {{ props.appointmentData.created_at }}</div>
-                <div>Agendado por: {{ props.appointmentData.scheduled_by }}</div>
-              </div>
+      <BaseSection>
+        <InfoGroup title="Dados do Agendamento">
+          <div class="flex gap-10">
+            <div>
+              <div>Data da Consulta: {{ formatDate(props.appointmentData.date) }}</div>
+              <div>Hora da Consulta: {{ props.appointmentData.time }}</div>
+              <div>Status do Agendamento: {{ status(props.appointmentData.status) }}</div>
             </div>
-          </InfoGroup>
-        </BaseSection>
-        <BaseSection>
-          <InfoGroup title="Dados da Solicitação">
-            <div class="flex gap-10">
-              <div>
-                <div v-if="isExam">Exame: {{ props.appointmentData.solicitation.procedure }}</div>
-                <div v-if="!isExam">Consulta com {{ props.appointmentData.solicitation.specialist }}</div>
-                <div>Unidade Solicitante: {{ props.appointmentData.solicitation.requesting_unit }} </div>
-                <div>Data da Solicitação: {{ formatDate(props.appointmentData.solicitation.solicitation_date) }}</div>
-              </div>
-              <div>
-                <div :class="{'text-red-500': isUrgent }">Urgência: {{ isUrgentLabel }}</div>
-                <div>Retorno: {{ isReturnLabel }}</div>
-                <div>Motivo: {{ props.appointmentData.solicitation.reason }}</div>
-              </div>
-              <div>
-                <div>Cadastrado por {{ props.appointmentData.solicitation.created_by }}</div>
-                <div>Data de Cadastrado {{ formatDate(props.appointmentData.solicitation.entry_date) }}</div>
-              </div>
+            <div>
+              <div>Unidade Prestadora: {{ props.appointmentData.provider_unit }}</div>
+              <div>Médico Responsável: {{ props.appointmentData.doctor }}</div>
             </div>
+            <div>
+              <div>Data do Agendamento: {{ props.appointmentData.created_at }}</div>
+              <div>Agendado por: {{ props.appointmentData.scheduled_by }}</div>
+            </div>
+          </div>
         </InfoGroup>
-        </BaseSection>
-        <div class="flex justify-end">
+      </BaseSection>
+      <BaseSection>
+        <InfoGroup title="Dados da Solicitação">
+          <div class="flex gap-10">
+            <div>
+              <div v-if="isExam">Exame: {{ props.appointmentData.solicitation.procedure }}</div>
+              <div v-if="!isExam">Consulta com {{ props.appointmentData.solicitation.specialist }}</div>
+              <div>Unidade Solicitante: {{ props.appointmentData.solicitation.requesting_unit }} </div>
+              <div>Data da Solicitação: {{ formatDate(props.appointmentData.solicitation.solicitation_date) }}</div>
+            </div>
+            <div>
+              <div :class="{'text-red-500': isUrgent }">Urgência: {{ isUrgentLabel }}</div>
+              <div>Retorno: {{ isReturnLabel }}</div>
+              <div>Motivo: {{ props.appointmentData.solicitation.reason }}</div>
+            </div>
+            <div>
+              <div>Cadastrado por {{ props.appointmentData.solicitation.created_by }}</div>
+              <div>Data de Cadastrado {{ formatDate(props.appointmentData.solicitation.entry_date) }}</div>
+            </div>
+          </div>
+        </InfoGroup>
+      </BaseSection>
+      <div class="flex justify-end">
         <v-btn
           v-if="attachment"
-          prepend-icon="mdi-paperclip"
           color="success"
+          prepend-icon="mdi-paperclip"
           @click="openAttachment = true"
-         >
+        >
           Anexo
           <v-tooltip
-          activator="parent"
+            activator="parent"
           >
-          {{ attachmentText }}
+            {{ attachmentText }}
           </v-tooltip>
         </v-btn>
 
         <v-btn
           v-else
-          prepend-icon="mdi-paperclip-off"
           color="error"
+          prepend-icon="mdi-paperclip-off"
         >
-        Anexo
-        <v-tooltip
-        activator="parent"
-        >
-        {{ attachmentText }}
-        </v-tooltip>
+          Anexo
+          <v-tooltip
+            activator="parent"
+          >
+            {{ attachmentText }}
+          </v-tooltip>
         </v-btn>
       </div>
     </v-card-text>
   </base-card>
   <v-dialog v-model="openAttachment">
-  <BaseCard title="Anexo" @close="openAttachment = false">
+    <BaseCard title="Anexo" @close="openAttachment = false">
       <v-card-text class="flex justify-center items-end h-full">
         <iframe
-            ref="attachmentRef"
-            v-if="attachment"
-            :src="attachment"
-            width="100%"
-            height="500px"
-            class="rounded-lg border"
-            @load="handleAdjustIframeContent"
-          ></iframe>
-    </v-card-text>
+          v-if="attachment"
+          ref="attachmentRef"
+          class="rounded-lg border"
+          height="500px"
+          :src="attachment"
+          width="100%"
+          @load="handleAdjustIframeContent"
+        />
+      </v-card-text>
 
       <div class="flex justify-end gap-4 m-4">
         <v-btn
-          prepend-icon="mdi-download"
           color="primary"
+          prepend-icon="mdi-download"
           @click="handleDownloadFile"
         >
           Baixar
           <v-tooltip activator="parent">Baixar</v-tooltip>
         </v-btn>
-    </div>
+      </div>
     </BaseCard>
-</v-dialog>
+  </v-dialog>
 
 </template>
 
@@ -146,12 +146,12 @@
   const attachment = computed(() => props.appointmentData.solicitation.attachment);
   const attachmentRef = ref(null);
 
-  const status = (status) => {
+  const status = status => {
     const statusMap = {
       'scheduled' : 'Agendado',
       'realized' : 'Realizado',
       'not-present' : 'Não Compareceu',
-      'pending' : 'Pendente'
+      'pending' : 'Pendente',
     }
     return statusMap[status] || 'Desconhecido'
   }

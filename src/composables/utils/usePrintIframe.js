@@ -1,11 +1,11 @@
-export function usePrintIframe() {
+export function usePrintIframe () {
 
-  const adjustIframeContent = ( attachmentRef ) => {
+  const adjustIframeContent = attachmentRef => {
     const iframe = attachmentRef.value;
     if (iframe && iframe.contentWindow) {
       const iframeDocument = iframe.contentWindow.document;
       const style = iframeDocument.createElement('style');
-    style.innerHTML = `
+      style.innerHTML = `
       @media print {
         @page {
           margin: 0;
@@ -28,7 +28,7 @@ export function usePrintIframe() {
         }
       }
     `;
-    iframeDocument.head.appendChild(style);
+      iframeDocument.head.appendChild(style);
 
       // Verifique se o iframe carregou conteúdo HTML (como uma imagem ou PDF)
       const content = iframeDocument.body;
@@ -40,7 +40,7 @@ export function usePrintIframe() {
       // Estilo para garantir que o conteúdo não ultrapasse a largura ou altura da página A4
       content.style.maxWidth = `${maxWidth}px`;
       content.style.maxHeight = `${maxHeight}px`;
-      content.style.objectFit = 'contain';  // Isso ajusta o conteúdo sem distorcer
+      content.style.objectFit = 'contain'; // Isso ajusta o conteúdo sem distorcer
 
       content.style.display = 'flex';
       content.style.justifyContent = 'center'; // Centraliza horizontalmente
@@ -48,14 +48,14 @@ export function usePrintIframe() {
       content.style.height = '100%'; // Assegura que o conteúdo ocupa toda a altura do iframe
 
       const images = iframeDocument.querySelectorAll('img');
-    images.forEach(img => {
-      img.style.maxWidth = '90%';  // Garante que a imagem não ultrapasse a largura disponível
-      img.style.height = 'auto';    // Mantém a proporção da imagem
-    });
+      images.forEach(img => {
+        img.style.maxWidth = '90%'; // Garante que a imagem não ultrapasse a largura disponível
+        img.style.height = 'auto'; // Mantém a proporção da imagem
+      });
     }
   };
 
-  const printContent = (attachmentRef) => {
+  const printContent = attachmentRef => {
     const iframe = attachmentRef.value;
     if (iframe && iframe.contentWindow) {
       const iframeWindow = iframe.contentWindow;
@@ -65,6 +65,6 @@ export function usePrintIframe() {
   };
   return {
     adjustIframeContent,
-    printContent
+    printContent,
   }
 }

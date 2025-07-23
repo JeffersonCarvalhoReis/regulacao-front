@@ -33,77 +33,77 @@
       <div class="flex justify-end">
         <v-btn
           v-if="attachment"
-          prepend-icon="mdi-paperclip"
           color="success"
+          prepend-icon="mdi-paperclip"
           @click="openAttachment = true"
-         >
+        >
           Anexo
           <v-tooltip
-          activator="parent"
+            activator="parent"
           >
-          {{ attachmentText }}
+            {{ attachmentText }}
           </v-tooltip>
         </v-btn>
 
         <v-btn
           v-else
-          prepend-icon="mdi-paperclip-off"
           color="error"
+          prepend-icon="mdi-paperclip-off"
         >
-        Anexo
-        <v-tooltip
-        activator="parent"
-        >
-        {{ attachmentText }}
-        </v-tooltip>
+          Anexo
+          <v-tooltip
+            activator="parent"
+          >
+            {{ attachmentText }}
+          </v-tooltip>
         </v-btn>
       </div>
     </v-card-text>
   </base-card>
   <v-dialog v-model="openAttachment">
-  <BaseCard title="Anexo" @close="openAttachment = false">
-    <v-card-text class="flex justify-center items-end h-full">
-      <iframe
-        v-if="isPDF(attachment)"
-        :src="attachment"
-        width="100%"
-        height="500px"
-        class="rounded-lg border"
-      ></iframe>
-      <img
-        v-else-if="isImage(attachment)"
-        :src="attachment"
-        style="max-width: 100%; max-height: 800px; display: block; margin: auto;"
-        class="rounded-lg border"
-    />
-  </v-card-text>
+    <BaseCard title="Anexo" @close="openAttachment = false">
+      <v-card-text class="flex justify-center items-end h-full">
+        <iframe
+          v-if="isPDF(attachment)"
+          class="rounded-lg border"
+          height="500px"
+          :src="attachment"
+          width="100%"
+        />
+        <img
+          v-else-if="isImage(attachment)"
+          class="rounded-lg border"
+          :src="attachment"
+          style="max-width: 100%; max-height: 800px; display: block; margin: auto;"
+        >
+      </v-card-text>
 
-    <div class="flex justify-end gap-4 m-4">
-      <v-btn
-        prepend-icon="mdi-download"
-        color="primary"
-        @click="handleDownloadFile"
-      >
-        Baixar
-        <v-tooltip activator="parent">Baixar</v-tooltip>
-      </v-btn>
-      <v-btn
-      prepend-icon="mdi-printer"
-      color="success"
-      @click="handlePrint"
-    >
-      Imprimir
-      <v-tooltip activator="parent">Imprimir</v-tooltip>
-    </v-btn>
-  </div>
-  </BaseCard>
-</v-dialog>
+      <div class="flex justify-end gap-4 m-4">
+        <v-btn
+          color="primary"
+          prepend-icon="mdi-download"
+          @click="handleDownloadFile"
+        >
+          Baixar
+          <v-tooltip activator="parent">Baixar</v-tooltip>
+        </v-btn>
+        <v-btn
+          color="success"
+          prepend-icon="mdi-printer"
+          @click="handlePrint"
+        >
+          Imprimir
+          <v-tooltip activator="parent">Imprimir</v-tooltip>
+        </v-btn>
+      </div>
+    </BaseCard>
+  </v-dialog>
 </template>
 
 <script setup>
-import { useBooleanLabel } from '@/composables/utils/useBooleanLabel';
-import { useDownloadFile } from '@/composables/utils/useDownloadFile';
-import { useFormatDate } from '@/composables/utils/useFormatDate';
+  import { useBooleanLabel } from '@/composables/utils/useBooleanLabel';
+  import { useDownloadFile } from '@/composables/utils/useDownloadFile';
+  import { useFormatDate } from '@/composables/utils/useFormatDate';
 
   const props = defineProps({
     solicitationData: { type: Object, default: () => ({}) },
@@ -127,7 +127,7 @@ import { useFormatDate } from '@/composables/utils/useFormatDate';
   const attachment = computed(() => props.solicitationData.attachment)
   const attachmentRef = ref(null)
 
-  const handlePrint = ()  => {
+  const handlePrint = () => {
     printContent(attachmentRef)
   }
 
@@ -135,11 +135,11 @@ import { useFormatDate } from '@/composables/utils/useFormatDate';
     downloadFile(attachment.value)
   }
 
-  const isPDF = (url) => {
+  const isPDF = url => {
     return url?.toLowerCase().endsWith('.pdf');
   };
 
-  const isImage = (url) => {
+  const isImage = url => {
     return /\.(jpe?g|png|gif|bmp|webp)$/i.test(url || '');
   };
 

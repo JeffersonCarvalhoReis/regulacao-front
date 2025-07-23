@@ -8,7 +8,7 @@ export function useAppointmentExportApi () {
 
   // usa os mesmos filtros da listagem
   const {
-    params, setFilter, setSort, clearFilters
+    params, setFilter, setSort, clearFilters,
   } = useQueryFilters()
 
   const exportAppointments = async () => {

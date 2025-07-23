@@ -7,6 +7,6 @@
         <router-view />
       </v-main>
     </app-toolbar>
-    <app-footer/>
+    <app-footer />
   </v-app>
 </template>

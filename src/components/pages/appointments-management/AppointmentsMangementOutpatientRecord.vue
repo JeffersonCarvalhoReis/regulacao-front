@@ -2,9 +2,9 @@
   <BaseCard @close="emit('close')">
     <div class="flex justify-end gap-4 m-4">
       <v-btn
-        prepend-icon="mdi-printer"
         color="success"
         :loading="clickPrint"
+        prepend-icon="mdi-printer"
         @click="handleExportToPDF"
       >
         Imprimir
@@ -15,7 +15,7 @@
       <div ref="printSection" class="max-w-4xl flex flex-col items-center">
         <div class="p-3 mb-4 border flex items-center justify-center gap-10 rounded-md">
           <div class="basis-50">
-            <img src="@/assets/images/logo-gestao.png" alt="Logo da prefeitura de itaguaçu da bahia">
+            <img alt="Logo da prefeitura de itaguaçu da bahia" src="@/assets/images/logo-gestao.png">
           </div>
           <div>
             <h2 class="uppercase tracking-wide"><strong>Prefeitura Municipal de Itaguaçu da Bahia</strong></h2>
@@ -24,7 +24,7 @@
         </div>
         <h1 class="uppercase font-extrabold text-xl tracking-wide"><strong>Ficha Ambulatorial</strong></h1>
         <div class="text-right w-full">
-          Nº {{appointmentData.order_of_attendance}}
+          Nº {{ appointmentData.order_of_attendance }}
         </div>
         <div class="flex flex-col w-full gap-1 py-4">
           <LabeledLineGroup>
@@ -43,7 +43,7 @@
           </LabeledLineGroup>
           <LabeledLineGroup>
             <LabeledLine label="Data de Nasc." :value="formatDate(appointmentData.solicitation.patient_birth_date)" />
-            <LabeledLine label="Idade" :value="`${calculateAge(appointmentData.solicitation.patient_birth_date)}`"/>
+            <LabeledLine label="Idade" :value="`${calculateAge(appointmentData.solicitation.patient_birth_date)}`" />
             <LabeledLine label="Gênero" :value="genderMap(appointmentData.solicitation.patient_gender)" />
           </LabeledLineGroup>
           <LabeledLineGroup>
@@ -52,14 +52,14 @@
             <LabeledLine label="Profissão" :value="''" /> <!-- Valor vazio adicionado -->
           </LabeledLineGroup>
           <LabeledLineGroup>
-            <LabeledLine label="Telefone" :value="appointmentData.solicitation.patient_phone"/>
+            <LabeledLine label="Telefone" :value="appointmentData.solicitation.patient_phone" />
             <LabeledLine label="ACS" :value="appointmentData.solicitation.patient_acs" />
             <LabeledLine label="Unidade de Saúde" :value="appointmentData.solicitation.patient_health_unit" />
           </LabeledLineGroup>
           <LabeledLineGroup>
-            <LabeledLine label="Médico" :value="appointmentData.doctor"/>
-            <LabeledLine v-if="appointmentData.solicitation.solicitation_type == 'exam'" label="Procedimento" :value="appointmentData?.procedure"/>
-            <LabeledLine v-if="appointmentData.solicitation.solicitation_type == 'consultation'" label="Consulta" :value="appointmentData?.specialist"/>
+            <LabeledLine label="Médico" :value="appointmentData.doctor" />
+            <LabeledLine v-if="appointmentData.solicitation.solicitation_type == 'exam'" label="Procedimento" :value="appointmentData?.procedure" />
+            <LabeledLine v-if="appointmentData.solicitation.solicitation_type == 'consultation'" label="Consulta" :value="appointmentData?.specialist" />
           </LabeledLineGroup>
           <LabeledLineGroup>
             <LabeledLine label="Data da Consulta" :value="formatDate(appointmentData.date)" />
@@ -71,7 +71,7 @@
               Anamnese/Exame Físico/Sus. Diagnóstica
             </div>
           </div>
-          <div v-for="i in 35" :key="i" class="border-b border-gray-500 h-6"></div>
+          <div v-for="i in 35" :key="i" class="border-b border-gray-500 h-6" />
         </div>
       </div>
     </div>
@@ -80,32 +80,30 @@
 </template>
 
 <script setup>
-import { useCalculateAge } from '@/composables/utils/useCalculateAge';
-import { useExportToPdf } from '@/composables/utils/useExportToPdf';
+  import { useCalculateAge } from '@/composables/utils/useCalculateAge';
+  import { useExportToPdf } from '@/composables/utils/useExportToPdf';
 
-defineProps({
-  appointmentData: { type: Object, required: true}
-});
+  defineProps({
+    appointmentData: { type: Object, required: true },
+  });
 
-const printSection = ref(null);
+  const printSection = ref(null);
 
-const { formatDate } = useFormatDate();
-const { calculateAge } = useCalculateAge();
-const { exportToImagePDF, clickPrint } = useExportToPdf();
-const emit = defineEmits(['close']);
+  const { formatDate } = useFormatDate();
+  const { calculateAge } = useCalculateAge();
+  const { exportToImagePDF, clickPrint } = useExportToPdf();
+  const emit = defineEmits(['close']);
 
-const handleExportToPDF = () => {
-  exportToImagePDF(printSection.value);
-}
-const genderMap = (value) => {
-  const gender = {
-    'F': 'Feminino',
-    'M': 'Masculino',
+  const handleExportToPDF = () => {
+    exportToImagePDF(printSection.value);
   }
-  return gender[value] || 'Outro'
-};
-
+  const genderMap = value => {
+    const gender = {
+      'F': 'Feminino',
+      'M': 'Masculino',
+    }
+    return gender[value] || 'Outro'
+  };
 
 
 </script>
-

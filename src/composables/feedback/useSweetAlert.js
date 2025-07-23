@@ -104,11 +104,11 @@ export function useSweetAlertFeedback () {
     });
   };
 
-  const confirmModal = async (message = 'Você tem certeza?', title = 'Confirmação', icon =  'warning', confirmButtonClass ='bg-red-500 text-white shadow-sm', cancelButtonClass = 'bg-blue-500 text-white') => {
+  const confirmModal = async (message = 'Você tem certeza?', title = 'Confirmação', icon = 'warning', confirmButtonClass ='bg-red-500 text-white shadow-sm', cancelButtonClass = 'bg-blue-500 text-white') => {
     const result = await Swal.fire({
       title,
       html: message,
-      icon: icon,
+      icon,
       showCancelButton: true,
       confirmButtonText: 'Sim, confirmar',
       cancelButtonText: 'Cancelar',

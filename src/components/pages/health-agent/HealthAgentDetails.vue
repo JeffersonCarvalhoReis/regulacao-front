@@ -3,9 +3,9 @@
     <v-card-text>
       <BaseSection>
         <InfoGroup title="Dados do Agente">
-        <div>Nome: {{ props.healthAgentData.name }}</div>
-        <div>Nome da Unidade: {{ props.healthAgentData.health_unit }}</div>
-        <div>Total de pacientes: {{ props.healthAgentData.total_patients }}</div>
+          <div>Nome: {{ props.healthAgentData.name }}</div>
+          <div>Nome da Unidade: {{ props.healthAgentData.health_unit }}</div>
+          <div>Total de pacientes: {{ props.healthAgentData.total_patients }}</div>
         </InfoGroup>
       </BaseSection>
     </v-card-text>

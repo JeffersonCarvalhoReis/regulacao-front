@@ -16,7 +16,7 @@ export function useFormatDate () {
     const dateValue = date instanceof Date ? date : toDate(date);
     if (isValid(dateValue)) {
       return format(dateValue, "EEEE, d 'de' MMMM 'de' yyyy", {
-        locale: ptBR
+        locale: ptBR,
       });
     }
     return date;

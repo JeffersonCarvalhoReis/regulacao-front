@@ -7,33 +7,34 @@
       class="rounted-t-none"
       :edit="props.edit"
       :headers="headers"
+      :icon-new-action="iconAddPassenger"
       :items="data"
       :loading="loadingList"
+      new-action
       :show-delete="props.showDelete"
+      :text-new-action="textAddPassenger"
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
-      new-action
-      :icon-new-action="iconAddPassenger"
-      :text-new-action="textAddPassenger"
       @delete-item="handleDelete"
-      @update-options="updateOptions"
-      @view-item="viewTravel"
       @edit-item="handleEdit"
       @new-action="handleAddPassenger"
+      @update-options="updateOptions"
+      @view-item="viewTravel"
     >
-    <template #item.date="{ item }">
-          {{ formatDate(item.date) }}
-    </template>
-  </base-table>
+      <template #item.date="{ item }">
+        {{ formatDate(item.date) }}
+      </template>
+    </base-table>
   </div>
-  <v-dialog v-model="viewTravelDetails"
-  class="z-990"
+  <v-dialog
+    v-model="viewTravelDetails"
+    class="z-990"
   >
     <travel-details
       :travel-data="selectedTravel"
       @close="viewTravelDetails = false"
       @refresh="refreshPassengers"
-      />
+    />
   </v-dialog>
 
   <v-dialog
@@ -50,7 +51,7 @@
       :travel-data="selectedTravel"
       @close="dialogAddPassenger = false"
       @save="submitPassenger"
-     />
+    />
   </v-dialog>
 </template>
 
@@ -88,12 +89,12 @@
     editTravel.value = true
   };
 
-  const handleAddPassenger = async (travel) => {
+  const handleAddPassenger = async travel => {
     dialogAddPassenger.value = true
     refreshPassengers(travel.id)
   }
 
-  const refreshPassengers = async (travelId) => {
+  const refreshPassengers = async travelId => {
     setInclude('companion_patient_travel')
     const travelData = await getById(travelId);
     refetch()
@@ -172,7 +173,7 @@
         align: 'left',
 
       },
-            {
+      {
         title: 'Veículo',
         key: 'vehicle',
         sortable: true,

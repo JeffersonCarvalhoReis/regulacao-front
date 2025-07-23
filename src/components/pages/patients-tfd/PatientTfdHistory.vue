@@ -37,8 +37,8 @@
       <base-table
         class="rounted-t-none"
         :headers="headers"
-        :items="patientData.transport_schedules"
         hide-default-footer
+        :items="patientData.transport_schedules"
         @view-item="historyDetails"
       >
         <template #item.medical_appointment.appointment_date="{ item }">
@@ -48,21 +48,21 @@
           {{ formatDate(item.date) }}
         </template>
         <template #item.medical_appointment.companion_name="{ item }">
-              {{ item.medical_appointment.companion_name ? item.medical_appointment.companion_name : 'Sem Acompanhante' }}
+          {{ item.medical_appointment.companion_name ? item.medical_appointment.companion_name : 'Sem Acompanhante' }}
         </template>
-       </base-table>
+      </base-table>
     </v-card-text>
   </base-card>
   <v-dialog
     v-model="dialogHistoryDetails"
     class="z-999"
   >
-  <PatientTfdHistoryDetails :data="selectedItem" @close="dialogHistoryDetails = false" />
+    <PatientTfdHistoryDetails :data="selectedItem" @close="dialogHistoryDetails = false" />
   </v-dialog>
 </template>
 
 <script setup>
-  const props = defineProps({
+  defineProps({
     patientData: { type: Object, default: () => ({}) },
   });
 
@@ -82,11 +82,11 @@
   const dialogHistoryDetails = ref(false);
   const selectedItem = ref(null)
 
-  const historyDetails = (v) => {
+  const historyDetails = v => {
     selectedItem.value = v
     dialogHistoryDetails.value = true;
   }
-   const headers = computed( () => {
+  const headers = computed( () => {
     const baseHeaders = [
       {
         title: 'Detalhes',
@@ -126,7 +126,7 @@
         sortable: false,
         align: 'center',
 
-      }
+      },
 
     ];
     return baseHeaders

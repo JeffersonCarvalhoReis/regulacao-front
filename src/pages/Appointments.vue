@@ -1,10 +1,10 @@
 <template>
   <appointment-table ref="appointmentTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
-      <v-badge color="error" :content="badgeCounter" v-if="badgeCounter > 0" >
-       <base-button-filter @filters="dialogFilter = true"/>
+      <v-badge v-if="badgeCounter > 0" color="error" :content="badgeCounter">
+        <base-button-filter @filters="dialogFilter = true" />
       </v-badge>
-      <base-button-filter v-else @filters="dialogFilter = true"/>
+      <base-button-filter v-else @filters="dialogFilter = true" />
       <base-button-clear
         button-icon="mdi-filter-remove-outline"
         button-text="Limpar Filtros"
@@ -33,15 +33,15 @@
   const dialogFilter = ref(false);
   const badgeCounter = ref(0);
 
-  const countNotNullKeys = (obj) => {
-  return Object.values(obj).filter(value => {
-    if (Array.isArray(value)) {
-      // Verifica se todo o array é nulo
-      return value.some(item => item !== null);
-    }
-    return value !== null;
-  }).length;
-};
+  const countNotNullKeys = obj => {
+    return Object.values(obj).filter(value => {
+      if (Array.isArray(value)) {
+        // Verifica se todo o array é nulo
+        return value.some(item => item !== null);
+      }
+      return value !== null;
+    }).length;
+  };
   const submitFilters = async val => {
     appointmentTableRef.value?.setFilter('', val);
     appointmentTableRef.value?.filterExport('', val);

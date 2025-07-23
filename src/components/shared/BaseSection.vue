@@ -3,10 +3,10 @@
     <v-divider />
     <div class="flex flex-coljustify-start gap-x-4">
       <v-divider vertical />
-        <slot />
+      <slot />
       <v-spacer />
       <v-divider vertical />
     </div>
-  <v-divider />
+    <v-divider />
   </div>
 </template>

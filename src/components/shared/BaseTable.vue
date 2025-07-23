@@ -1,23 +1,23 @@
 <template>
-<v-card
-  class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 overflow-auto"
-  flat
->
+  <v-card
+    class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 overflow-auto"
+    flat
+  >
 
     <!-- Data Table -->
     <v-data-table-server
-      class="uppercase"
       v-model:items-per-page="options.itemsPerPage"
       v-model:options="options"
-      :headers="headers"
+      class="uppercase"
       density="compact"
       :header-props="{ class: 'text-ita-blue font-semibold text-sm normal-case' }"
+      :headers="headers"
+      :hide-default-footer="hideDefaultFooter"
       item-value="id"
       :items="items"
       :items-length="totalItems"
       :loading="loading"
       loading-text="Carregando..."
-      :hide-default-footer="hideDefaultFooter"
     >
       <template
         v-for="header in headers"
@@ -46,57 +46,57 @@
       <!-- Actions Column -->
       <template #item.action="{ item }">
         <template v-if="item.status === 'pending'">
-          <slot name="item.action" :item="item" />
+          <slot :item="item" name="item.action" />
         </template>
         <template v-else>
           <v-btn-group
             divided
             variant="outlined"
           >
-          <div v-if="handleConditionalAction(item)">
-            <v-tooltip
-              v-if="newAction"
-              :text="textNewAction"
-            >
-              <template #activator="{ props }">
-                <v-btn
-                  v-bind="props"
-                  :class="currentStatus(item) ? 'text-slate-500 border-0 ml-1 h-full' : classNewAction"
-                  :disabled="currentStatus(item)"
-                  icon
-                  @click.stop="selectItemNewAction(item)"
-                >
-                  <v-icon>{{ currentStatus(item) ? 'mdi-account-off' : iconNewAction }}</v-icon>
-                </v-btn>
-              </template>
-            </v-tooltip>
-          </div>
-          <div v-if="handleConditionalActionNot(item)">
-            <template
-             v-if="edit"
-            >
-              <span>
-                <v-btn
-                  v-if="(item?.role != 'admin')"
-                  v-bind="props"
-                  :disabled="!(deletable || item.deletable || editOn)"
-                  :class="item.deletable || deletable || editOn ? classEdit : 'text-slate-500 border-0  ml-1 h-full'"
-                  icon
-                  @click.stop="selectItem(item)"
-                >
+            <div v-if="handleConditionalAction(item)">
+              <v-tooltip
+                v-if="newAction"
+                :text="textNewAction"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    :class="currentStatus(item) ? 'text-slate-500 border-0 ml-1 h-full' : classNewAction"
+                    :disabled="currentStatus(item)"
+                    icon
+                    @click.stop="selectItemNewAction(item)"
+                  >
+                    <v-icon>{{ currentStatus(item) ? 'mdi-account-off' : iconNewAction }}</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+            </div>
+            <div v-if="handleConditionalActionNot(item)">
+              <template
+                v-if="edit"
+              >
+                <span>
+                  <v-btn
+                    v-if="(item?.role != 'admin')"
+                    v-bind="props"
+                    :class="item.deletable || deletable || editOn ? classEdit : 'text-slate-500 border-0  ml-1 h-full'"
+                    :disabled="!(deletable || item.deletable || editOn)"
+                    icon
+                    @click.stop="selectItem(item)"
+                  >
                     <v-icon>
-                      {{ item.deletable || deletable  || editOn ? iconEdit : 'mdi-pencil-off' }}
+                      {{ item.deletable || deletable || editOn ? iconEdit : 'mdi-pencil-off' }}
                     </v-icon>
-                </v-btn>
-                <v-tooltip
-                 activator="parent"
-                >
+                  </v-btn>
+                  <v-tooltip
+                    activator="parent"
+                  >
 
                     {{ item.deletable || deletable || editOn ? textEdit : 'Não é possível editar' }}
-                </v-tooltip>
-              </span>
-            </template>
-          </div>
+                  </v-tooltip>
+                </span>
+              </template>
+            </div>
 
 
             <v-tooltip
@@ -124,7 +124,7 @@
                   icon
                   @click="selectItemDelete(item)"
                 >
-                  <v-icon>{{ item.deletable || deletable ? chooseIconDelete(item?.status, iconDelete)  : 'mdi-delete-off' }}</v-icon>
+                  <v-icon>{{ item.deletable || deletable ? chooseIconDelete(item?.status, iconDelete) : 'mdi-delete-off' }}</v-icon>
                 </v-btn>
 
                 <v-tooltip
@@ -172,7 +172,7 @@
 
   const theme = useTheme()
 
- const props = defineProps({
+  const props = defineProps({
     role: { type: String, default: 'user' },
     headers: { type: Array, required: true },
     items: { type: Array, required: true },
@@ -180,26 +180,26 @@
     loading: { type: Boolean, default: false },
     tab: { type: String, default: 'finalizadas' },
     edit: { type: Boolean, default: true },
-    classEdit: { type: String, default: 'text-ita-blue bg-white/0/0 border-0 ml-1 h-full'},
+    classEdit: { type: String, default: 'text-ita-blue bg-white/0/0 border-0 ml-1 h-full' },
     register: { type: Boolean, default: false },
     showDelete: { type: Boolean, default: true },
     iconRegister: { type: String, default: 'mdi-plus' },
     iconDelete: { type: String, default: 'mdi-delete' },
-    iconView: { type: String, default: 'mdi-eye'},
-    textView: { type: String, default: 'Visualizar todos os dados'},
-    classView: { type: String, default: 'text-blue-500'},
+    iconView: { type: String, default: 'mdi-eye' },
+    textView: { type: String, default: 'Visualizar todos os dados' },
+    classView: { type: String, default: 'text-blue-500' },
     textDelete: { type: String, default: 'Excluir' },
     iconEdit: { type: String, default: 'mdi-pencil' },
     textEdit: { type: String, default: 'Editar' },
-    newAction: { type: Boolean, default: false},
-    classNewAction: { type: String, default: 'text-ita-green bg-white/0 border-0 ml-1 h-full'},
-    iconNewAction: { type: String, default: 'mdi-plus'},
-    textNewAction: { type: String, default: 'Ação'},
+    newAction: { type: Boolean, default: false },
+    classNewAction: { type: String, default: 'text-ita-green bg-white/0 border-0 ml-1 h-full' },
+    iconNewAction: { type: String, default: 'mdi-plus' },
+    textNewAction: { type: String, default: 'Ação' },
     tooltipTextDelete: { type: String, default: 'Não é possivel excluir pois há outros registros vinculados' },
     deletable: { type: Boolean, default: false },
     hideDefaultFooter: { type: Boolean, default: false },
-    editOn: { type: Boolean, default: true},
-    condiationalAction: { type: Boolean, default: false}
+    editOn: { type: Boolean, default: true },
+    condiationalAction: { type: Boolean, default: false },
   });
 
   const emit = defineEmits([
@@ -208,7 +208,7 @@
     'update-options',
     'view-item',
     'register-item',
-    'new-action'
+    'new-action',
   ]);
 
   const selectedItem = ref(null);
@@ -217,21 +217,21 @@
     page: 1,
     itemsPerPage: 10,
   });
-  const handleConditionalAction = (item) => {
+  const handleConditionalAction = item => {
     if (props.condiationalAction) {
       return item.status !== 'scheduled'
     } else {
       return true
     }
   }
-  const handleConditionalActionNot = (item) => {
+  const handleConditionalActionNot = item => {
     if (props.condiationalAction) {
       return item.status === 'scheduled'
     } else {
       return true
     }
   }
-  const currentStatus = (item) => {
+  const currentStatus = item => {
     if (props.condiationalAction) {
       return item.status == 'not-present'
     } else {
@@ -239,23 +239,23 @@
     }
   }
   const chooseIconDelete = (status, iconDelete) => {
-   const mapIcon = {
+    const mapIcon = {
       'not-present' : 'mdi-arrow-u-left-top',
       'realized' : 'mdi-arrow-u-left-top',
     }
     return mapIcon[status] || iconDelete
   }
-  const chooseClassDelete = (status) => {
+  const chooseClassDelete = status => {
     const mapClass = {
       'not-present': 'text-ita-yellow bg-white/0 border-0 ml-1 h-full',
-      'realized': 'text-ita-yellow bg-white/0 border-0 ml-1 h-full'
+      'realized': 'text-ita-yellow bg-white/0 border-0 ml-1 h-full',
     }
     return mapClass[status] || 'text-red-600 bg-white/0 border-0 ml-1 h-full';
   }
   const chooseTextDelete = (status, textDelete) => {
     const mapText = {
       'not-present': 'Desfazer',
-      'realized': 'Desfazer'
+      'realized': 'Desfazer',
     }
     return mapText[status] || textDelete;
   }

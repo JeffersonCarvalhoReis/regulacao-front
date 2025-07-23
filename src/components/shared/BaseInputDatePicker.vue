@@ -10,17 +10,17 @@
       <v-text-field
         v-model="formattedDate"
         v-bind="props"
+        :class="classField"
+        :clearable="clearable"
         density="compact"
         :error-messages="errorMessages"
         :label="label"
-        :readonly="readonly"
-        :class="classField"
         maxlength="10"
         persistent-hint
         placeholder="dd/mm/aaaa"
         prepend-inner-icon="mdi-calendar"
+        :readonly="readonly"
         variant="outlined"
-        :clearable="clearable"
         @keypress="onlyNumbers"
       />
     </template>
@@ -51,10 +51,10 @@
     label: { type: String, default: 'Data' },
     errorMessages: { type: String, default: null },
     modelValue: { type: [Date, String, null], default: null },
-    classDatePicker: { type: String, default: 'absolute left-[-175px]'},
+    classDatePicker: { type: String, default: 'absolute left-[-175px]' },
     readonly: { type: Boolean, default: false },
-    classField: {type: String, required: false},
-    clearable: {type: String, required: false}
+    classField: { type: String, required: false },
+    clearable: { type: String, required: false },
   });
 
   const emit = defineEmits(['update:modelValue']);

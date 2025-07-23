@@ -41,7 +41,7 @@ export default [
     component: Home,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -50,7 +50,7 @@ export default [
     component: Appointments,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -59,7 +59,7 @@ export default [
     component: AppointmentsManagement,
     meta: {
       requiresAuth: true,
-      roles: ['provider_unit_manager']
+      roles: ['provider_unit_manager'],
     },
   },
   {
@@ -68,7 +68,7 @@ export default [
     component: Doctors,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -77,7 +77,7 @@ export default [
     component: HealthUnits,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -86,7 +86,7 @@ export default [
     component: HealthAgents,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -95,7 +95,7 @@ export default [
     component: Patients,
     meta: {
       requiresAuth: true,
-      roles: ['tfd','regulation_officer', 'reception', 'provider_unit_manager']
+      roles: ['tfd','regulation_officer', 'reception', 'provider_unit_manager'],
     },
   },
   {
@@ -104,7 +104,7 @@ export default [
     component: Procedures,
     meta: {
       requiresAuth: true,
-      roles: ['reception','regulation_officer']
+      roles: ['reception','regulation_officer'],
     },
   },
   {
@@ -121,7 +121,7 @@ export default [
     component: Specialists,
     meta: {
       requiresAuth: true,
-      roles: ['reception','regulation_officer']
+      roles: ['reception','regulation_officer'],
     },
   },
   {
@@ -130,7 +130,7 @@ export default [
     component: RequestingUnits,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -139,7 +139,7 @@ export default [
     component: ProviderUnits,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer']
+      roles: ['regulation_officer'],
     },
   },
   {
@@ -148,7 +148,7 @@ export default [
     component: Users,
     meta: {
       requiresAuth: true,
-      roles: ['admin']
+      roles: ['admin'],
     },
   },
   {
@@ -157,7 +157,7 @@ export default [
     component: Solicitations,
     meta: {
       requiresAuth: true,
-      roles: ['regulation_officer', 'reception', 'provider_unit_manager']
+      roles: ['regulation_officer', 'reception', 'provider_unit_manager'],
     },
   },
 
@@ -167,7 +167,7 @@ export default [
     component: Companions,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
   {
@@ -176,7 +176,7 @@ export default [
     component: Hospitals,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
   {
@@ -185,7 +185,7 @@ export default [
     component: Cities,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
   {
@@ -194,7 +194,7 @@ export default [
     component: Vehicles,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
   {
@@ -203,7 +203,7 @@ export default [
     component: Drivers,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
   {
@@ -212,7 +212,7 @@ export default [
     component: Travels,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
   {
@@ -221,25 +221,25 @@ export default [
     component: PatientsTfd,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
-    {
+  {
     path: '/falecidos',
     name: 'deceased',
     component: Deceased,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
-      {
+  {
     path: '/bpa-definicoes',
     name: 'bpa-settings',
     component: BpaSettings,
     meta: {
       requiresAuth: true,
-      roles: ['tfd']
+      roles: ['tfd'],
     },
   },
 ]

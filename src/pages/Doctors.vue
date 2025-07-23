@@ -9,7 +9,7 @@
     v-model="registerDoctor"
     class="z-999"
   >
-    <doctor-form @close="registerDoctor = false" @save="submit"/>
+    <doctor-form @close="registerDoctor = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const doctorTableRef = ref(null);
 
 
-  const submit = async (doctor) => {
+  const submit = async doctor => {
     const success = await showFeedback(() => create(doctor));
     if (success) {
       doctorTableRef.value?.refetch();

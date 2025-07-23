@@ -1,6 +1,6 @@
 <!-- AppMenuItem.vue -->
 <template>
-  <v-list-item :to="to" :active="active" :class="classes" active-class="bg-blue-100">
+  <v-list-item :active="active" active-class="bg-blue-100" :class="classes" :to="to">
     <template #prepend>
       <v-icon :class="active ? 'text-ita-blue ' : ''">{{ icon }}</v-icon>
     </template>
@@ -11,14 +11,14 @@
 </template>
 
 <script setup>
-defineProps({
-  to: Object,
-  active: Boolean,
-  icon: String,
-  title: String,
-  classes: {
-    type: String,
-    default: 'hover:bg-blue-100 hover:text-ita-blue text-slate-700'
-  }
-});
+  defineProps({
+    to: Object,
+    active: Boolean,
+    icon: String,
+    title: String,
+    classes: {
+      type: String,
+      default: 'hover:bg-blue-100 hover:text-ita-blue text-slate-700',
+    },
+  });
 </script>

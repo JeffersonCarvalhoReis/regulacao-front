@@ -13,9 +13,9 @@
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
       @delete-item="handleDelete"
+      @edit-item="handleEdit"
       @update-options="updateOptions"
       @view-item="viewRequestingUnit"
-      @edit-item="handleEdit"
     />
   </div>
   <v-dialog v-model="viewRequestingUnitDetails">
@@ -40,7 +40,7 @@
     showDelete: { type: Boolean, default: false },
 
   })
-  const { data, loadingList, refetch, setTableOptions, meta, setFilter, update, destroy  } = useRequestingUnitApi();
+  const { data, loadingList, refetch, setTableOptions, meta, setFilter, update, destroy } = useRequestingUnitApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const options = ref({});

@@ -4,9 +4,9 @@
       <v-form>
         <v-text-field
           v-model="name"
+          class="required"
           density="compact"
           :error-messages="errors.name"
-          class="required"
           label="Nome"
           placeholder="Nome da Unidade Solicitante"
           variant="outlined"

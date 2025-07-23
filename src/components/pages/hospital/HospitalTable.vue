@@ -13,9 +13,9 @@
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
       @delete-item="handleDelete"
+      @edit-item="handleEdit"
       @update-options="updateOptions"
       @view-item="viewHospital"
-      @edit-item="handleEdit"
     />
   </div>
   <v-dialog v-model="viewHospitalDetails">

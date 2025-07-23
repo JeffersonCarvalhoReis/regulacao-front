@@ -5,10 +5,13 @@ export default [
     ignores: ['**/*.d.ts'],
   },
   {
-    globals: {
-      ...(require('./.eslintrc-auto-import.json').globals || {}),
+
+  },
+  ...vuetifyConfig,
+  {
+    rules: {
+      'vue/valid-v-slot': 'off',
     },
   },
 
-  ...vuetifyConfig,
 ]

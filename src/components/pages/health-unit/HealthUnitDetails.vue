@@ -5,7 +5,7 @@
         <InfoGroup title="Dados da Unidade">
           <div>Nome: {{ props.healthUnitData.name }}</div>
           <div>Total de pacientes: {{ totalPatients }}</div>
-        </InfoGroup >
+        </InfoGroup>
 
         <v-divider vertical />
 

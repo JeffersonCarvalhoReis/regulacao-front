@@ -1,6 +1,6 @@
-export function useDownloadFile() {
+export function useDownloadFile () {
 
-  const downloadFile = (file) => {
+  const downloadFile = file => {
     const link = document.createElement('a')
     link.href = file
     link.setAttribute('download', '')
@@ -10,6 +10,6 @@ export function useDownloadFile() {
   }
 
   return {
-    downloadFile
+    downloadFile,
   }
 }

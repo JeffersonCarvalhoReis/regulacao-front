@@ -5,22 +5,22 @@
     </provider-unit-search>
     <base-table
       class="rounted-t-none"
+      :class-new-action="classAddDoctor"
       :edit="props.edit"
       :headers="headers"
+      :icon-new-action="iconAddDoctor"
       :items="data"
       :loading="loadingList"
+      :new-action="addDoctor"
       :show-delete="props.showDelete"
+      :text-new-action="textAddDoctor"
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
-      :newAction="addDoctor"
-      :iconNewAction="iconAddDoctor"
-      :classNewAction="classAddDoctor"
-      :textNewAction="textAddDoctor"
       @delete-item="handleDelete"
-      @update-options="updateOptions"
-      @view-item="viewProviderUnit"
       @edit-item="handleEdit"
       @new-action="openDoctorManager"
+      @update-options="updateOptions"
+      @view-item="viewProviderUnit"
     />
   </div>
   <v-dialog v-model="viewProviderUnitDetails">
@@ -38,7 +38,7 @@
     v-model="dialogDoctorManager"
     class="z-999"
   >
-    <provider-unit-doctor-manager :model-value="selectedProviderUnit" @close="dialogDoctorManager = false" @save="submitUpdateDoctors"  @update-table="updateTable" />
+    <provider-unit-doctor-manager :model-value="selectedProviderUnit" @close="dialogDoctorManager = false" @save="submitUpdateDoctors" @update-table="updateTable" />
   </v-dialog>
 
 </template>

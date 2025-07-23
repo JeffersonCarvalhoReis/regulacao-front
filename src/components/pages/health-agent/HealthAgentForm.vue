@@ -5,9 +5,9 @@
         <div class="grid grid-cols-3 gap-x-2">
           <v-text-field
             v-model="name"
-            :error-messages="errors.name"
             class="col-span-2 required"
             density="compact"
+            :error-messages="errors.name"
             label="Nome"
             placeholder="Nome do agente"
             variant="outlined"
@@ -15,9 +15,9 @@
 
           <v-autocomplete
             v-model="health_unit_id"
-            :error-messages="errors.health_unit_id"
             class="required"
             density="compact"
+            :error-messages="errors.health_unit_id"
             item-title="name"
             item-value="id"
             :items="data"

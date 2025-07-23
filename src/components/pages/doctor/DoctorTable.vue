@@ -7,16 +7,16 @@
       class="rounted-t-none"
       :edit="props.edit"
       :headers="headers"
+      :icon-edit="iconEdit"
       :items="data"
       :loading="loadingList"
       :show-delete="props.showDelete"
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
-      :iconEdit="iconEdit"
       @delete-item="handleDelete"
+      @edit-item="handleEdit"
       @update-options="updateOptions"
       @view-item="viewDoctor"
-      @edit-item="handleEdit"
     />
   </div>
   <v-dialog v-model="viewDoctorDetails">
@@ -26,7 +26,7 @@
     v-model="editDoctor"
     class="z-999"
   >
-    <doctor-edit :model-value="selectedDoctor" @close="editDoctor = false" @save="submit" @update-table="refetch"/>
+    <doctor-edit :model-value="selectedDoctor" @close="editDoctor = false" @save="submit" @update-table="refetch" />
   </v-dialog>
 </template>
 
@@ -41,7 +41,7 @@
 
   });
 
-  const { data, loadingList, refetch, setTableOptions, meta, setFilter, update } = useDoctorApi();
+  const { data, loadingList, refetch, setTableOptions, meta, setFilter, update, destroy } = useDoctorApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const options = ref({});
@@ -64,14 +64,14 @@
 
   const submit = async value => {
     try {
-    await showFeedback(() => update(selectedDoctor.value.id, value))
-    await refetch()
-    const refreshedDoctor = data.value.find((d) => d.id === selectedDoctor.value.id)
-    if (refreshedDoctor) {
-      selectedDoctor.value = { ...refreshedDoctor }
-    }
+      await showFeedback(() => update(selectedDoctor.value.id, value))
+      await refetch()
+      const refreshedDoctor = data.value.find(d => d.id === selectedDoctor.value.id)
+      if (refreshedDoctor) {
+        selectedDoctor.value = { ...refreshedDoctor }
+      }
     } catch (error) {
-      console.error("Error updating doctor:", error)
+      console.error('Error updating doctor:', error)
     }
   };
 

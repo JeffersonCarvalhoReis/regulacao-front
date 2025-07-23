@@ -12,19 +12,18 @@
       :total-items="meta.total"
       @update-options="updateOptions"
     >
-    <template #item.birth_date="{ item }">
-      {{ formatDate(item.birth_date) }}
-    </template>
-        <template #item.date_of_dead="{ item }">
-      {{ formatDate(item.date_of_dead) }}
-    </template>
-  </base-table>
+      <template #item.birth_date="{ item }">
+        {{ formatDate(item.birth_date) }}
+      </template>
+      <template #item.date_of_dead="{ item }">
+        {{ formatDate(item.date_of_dead) }}
+      </template>
+    </base-table>
   </div>
 </template>
 
 <script setup>
   import { usePatientApi } from '@/composables/modules/usePatientModule';
-  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
   import debounce from 'lodash/debounce'
 
   const props = defineProps({
@@ -33,7 +32,6 @@
 
   });
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, clearFilters } = usePatientApi();
-  const { showFeedback, confirmModal } = useSweetAlertFeedback();
   const { formatDate } = useFormatDate();
 
   const options = ref({});

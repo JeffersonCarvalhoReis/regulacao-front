@@ -14,17 +14,17 @@
         />
 
         <v-autocomplete
-            :key="autocompleteKey"
-            v-model="city_id"
-            class="required"
-            :error-messages="errors.city_id"
-            density="compact"
-            item-title="name"
-            item-value="id"
-            :items="data"
-            label="Cidade"
-            variant="outlined"
-          />
+          :key="autocompleteKey"
+          v-model="city_id"
+          class="required"
+          density="compact"
+          :error-messages="errors.city_id"
+          item-title="name"
+          item-value="id"
+          :items="data"
+          label="Cidade"
+          variant="outlined"
+        />
       </v-form>
     </v-card-text>
     <v-card-actions class="flex justify-between mx-4 mb-4">
@@ -67,8 +67,8 @@
     validationSchema: schema,
     initialValues:  {
       name: '',
-      city_id: null
-    }
+      city_id: null,
+    },
   });
 
   const { value: name } = useField('name');

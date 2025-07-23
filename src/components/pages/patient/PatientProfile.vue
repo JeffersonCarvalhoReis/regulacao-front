@@ -34,11 +34,11 @@
       </BaseSection>
       <div v-if="!['tfd'].includes(role)">
         <h2 class="text-xl my-2">Histórico do Paciente</h2>
-          <v-tabs
-            v-model="tab"
-            selected-class="text-blue-800 bg-blue-100 border-b-2 border-blue-800"
-            class="border"
-          >
+        <v-tabs
+          v-model="tab"
+          class="border"
+          selected-class="text-blue-800 bg-blue-100 border-b-2 border-blue-800"
+        >
           <v-tab class="font-bold px-10" value="solicitations">
             Solicitações
           </v-tab>
@@ -64,25 +64,25 @@
           <v-select
             v-if="tab !== 'solicitations'"
             v-model="solicitationType"
-            :items="solicitationTypeOptions"
-            :label="tab === 'solicitations' ? 'Tipo de Solicitação' : 'Tipo de Agendamento'"
+            class="max-w-100 mt-4"
+            density="compact"
             item-title="label"
             item-value="value"
+            :items="solicitationTypeOptions"
+            :label="tab === 'solicitations' ? 'Tipo de Solicitação' : 'Tipo de Agendamento'"
             variant="outlined"
-            density="compact"
-            class="max-w-100 mt-4"
           />
 
           <v-tabs-window-item value="solicitations">
             <v-select
               v-model="solicitationType"
-              :items="solicitationTypeOptions"
-              label="Tipo de Solicitação"
+              class="max-w-100 mt-4"
+              density="compact"
               item-title="label"
               item-value="value"
+              :items="solicitationTypeOptions"
+              label="Tipo de Solicitação"
               variant="outlined"
-              density="compact"
-              class="max-w-100 mt-4"
             />
             <patient-solicitation-table
               :patient-id="patientData.id"
@@ -93,10 +93,10 @@
 
           <v-tabs-window-item v-for="tabValue in appointmentTabs" :key="tabValue" :value="tabValue">
             <patient-appointment-table
+              :ref="tabValue === 'scheduled' ? setAppointmentTableRef : undefined"
+              :appointment-status="tabValue"
               :patient-id="patientData.id"
               :solicitation-type="solicitationType"
-              :appointment-status="tabValue"
-              :ref="tabValue === 'scheduled' ? setAppointmentTableRef : undefined"
             />
           </v-tabs-window-item>
         </v-tabs-window>
@@ -127,7 +127,7 @@
 
   const solicitationTypeOptions = [
     { label: 'Consulta', value: 'consultation' },
-    { label: 'Exame', value: 'exam' }
+    { label: 'Exame', value: 'exam' },
   ];
 
   const genderMap = value => {

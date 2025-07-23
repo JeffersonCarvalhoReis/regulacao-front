@@ -25,9 +25,9 @@
                 @register="dialogSpecialistForm = true"
               >
                 <v-tooltip
-                activator="parent"
+                  activator="parent"
                 >
-                Clique para cadastrar nova especialidade caso não encontre na lista
+                  Clique para cadastrar nova especialidade caso não encontre na lista
                 </v-tooltip>
               </base-button-register>
             </div>
@@ -41,7 +41,7 @@
                 <v-tooltip
                   activator="parent"
                 >
-                 Cadastrar novo procedimento caso não encontre na lista
+                  Cadastrar novo procedimento caso não encontre na lista
                 </v-tooltip>
               </base-button-register>
             </div>
@@ -54,9 +54,9 @@
               @register="dialogRequestingUnitForm = true"
             >
               <v-tooltip
-               activator="parent"
+                activator="parent"
               >
-               Cadastrar nova unidade solicitante caso não encontre na lista
+                Cadastrar nova unidade solicitante caso não encontre na lista
               </v-tooltip>
             </base-button-register>
           </div>
@@ -65,16 +65,16 @@
         <div class="grid grid-cols-3 gap-2">
           <v-autocomplete
             v-model="patient_id"
-            :items="patientData"
-            :loading="isLoading"
             class="col-span-2"
+            density="compact"
+            :error-messages="errors.patient_id"
             :item-title="patientLabel"
             item-value="id"
+            :items="patientData"
             label="Paciente"
+            :loading="isLoading"
             variant="outlined"
-            density="compact"
             @update:search="onSearch"
-            :error-messages="errors.patient_id"
           />
 
           <base-input-date-picker
@@ -127,38 +127,38 @@
           </div>
 
           <div
-          class="flex items-start gap-1"
-          v-if="solicitation_type == 'consultation'"
+            v-if="solicitation_type == 'consultation'"
+            class="flex items-start gap-1"
           >
             <v-autocomplete
-            v-model="specialist_id"
-            class="required"
-            density="compact"
-            :error-messages="errors.specialist_id"
-            item-title="name"
-            item-value="id"
-            :items="specialistData"
-            label="Especialidade"
-            variant="outlined"
-          />
+              v-model="specialist_id"
+              class="required"
+              density="compact"
+              :error-messages="errors.specialist_id"
+              item-title="name"
+              item-value="id"
+              :items="specialistData"
+              label="Especialidade"
+              variant="outlined"
+            />
 
           </div>
           <div
-          v-else
-          class="flex  items-start gap-1"
+            v-else
+            class="flex  items-start gap-1"
           >
-          <v-autocomplete
-            :disabled="!solicitation_type"
-            v-model="procedure_id"
-            :class="{ 'required': solicitation_type}"
-            density="compact"
-            :error-messages="errors.procedure_id"
-            item-title="name"
-            item-value="id"
-            :items="procedureData"
-            label="Procedimento"
-            variant="outlined"
-          />
+            <v-autocomplete
+              v-model="procedure_id"
+              :class="{ 'required': solicitation_type}"
+              density="compact"
+              :disabled="!solicitation_type"
+              :error-messages="errors.procedure_id"
+              item-title="name"
+              item-value="id"
+              :items="procedureData"
+              label="Procedimento"
+              variant="outlined"
+            />
           </div>
           <v-autocomplete
             v-model="requesting_unit_id"
@@ -174,18 +174,18 @@
 
           <v-file-input
             v-model="attachment"
-            density="compact"
-            label="Anexo"
-            :error-messages="errors.attachment"
-            prepend-inner-icon="mdi-paperclip"
-            prepend-icon
-            variant="outlined"
             accept=".pdf,.jpg,.jpeg,.png"
+            density="compact"
+            :error-messages="errors.attachment"
+            label="Anexo"
+            prepend-icon
+            prepend-inner-icon="mdi-paperclip"
+            variant="outlined"
           />
           <v-textarea
+            v-model="reason"
             class="col-span-3 required"
             density="compact"
-            v-model="reason"
             :error-messages="errors.reason"
             label="Motivo"
             variant="outlined"
@@ -204,28 +204,28 @@
       />
     </v-card-actions>
     <v-dialog
-    class="z-999"
-    v-model="dialogPatientForm"
+      v-model="dialogPatientForm"
+      class="z-999"
     >
-    <patient-form @save="submitNewPatient" @close="dialogPatientForm = false"/>
+      <patient-form @close="dialogPatientForm = false" @save="submitNewPatient" />
     </v-dialog>
     <v-dialog
-    class="z-999"
-    v-model="dialogProcedureForm"
+      v-model="dialogProcedureForm"
+      class="z-999"
     >
-    <procedure-form @save="submitNewProcedure" @close="dialogProcedureForm = false"/>
+      <procedure-form @close="dialogProcedureForm = false" @save="submitNewProcedure" />
     </v-dialog>
     <v-dialog
-    class="z-999"
-    v-model="dialogSpecialistForm"
+      v-model="dialogSpecialistForm"
+      class="z-999"
     >
-    <specialist-form @save="submitNewSpecialist" @close="dialogSpecialistForm = false"/>
+      <specialist-form @close="dialogSpecialistForm = false" @save="submitNewSpecialist" />
     </v-dialog>
     <v-dialog
-    class="z-999"
-    v-model="dialogRequestingUnitForm"
+      v-model="dialogRequestingUnitForm"
+      class="z-999"
     >
-    <requesting-unit-form @save="submitNewRequestingUnit" @close="dialogRequestingUnitForm = false"/>
+      <requesting-unit-form @close="dialogRequestingUnitForm = false" @save="submitNewRequestingUnit" />
     </v-dialog>
   </base-card>
 </template>
@@ -243,7 +243,6 @@
   import * as yup from 'yup'
 
 
-
   const props = defineProps({
     modelValue: { type: Object, default: () => ({}) },
   })
@@ -251,7 +250,7 @@
   const { data: patientData, refetch: patientFetch, create: patientCreate, setFilter: patientFilter, isLoading, clearFilters } = usePatientApi();
   const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate } = useSpecialistApi();
   const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate } = useProcedureApi();
-  const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate, setSort: sortRequestingUnit} = useRequestingUnitApi();
+  const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate } = useRequestingUnitApi();
   const { showFeedback, showFeedbackLoading } = useSweetAlertFeedback();
   const { calculateAge } = useCalculateAge();
   const { patientLabel } = usePatientLabel();
@@ -275,15 +274,15 @@
 
   const solicitationTypeOptions = [
     { label: 'Consulta', value: 'consultation' },
-    { label: 'Exame', value: 'exam' }
+    { label: 'Exame', value: 'exam' },
   ];
   const isFirstTimeOptions = [
     { label: 'Sim', value: 0 },
-    { label: 'Não', value: 1 }
+    { label: 'Não', value: 1 },
   ];
   const isUrgentOptions = [
     { label: 'Sim', value: 1 },
-    { label: 'Não', value: 0 }
+    { label: 'Não', value: 0 },
   ];
 
 
@@ -303,12 +302,12 @@
         loadPatient(),
         specialistFetch(),
         procedureFetch(),
-        requestingUnitFetch()
+        requestingUnitFetch(),
       ]),
       {
         loadingText: 'Carregando Dados',
-        erroTitle: 'Falha ao Carregar dados'
-       }
+        erroTitle: 'Falha ao Carregar dados',
+      }
     )
   });
 
@@ -324,12 +323,12 @@
   }
 
   const onSearch = debounce(async v => {
-      clearFilters();
-      const name = v.split('-');
-      patientFilter('name', name[0]);
-      await nextTick()
-      patientFetch()
-    }, 250);
+    clearFilters();
+    const name = v.split('-');
+    patientFilter('name', name[0]);
+    await nextTick()
+    patientFetch()
+  }, 250);
 
 
   const emit = defineEmits(['close', 'save']);
@@ -347,76 +346,76 @@
     is_urgent: yup.number().required('Obrigátorio identificar se é urgente'),
     reason: yup.string().required('Motivo é obrigatório'),
     attachment: yup
-    .mixed()
-    .nullable()
-    .test('fileSize', 'O arquivo deve ter no máximo 10MB', (value) => {
-      if (!value) return true;
-      return value.size <= 10 * 1024 * 1024;
-    })
-    .test('fileType', 'Tipo de arquivo inválido', (value) => {
-      if (!value) return true;
-      const allowedTypes = [
-        'application/pdf',
-        'image/jpeg',
-        'image/png',
-      ];
-      return allowedTypes.includes(value.type);
-    }),
+      .mixed()
+      .nullable()
+      .test('fileSize', 'O arquivo deve ter no máximo 10MB', value => {
+        if (!value) return true;
+        return value.size <= 10 * 1024 * 1024;
+      })
+      .test('fileType', 'Tipo de arquivo inválido', value => {
+        if (!value) return true;
+        const allowedTypes = [
+          'application/pdf',
+          'image/jpeg',
+          'image/png',
+        ];
+        return allowedTypes.includes(value.type);
+      }),
     requesting_unit_id: yup.number().required('Unidade solicitante é obrigatório'),
     specialist_id: yup
-    .number()
-    .nullable()
-    .when('solicitation_type', {
-      is: 'consultation',
-      then: (schema) => schema
-      .required('Especialidade é obrigatória')
-      .test('check_min_age', `Paciente não tem a idade mínima exigida para essa especialidade (${specialist_min_age.value} anos)`, () => {
-        if(patient_age.value != null && specialist_min_age.value != null) {
-          return patient_age.value >= specialist_min_age.value;
-        }
-        return true;
+      .number()
+      .nullable()
+      .when('solicitation_type', {
+        is: 'consultation',
+        then: schema => schema
+          .required('Especialidade é obrigatória')
+          .test('check_min_age', `Paciente não tem a idade mínima exigida para essa especialidade (${specialist_min_age.value} anos)`, () => {
+            if(patient_age.value != null && specialist_min_age.value != null) {
+              return patient_age.value >= specialist_min_age.value;
+            }
+            return true;
+          })
+          .test('check_max_age', `Paciente ultrapassou a idade máxima permitida para essa especialidade (${specialist_max_age.value} anos)`, () => {
+            if(patient_age.value != null && specialist_max_age.value != null) {
+              return patient_age.value <= specialist_max_age.value;
+            }
+            return true;
+          }),
+        otherwise: schema => schema.nullable(),
       })
-      .test('check_max_age', `Paciente ultrapassou a idade máxima permitida para essa especialidade (${specialist_max_age.value} anos)`, () => {
-        if(patient_age.value != null && specialist_max_age.value != null) {
-          return patient_age.value <= specialist_max_age.value;
-        }
-        return true;
-      }),
-      otherwise: (schema) => schema.nullable()
-    })
     ,
 
-  procedure_id: yup
-    .number()
-    .nullable()
-    .when('solicitation_type', {
-      is: 'exam',
-      then: (schema) => schema
-      .required('Procedimento é obrigatório')
-      .test('check_min_age', `Paciente não tem a idade mínima exigida para esse procedimento (${procedure_min_age.value} anos)`, () => {
-        if(patient_age.value != null && procedure_min_age.value != null) {
-          return patient_age.value >= procedure_min_age.value;
-        }
-        return true;
-      })
-    .test('check_max_age', `Paciente ultrapassou a idade máxima permitida para esse procedimento (${procedure_max_age.value} anos)`, () => {
-        if(patient_age.value != null && procedure_max_age.value != null) {
-          return patient_age.value <= procedure_max_age.value;
-        }
-        return true;
+    procedure_id: yup
+      .number()
+      .nullable()
+      .when('solicitation_type', {
+        is: 'exam',
+        then: schema => schema
+          .required('Procedimento é obrigatório')
+          .test('check_min_age', `Paciente não tem a idade mínima exigida para esse procedimento (${procedure_min_age.value} anos)`, () => {
+            if(patient_age.value != null && procedure_min_age.value != null) {
+              return patient_age.value >= procedure_min_age.value;
+            }
+            return true;
+          })
+          .test('check_max_age', `Paciente ultrapassou a idade máxima permitida para esse procedimento (${procedure_max_age.value} anos)`, () => {
+            if(patient_age.value != null && procedure_max_age.value != null) {
+              return patient_age.value <= procedure_max_age.value;
+            }
+            return true;
+          }),
+        otherwise: schema => schema.nullable(),
       }),
-      otherwise: (schema) => schema.nullable()
-    })
-   });
+  });
 
-   const today = new Date();
+  const today = new Date();
 
   const { handleSubmit, errors, resetForm } = useForm({
     validationSchema: schema,
     initialValues: {
       attachment: null,
       solicitation_date: today,
-    }
+    },
   });
 
   const { value: patient_id } = useField('patient_id');

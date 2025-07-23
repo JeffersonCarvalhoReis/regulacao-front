@@ -13,9 +13,9 @@
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
       @delete-item="handleDelete"
+      @edit-item="handleEdit"
       @update-options="updateOptions"
       @view-item="viewHealthUnit"
-      @edit-item="handleEdit"
     />
   </div>
   <v-dialog v-model="viewHealthUnitDetails">
@@ -111,7 +111,7 @@
         sortable: true,
         align: 'left',
       },
-     {
+      {
         title: 'CNES da Unidade',
         key: 'cnes',
         sortable: false,

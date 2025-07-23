@@ -4,82 +4,82 @@
       <slot />
     </solicitation-search>
     <v-tabs
-        v-model="tab"
-        class="bg-white border-t border-x border-gray-200"
-        selected-class="text-blue-800 bg-blue-100"
-      >
-        <v-tab class="font-bold px-10" value="consultation">
-          Consultas
-        </v-tab>
-        <v-tab class="font-bold  px-10" value="exam">
-          Exames
-        </v-tab>
-      </v-tabs>
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item value="consultation">
-            <base-table
-            class="rounted-t-none"
-            :edit="props.edit"
-            :headers="headers"
-            :items="data"
-            :loading="loadingList"
-            :show-delete="props.showDelete"
-            :tooltip-text-delete="tooltipTextDelete"
-            :total-items="meta.total"
-            :new-action="appointmentPermission"
-            :icon-new-action="appointmentIcon"
-            :text-new-action="appointmentText"
-            :class-new-action="appointmentClass"
-            @delete-item="handleDelete"
-            @edit-item="handleEdit"
-            @update-options="updateOptions"
-            @view-item="viewSolicitation"
-            @new-action="openAppointment"
-          >
+      v-model="tab"
+      class="bg-white border-t border-x border-gray-200"
+      selected-class="text-blue-800 bg-blue-100"
+    >
+      <v-tab class="font-bold px-10" value="consultation">
+        Consultas
+      </v-tab>
+      <v-tab class="font-bold  px-10" value="exam">
+        Exames
+      </v-tab>
+    </v-tabs>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item value="consultation">
+        <base-table
+          class="rounted-t-none"
+          :class-new-action="appointmentClass"
+          :edit="props.edit"
+          :headers="headers"
+          :icon-new-action="appointmentIcon"
+          :items="data"
+          :loading="loadingList"
+          :new-action="appointmentPermission"
+          :show-delete="props.showDelete"
+          :text-new-action="appointmentText"
+          :tooltip-text-delete="tooltipTextDelete"
+          :total-items="meta.total"
+          @delete-item="handleDelete"
+          @edit-item="handleEdit"
+          @new-action="openAppointment"
+          @update-options="updateOptions"
+          @view-item="viewSolicitation"
+        >
           <template #item.solicitation_date="{ item }">
-             {{ formatDate(item.solicitation_date) }}
+            {{ formatDate(item.solicitation_date) }}
           </template>
           <template #item.is_first_time="{ item }">
-             {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
+            {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
           </template>
           <template #item.is_urgent="{ item }">
-             {{ booleanToLabel(item.is_urgent) }}
+            {{ booleanToLabel(item.is_urgent) }}
           </template>
         </base-table>
       </v-tabs-window-item>
 
-        <v-tabs-window-item value="exam">
-          <base-table
-            class="rounted-t-none"
-            :edit="props.edit"
-            :headers="headers"
-            :items="data"
-            :loading="loadingList"
-            :show-delete="props.showDelete"
-            :tooltip-text-delete="tooltipTextDelete"
-            :total-items="meta.total"
-            :new-action="appointmentPermission"
-            :icon-new-action="appointmentIcon"
-            :text-new-action="appointmentText"
-            :class-new-action="appointmentClass"
-            @delete-item="handleDelete"
-            @edit-item="handleEdit"
-            @update-options="updateOptions"
-            @view-item="viewSolicitation"
-            @new-action="openAppointment"
-          >
-            <template #item.solicitation_date="{ item }">
-              {{ formatDate(item.solicitation_date) }}
-            </template>
-            <template #item.is_first_time="{ item }">
-              {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
-            </template>
-            <template #item.is_urgent="{ item }">
-              {{ booleanToLabel(item.is_urgent) }}
-            </template>
+      <v-tabs-window-item value="exam">
+        <base-table
+          class="rounted-t-none"
+          :class-new-action="appointmentClass"
+          :edit="props.edit"
+          :headers="headers"
+          :icon-new-action="appointmentIcon"
+          :items="data"
+          :loading="loadingList"
+          :new-action="appointmentPermission"
+          :show-delete="props.showDelete"
+          :text-new-action="appointmentText"
+          :tooltip-text-delete="tooltipTextDelete"
+          :total-items="meta.total"
+          @delete-item="handleDelete"
+          @edit-item="handleEdit"
+          @new-action="openAppointment"
+          @update-options="updateOptions"
+          @view-item="viewSolicitation"
+        >
+          <template #item.solicitation_date="{ item }">
+            {{ formatDate(item.solicitation_date) }}
+          </template>
+          <template #item.is_first_time="{ item }">
+            {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
+          </template>
+          <template #item.is_urgent="{ item }">
+            {{ booleanToLabel(item.is_urgent) }}
+          </template>
         </base-table>
-        </v-tabs-window-item>
-      </v-tabs-window>
+      </v-tabs-window-item>
+    </v-tabs-window>
 
 
   </div>
@@ -99,11 +99,11 @@
   >
     <appointment-form :solicitation-data="selectedSolicitation" @close="dialogAppointment = false" @save="submitAppointment" />
   </v-dialog>
-    <v-dialog
+  <v-dialog
     v-model="dialogAppointmentConfirmation"
     class="z-985"
-    >
-    <appointment-confirmation @close="dialogAppointmentConfirmation = false" :appointment-data="appointmentData" />
+  >
+    <appointment-confirmation :appointment-data="appointmentData" @close="dialogAppointmentConfirmation = false" />
   </v-dialog>
 </template>
 
@@ -123,7 +123,7 @@
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, destroy, clearFilters, updateWithAttachment } = useSolicitationApi();
   const { create } = useAppointmentApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
-  const { booleanToLabel  } = useBooleanLabel();
+  const { booleanToLabel } = useBooleanLabel();
   const { formatDate } = useFormatDate();
 
   const meStore = useMeStore();
@@ -139,8 +139,8 @@
   const solicitationData = ref({});
   const tooltipTextDelete = 'Não é possível excluir uma solicitação já agendada.'
   const tab = ref('consultation');
-  const appointmentIcon = "mdi-calendar-check"
-  const appointmentText = "Agendar Solicitação"
+  const appointmentIcon = 'mdi-calendar-check'
+  const appointmentText = 'Agendar Solicitação'
   const appointmentClass = 'text-green-600 bg-white/0 border-0 ml-1 h-full';
 
 
@@ -211,67 +211,67 @@
 
   const headers = computed( () => {
     const baseHeaders = [
-    {
-      title: 'Detalhes',
-      value: 'view',
-      align: 'center',
-      width: '20px',
-    },
-    {
-      title: 'Paciente',
-      key: 'patient',
-      sortable: true,
-      align: 'center',
+      {
+        title: 'Detalhes',
+        value: 'view',
+        align: 'center',
+        width: '20px',
+      },
+      {
+        title: 'Paciente',
+        key: 'patient',
+        sortable: true,
+        align: 'center',
 
-    },
-    {
-      title: 'Data da Solicitação',
-      key: 'solicitation_date',
-      sortable: true,
-      align: 'center',
+      },
+      {
+        title: 'Data da Solicitação',
+        key: 'solicitation_date',
+        sortable: true,
+        align: 'center',
 
-    },
-    {
-      title: 'Retorno',
-      key: 'is_first_time',
-      sortable: true,
-      align: 'center',
+      },
+      {
+        title: 'Retorno',
+        key: 'is_first_time',
+        sortable: true,
+        align: 'center',
 
-    },
-    {
-      title: 'Urgência',
-      key: 'is_urgent',
-      sortable: true,
-      align: 'center',
-    },
-    {
-      title: 'Cadastrado por',
-      key: 'created_by',
-      sortable: true,
-      align: 'center',
-    },
-    {
-      title: 'Ações',
+      },
+      {
+        title: 'Urgência',
+        key: 'is_urgent',
+        sortable: true,
+        align: 'center',
+      },
+      {
+        title: 'Cadastrado por',
+        key: 'created_by',
+        sortable: true,
+        align: 'center',
+      },
+      {
+        title: 'Ações',
         value: 'action',
         align: 'center',
         width: '100px',
-    }
+      },
 
     ];
     if(tab.value == 'exam') {
       baseHeaders.splice(2, 0, {
-      title: 'Procedimento',
-      key: 'procedure',
-      sortable: true,
-      align: 'center',
-    });
+        title: 'Procedimento',
+        key: 'procedure',
+        sortable: true,
+        align: 'center',
+      });
     } else if(tab.value == 'consultation') {
       baseHeaders.splice(2, 0, {
-      title: 'Especialidade',
-      key: 'specialist',
-      sortable: true,
-      align: 'center',
-    });
+        title: 'Especialidade',
+        key: 'specialist',
+        sortable: true,
+        align: 'center',
+      });
     }
     return baseHeaders
   });

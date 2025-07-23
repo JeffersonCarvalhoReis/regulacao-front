@@ -1,19 +1,19 @@
 <template>
-  <BaseCard @close="emit('close')" title="Novas Recomendações">
+  <BaseCard title="Novas Recomendações" @close="emit('close')">
     <v-card-text>
-      <div  class="flex gap-4">
+      <div class="flex gap-4">
         <v-select
+          density="compact"
+          item-title="text"
+          item-value="text"
           :items="data"
           label="Recomendações prontas"
           variant="outlined"
-          item-title="text"
-          item-value="text"
-          density="compact"
           @update:model-value="updateTextArea"
         />
         <v-btn
-          prepend-icon="mdi-pencil"
           color="primary"
+          prepend-icon="mdi-pencil"
           @click="dialogRecomendationTable = true"
         >
           Editar
@@ -23,24 +23,23 @@
 
       <v-textarea
         v-model="recomendation"
-        variant="outlined"
-        label="Recomendações"
         density="compact"
-      >
-      </v-textarea>
+        label="Recomendações"
+        variant="outlined"
+      />
     </v-card-text>
     <div class="flex justify-end gap-2 m-4">
       <v-btn
-        prepend-icon="mdi-close"
         color="error"
+        prepend-icon="mdi-close"
         @click="emit('close')"
       >
-      Fechar
-      <v-tooltip activator="parent">Fechar recomendações</v-tooltip>
+        Fechar
+        <v-tooltip activator="parent">Fechar recomendações</v-tooltip>
       </v-btn>
       <v-btn
-        prepend-icon="mdi-content-save"
         color="primary"
+        prepend-icon="mdi-content-save"
         @click="emit('save', recomendation)"
       >
         Salvar
@@ -52,11 +51,11 @@
     v-model="dialogRecomendationTable"
     class="z-995"
   >
-    <BaseCard @close="dialogRecomendationTable  = false" title="Lista de Recomendações Prontas">
+    <BaseCard title="Lista de Recomendações Prontas" @close="dialogRecomendationTable = false">
       <div class="flex justify-end p-4">
         <v-btn
-          prepend-icon="mdi-comment-plus"
           color="primary"
+          prepend-icon="mdi-comment-plus"
           @click="dialogNewRecomendation = true"
         >
           Adicionar
@@ -66,13 +65,13 @@
 
       <div class="mx-4 mb-8 overflow-y-auto">
         <BaseTable
-          :items="data"
           :headers="headers"
           hide-default-footer
+          :items="data"
           @delete-item="handleDelete"
           @edit-item="handleEdit"
         />
-    </div>
+      </div>
     </BaseCard>
   </v-dialog>
   <v-dialog
@@ -80,108 +79,108 @@
     class="z-999"
     persistent
   >
-  <BaseCard @close="handleCloseDialogNewRecomendation" :title="titleNewRecomentation" >
-    <div class="p-4">
-      <v-textarea
-        v-model="newRecomendation"
-        :error-messages="errors.text"
-        variant="outlined"
-        label="Recomendações"
-        density="compact"
-      />
-      <div class="flex justify-end">
-        <v-btn
-        prepend-icon="mdi-content-save"
-        color="primary"
-        @click="createNewRecomendation"
-      >
-        Salvar
-        <v-tooltip activator="parent">{{ tooltipSaveRecomendation }}</v-tooltip>
-      </v-btn>
+    <BaseCard :title="titleNewRecomentation" @close="handleCloseDialogNewRecomendation">
+      <div class="p-4">
+        <v-textarea
+          v-model="newRecomendation"
+          density="compact"
+          :error-messages="errors.text"
+          label="Recomendações"
+          variant="outlined"
+        />
+        <div class="flex justify-end">
+          <v-btn
+            color="primary"
+            prepend-icon="mdi-content-save"
+            @click="createNewRecomendation"
+          >
+            Salvar
+            <v-tooltip activator="parent">{{ tooltipSaveRecomendation }}</v-tooltip>
+          </v-btn>
+        </div>
       </div>
-    </div>
 
-  </BaseCard>
+    </BaseCard>
   </v-dialog>
 </template>
 
 <script setup>
-import { useRecomendationApi } from '@/composables/modules/useRecomendationModule';
-import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
-import { useField, useForm } from 'vee-validate'
-import * as yup from 'yup'
+  import { useRecomendationApi } from '@/composables/modules/useRecomendationModule';
+  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+  import { useField, useForm } from 'vee-validate'
+  import * as yup from 'yup'
 
-const props = defineProps({
-  recomendationDefault: { type: String, required: true}
-})
+  const props = defineProps({
+    recomendationDefault: { type: String, required: true },
+  })
 
-const dialogRecomendationTable = ref(false);
-const dialogNewRecomendation = ref(false);
-const recomendation = ref(null);
-const editingId = ref(null);
-const isEditing = computed(() => !!editingId.value);
-const titleNewRecomentation = computed(() => isEditing.value ? 'Editar Recomendação pronta' : 'Adicionar Nova Recomendação');
-const tooltipSaveRecomendation = computed(() => isEditing.value ? 'Salvar edição' : 'Salvar nova recomendação')
+  const dialogRecomendationTable = ref(false);
+  const dialogNewRecomendation = ref(false);
+  const recomendation = ref(null);
+  const editingId = ref(null);
+  const isEditing = computed(() => !!editingId.value);
+  const titleNewRecomentation = computed(() => isEditing.value ? 'Editar Recomendação pronta' : 'Adicionar Nova Recomendação');
+  const tooltipSaveRecomendation = computed(() => isEditing.value ? 'Salvar edição' : 'Salvar nova recomendação')
 
-const { data, refetch, create, update, destroy } = useRecomendationApi();
-const { showFeedback, confirmModal } = useSweetAlertFeedback();
+  const { data, refetch, create, update, destroy } = useRecomendationApi();
+  const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
-const emit = defineEmits(['close', 'save']);
+  const emit = defineEmits(['close', 'save']);
 
-const updateTextArea = newValue => {
-  recomendation.value = newValue
-}
-
-const schema = yup.object({
-  text: yup.string().required('O texto da recomendação não pode ser salva em branco')
-})
-const { handleSubmit, errors, resetForm } = useForm({
-  validationSchema: schema,
-  initialValues: {
-    text: ''
-  }
-});
-
-const { value: newRecomendation } = useField('text');
-
-const createNewRecomendation = handleSubmit(async values => {
-  if (editingId.value) {
-    await showFeedback(() => update(editingId.value, values));
-  } else {
-    await showFeedback(() => create(values));
+  const updateTextArea = newValue => {
+    recomendation.value = newValue
   }
 
-  await refetch();
-  dialogNewRecomendation.value = false;
-  editingId.value = null;
-  resetForm({ values: { text: '' } });
-});
+  const schema = yup.object({
+    text: yup.string().required('O texto da recomendação não pode ser salva em branco'),
+  })
+  const { handleSubmit, errors, resetForm } = useForm({
+    validationSchema: schema,
+    initialValues: {
+      text: '',
+    },
+  });
 
-onMounted( async () => {
-  await refetch();
-  recomendation.value = props.recomendationDefault
-});
+  const { value: newRecomendation } = useField('text');
 
-const handleDelete = async (recomendation) => {
-  const confirm =  await confirmModal('Realmente deseja excluir essa recomendação?', 'Atenção');
-  if(confirm) {
-    await showFeedback(() => destroy(recomendation));
-    refetch();
+  const createNewRecomendation = handleSubmit(async values => {
+    if (editingId.value) {
+      await showFeedback(() => update(editingId.value, values));
+    } else {
+      await showFeedback(() => create(values));
+    }
+
+    await refetch();
+    dialogNewRecomendation.value = false;
+    editingId.value = null;
+    resetForm({ values: { text: '' } });
+  });
+
+  onMounted( async () => {
+    await refetch();
+    recomendation.value = props.recomendationDefault
+  });
+
+  const handleDelete = async recomendation => {
+    const confirm = await confirmModal('Realmente deseja excluir essa recomendação?', 'Atenção');
+    if(confirm) {
+      await showFeedback(() => destroy(recomendation));
+      refetch();
+    }
+  };
+  const handleCloseDialogNewRecomendation = () => {
+    editingId.value = null;
+    resetForm({ values: { text: '' } });
+    dialogNewRecomendation.value = false;
+  };
+
+  const handleEdit = recomendation => {
+    resetForm({ values: recomendation })
+    editingId.value = recomendation.id
+    dialogNewRecomendation.value = true
   }
-};
-const handleCloseDialogNewRecomendation = () => {
-  editingId.value = null;
-  resetForm({ values: { text: '' } });
-  dialogNewRecomendation.value = false;
-};
 
-const handleEdit = (recomendation) =>  {
-  resetForm({ values: recomendation })
-  editingId.value = recomendation.id
-  dialogNewRecomendation.value = true
-}
-
-const headers = computed( () => {
+  const headers = computed( () => {
     const baseHeaders = [
 
       {
@@ -197,7 +196,7 @@ const headers = computed( () => {
         value: 'action',
         width: '200px',
         align: 'center',
-      }
+      },
     ];
     return baseHeaders
   });

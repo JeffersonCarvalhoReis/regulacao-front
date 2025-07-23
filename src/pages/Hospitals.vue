@@ -1,5 +1,5 @@
 <template>
-  <hospital-table ref='hospitalTableRef' :edit="true" :show-delete="true">
+  <hospital-table ref="hospitalTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerHospital = true" />
 
@@ -9,7 +9,7 @@
     v-model="registerHospital"
     class="z-999"
   >
-    <hospital-form @close="registerHospital = false"  @save="submit" />
+    <hospital-form @close="registerHospital = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const hospitalTableRef = ref(null);
 
 
-  const submit = async (hospital) => {
+  const submit = async hospital => {
     const success = await showFeedback(() => create(hospital));
     if (success) {
       hospitalTableRef.value?.refetch();
