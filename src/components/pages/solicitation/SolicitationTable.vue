@@ -128,7 +128,7 @@
 
   const meStore = useMeStore();
   const role = meStore.role;
-  const appointmentPermission = ['regulation_officer'].includes(role)
+  const appointmentPermission = ['regulation_officer', 'provider_unit_manager'].includes(role)
   const options = ref({});
   const viewSolicitationDetails = ref(false);
   const editSolicitation = ref(false);
@@ -139,8 +139,8 @@
   const solicitationData = ref({});
   const tooltipTextDelete = 'Não é possível excluir uma solicitação já agendada.'
   const tab = ref('consultation');
-  const appointmentIcon = 'mdi-calendar-check'
-  const appointmentText = 'Agendar Solicitação'
+  const appointmentIcon = computed(() => role == 'regulation_officer' ? 'mdi-calendar-check' : 'mdi-calendar-alert');
+  const appointmentText = computed(() => role == 'regulation_officer' ? 'Agendar Solicitação' : 'Solicitar Agendamento');
   const appointmentClass = 'text-green-600 bg-white/0 border-0 ml-1 h-full';
 
 
@@ -180,8 +180,11 @@
     const newAppointmentData = await showFeedback(() => create(appointment));
     refetch();
     dialogAppointment.value = false;
-    appointmentData.value = newAppointmentData.data
-    dialogAppointmentConfirmation.value = true;
+    if(role == 'regulation_officer') {
+      appointmentData.value = newAppointmentData.data
+      dialogAppointmentConfirmation.value = true;
+    }
+
   };
 
   const search = debounce(async v => {

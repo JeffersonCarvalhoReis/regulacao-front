@@ -92,6 +92,7 @@
   import { useOnlyNumbers } from '@/composables/utils/useOnlyNumbers';
   import { useBooleanLabel } from '@/composables/utils/useBooleanLabel';
   import { useField, useForm } from 'vee-validate'
+  import { useMeStore } from '@/stores/me';
   import * as yup from 'yup'
 
   const props = defineProps({
@@ -99,6 +100,8 @@
     solicitationData: { type: Object, default: () => ({}) },
   })
 
+  const meStore = useMeStore();
+  const role = meStore.role;
   const { data: providerUnitData, refetch: providerUnitFetch, params: providerUnitParams } = useProviderUnitApi();
   const { data: doctorData, refetch: doctorFetch, params: doctorParams } = useDoctorApi();
   const { formatDate } = useFormatDate();
@@ -202,6 +205,7 @@
   const { value: status } = useField('status');
 
   const onSubmit = handleSubmit(values => {
+    if(role == 'provider_unit_manager') values.status = 'pending';
     emit('save', values)
   })
 

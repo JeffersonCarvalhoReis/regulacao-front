@@ -1,5 +1,5 @@
 <template>
-  <BaseCard @close="$emit('close')">
+  <BaseCard @close="emit('close')">
     <div class="mr-5 text-right">
       <BaseButtonRegister button-icon="mdi-printer" button-text="PDF" :loading="clickPrint" @register="handleExportToPdf" />
     </div>
@@ -108,7 +108,7 @@
 
   const tableRows = computed(() => {
     const rows = [];
-    props.data.patients.forEach((patient, index) => {
+    props.data.patients.forEach(patient => {
       rows.push({ ...patient, type: 'patient' });
       if (patient.companion_name) {
         rows.push({ ...patient, type: 'companion' });
@@ -133,6 +133,7 @@
   const handleExportToPdf = () => {
     exportToPDF(columns, travelInfo, fileInfo);
   }
+  const emit = defineEmits(['close'])
 </script>
 
 <style scoped>

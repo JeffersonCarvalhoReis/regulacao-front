@@ -31,27 +31,27 @@
           </div>
           <div class="flex flex-col gap-2">
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Paciente" :value="patientData.name" />
+              <LabeledLine label="Nome do Paciente" :value="props.patientData.name" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Acompanhante" :value="patientData.companion_name" />
+              <LabeledLine label="Nome do Acompanhante" :value="props.patientData.companion_name" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Endereço" :value="patientData.street" />
+              <LabeledLine label="Endereço" :value="props.patientData.street" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Bairro" :value="patientData.neighborhood" />
+              <LabeledLine label="Bairro" :value="props.patientData.neighborhood" />
               <LabeledLine label="Cidade" value="Itaguaçu da Bahia" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Hospital" :value="patientData.hospital_name" />
+              <LabeledLine label="Hospital" :value="props.patientData.hospital_name" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Motivo do Tratamento" :value="patientData.notes" />
+              <LabeledLine label="Motivo do Tratamento" :value="props.patientData.notes" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="CPF" :value="patientData.cpf" />
-              <LabeledLine label="SUS" :value="patientData.cns" />
+              <LabeledLine label="CPF" :value="props.patientData.cpf" />
+              <LabeledLine label="SUS" :value="props.patientData.cns" />
             </LabeledLineGroup>
             <LabeledLineGroup>
               <LabeledLine label="Data da Entrada" :value="datePaceholder" />

@@ -49,6 +49,13 @@
           <template #item.date="{ item }">
             {{ formatDate(item.date) }}
           </template>
+          <template #item.action="{ item }">
+            <v-chip
+              color="orange"
+            >
+              Pendente
+            </v-chip>
+          </template>
         </base-table>
 
       </v-tabs-window-item>
@@ -81,6 +88,13 @@
         >
           <template #item.date="{ item }">
             {{ formatDate(item.date) }}
+          </template>
+          <template #item.action="{ item }">
+            <v-chip
+              color="orange"
+            >
+              Pendente
+            </v-chip>
           </template>
         </base-table>
       </v-tabs-window-item>

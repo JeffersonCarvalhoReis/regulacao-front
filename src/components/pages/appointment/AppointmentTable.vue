@@ -61,6 +61,7 @@
                     class="text-green-500 border-0 ml-1 h-full"
                     flat
                     icon
+                    @click="confirmAppointment(item)"
                   >
                     <v-icon>mdi-check</v-icon>
                   </v-btn>
@@ -75,6 +76,7 @@
                     class="text-red-500 border-0 ml-1 h-full"
                     flat
                     icon
+                    @click="handleDelete(item)"
                   >
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
@@ -111,6 +113,43 @@
           <template #item.date="{ item }">
             {{ formatDate(item.date) }}
           </template>
+          <template #item.action="{ item }">
+            <v-btn-group
+              divided
+              variant="outlined"
+            >
+              <v-tooltip
+                text="Aceitar"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    class="text-green-500 border-0 ml-1 h-full"
+                    flat
+                    icon
+                    @click="confirmAppointment(item)"
+                  >
+                    <v-icon>mdi-check</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+              <v-tooltip
+                text="Recusar"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    class="text-red-500 border-0 ml-1 h-full"
+                    flat
+                    icon
+                    @click="handleDelete(item)"
+                  >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+            </v-btn-group>
+          </template>
         </base-table>
       </v-tabs-window-item>
     </v-tabs-window>
@@ -146,6 +185,7 @@
     showDelete: { type: Boolean, default: true },
 
   });
+
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, destroy, clearFilters, setSort, update } = useAppointmentApi();
   const { setFilter: filterExport, exportAppointments, setSort: sortExport, clearFilters: clearFiltersExport } = useAppointmentExportApi();
   const { showFeedback, confirmModal, showFeedbackLoading } = useSweetAlertFeedback();
@@ -175,6 +215,15 @@
     filterExport('solicitation_type', tab.value)
     setSort('-updated_at')
     sortExport('-updated_at')
+  }
+
+  const confirmAppointment = async appointment => {
+    const confirm = await confirmModal(`Confirmar agendamento de <strong>${appointment.patient}</strong>?`, 'Confirmação', 'question', 'bg-green-500 text-white shadow-sm', 'bg-red-500 text-white shadow-sm');
+    if(confirm) {
+      appointment.status = 'scheduled';
+      await showFeedback(() => update(appointment.id, appointment));
+      refetch();
+    }
   }
 
   const handleExportAppointments = async () => {
