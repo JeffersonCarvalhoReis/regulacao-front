@@ -17,15 +17,15 @@
       @update-options="updateOptions"
       @view-item="viewPatient"
     >
-    <template #item.birth_date="{ item }">
-      {{ formatDate(item.birth_date) }}
-    </template>
-  </base-table>
+      <template #item.birth_date="{ item }">
+        {{ formatDate(item.birth_date) }}
+      </template>
+    </base-table>
   </div>
   <v-dialog
-   v-model="viewPatientProfile"
-   class="z-900"
-   >
+    v-model="viewPatientProfile"
+    class="z-900"
+  >
     <patient-profile :patient-data="patientData" @close="viewPatientProfile = false" />
   </v-dialog>
 

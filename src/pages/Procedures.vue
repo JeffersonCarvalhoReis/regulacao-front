@@ -1,5 +1,5 @@
 <template>
-  <procedure-table ref='procedureTableRef' :edit="true" :show-delete="true">
+  <procedure-table ref="procedureTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerProcedure = true" />
 
@@ -9,7 +9,7 @@
     v-model="registerProcedure"
     class="z-999"
   >
-    <procedure-form @close="registerProcedure = false"  @save="submit" />
+    <procedure-form @close="registerProcedure = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const procedureTableRef = ref(null);
 
 
-  const submit = async (procedure) => {
+  const submit = async procedure => {
     const success = await showFeedback(() => create(procedure));
     if (success) {
       procedureTableRef.value?.refetch();

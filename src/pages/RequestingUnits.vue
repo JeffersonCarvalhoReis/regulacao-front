@@ -1,5 +1,5 @@
 <template>
-  <requesting-unit-table ref='requestingUnitTableRef' :edit="true" :show-delete="true">
+  <requesting-unit-table ref="requestingUnitTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerRequestingUnit = true" />
     </div>
@@ -22,7 +22,7 @@
   const requestingUnitTableRef = ref(null);
 
 
-  const submit = async (requestingUnit) => {
+  const submit = async requestingUnit => {
     const success = await showFeedback(() => create(requestingUnit));
     if (success) {
       requestingUnitTableRef.value?.refetch();

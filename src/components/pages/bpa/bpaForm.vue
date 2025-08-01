@@ -1,41 +1,41 @@
 <template>
-  <BaseCard @close="emit('close')" title="Gerar BPA" class="max-w-[1050px] min-w-[1050px]">
+  <BaseCard class="max-w-[1050px] min-w-[1050px]" title="Gerar BPA" @close="emit('close')">
     <div class="m-5 text-blue-900 ">
       <div class="grid grid-cols-10 gap-2">
         <div class="flex align-center border-2 col-span-3">
           <div class="font-[neuropol] text-center w-30">
-           Ministério da Saúde
+            Ministério da Saúde
           </div>
-         <img src="@/assets/images/logo-sus.svg" alt="logo do sus" class="w-15 mx-2">
+          <img alt="logo do sus" class="w-15 mx-2" src="@/assets/images/logo-sus.svg">
           <div class="text-center">
             <div class="text-xl font-[neuropol]">
               SUS
             </div>
             <div class="font-[neuropol] text-[9px] w-20">
               Sistema Único de Saúde
+            </div>
           </div>
-         </div>
         </div>
         <div class="flex gap-4 align-center justify-center border-2 px-2 col-span-7">
-           <div class="font-[neuropol] text-4xl">
-           BPA-I
+          <div class="font-[neuropol] text-4xl">
+            BPA-I
           </div>
-           <div class="text-center">
-             <div class="font-[neuropol] text-xl">
+          <div class="text-center">
+            <div class="font-[neuropol] text-xl">
               Boletim de Produção Ambulatorial
-             </div>
-             <div class="font-[neuropol] text-xl">
-               Dados Individualizados
-             </div>
-           </div>
+            </div>
+            <div class="font-[neuropol] text-xl">
+              Dados Individualizados
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-     <div class="border-2 mt-1">
+      <div class="border-2 mt-1">
         <div class="uppercase bg-blue-800 text-white text-center">
           Identificação do estabelecimento de saúde
         </div>
         <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
-         <v-text-field
+          <v-text-field
             v-model="health_unit_name"
             class="col-span-4"
             density="compact"
@@ -55,7 +55,7 @@
           Identificação do Profissional
         </div>
         <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
-         <v-text-field
+          <v-text-field
             class="col-span-2"
             density="compact"
             label="Cartão Nacional de Saúde (CNS)"
@@ -84,11 +84,11 @@
             variant="outlined"
           />
         </div>
-       <div class="uppercase bg-blue-800 text-white text-center">
-        Identificação do Paciente
-      </div>
-       <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
-         <v-text-field
+        <div class="uppercase bg-blue-800 text-white text-center">
+          Identificação do Paciente
+        </div>
+        <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
+          <v-text-field
             class="col-span-3"
             density="compact"
             label="Cartão Nacional de Saúde (CNS)"
@@ -114,7 +114,7 @@
             maxlength="100"
             variant="outlined"
           />
-         <v-text-field
+          <v-text-field
             density="compact"
             label="Nacionalidade"
             maxlength="100"
@@ -160,16 +160,16 @@
           />
         </div>
         <div class="uppercase bg-blue-800 text-white text-center">
-        Procedimento Realizado
-      </div>
-       <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
-            <v-text-field
+          Procedimento Realizado
+        </div>
+        <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
+          <v-text-field
             density="compact"
             label="Data do Atendimento"
             maxlength="100"
             variant="outlined"
           />
-           <v-text-field
+          <v-text-field
             class="col-span-2"
             density="compact"
             label="Procedimento"
@@ -177,33 +177,33 @@
             variant="outlined"
           />
           <v-text-field
-           class="col-span-2"
+            class="col-span-2"
             density="compact"
             label="Código do Procedimento"
             maxlength="100"
             variant="outlined"
           />
-         <v-text-field
+          <v-text-field
             density="compact"
             label="Qtde."
             maxlength="100"
             variant="outlined"
           />
-       </div>
+        </div>
       </div>
     </div>
   </BaseCard>
 </template>
 
 <script setup>
-import { useMeStore } from '@/stores/me';
+  import { useMeStore } from '@/stores/me';
 
-const emit = defineEmits(['close']);
+  const emit = defineEmits(['close']);
 
-const meStore = useMeStore();
-const health_unit_name = computed(() => meStore.health_unit)
-const health_unit_cnes = computed(() => meStore.health_unit_cnes)
-meStore.getMe();
+  const meStore = useMeStore();
+  const health_unit_name = computed(() => meStore.health_unit)
+  const health_unit_cnes = computed(() => meStore.health_unit_cnes)
+  meStore.getMe();
 
 </script>
 

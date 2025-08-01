@@ -13,9 +13,9 @@
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
       @delete-item="handleDelete"
+      @edit-item="handleEdit"
       @update-options="updateOptions"
       @view-item="viewHealthAgent"
-      @edit-item="handleEdit"
     />
   </div>
   <v-dialog v-model="viewHealthAgentDetails">
@@ -41,7 +41,7 @@
 
   });
 
-  const { data, loadingList, refetch, setTableOptions, meta, setFilter, update, destroy  } = useHealthAgentApi();
+  const { data, loadingList, refetch, setTableOptions, meta, setFilter, update, destroy } = useHealthAgentApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const options = ref({});

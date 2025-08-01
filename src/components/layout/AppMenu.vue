@@ -1,196 +1,196 @@
 <template>
   <!-- <v-layout> -->
-    <v-navigation-drawer
-      v-model="drawer"
-      class="border-r border-gray-200 bg-slate-100 pb-6 "
-      expand-on-hover
-      flat
-      @update:modelValue="val => { if (!val) emit('close') }"
-      :mobile-breakpoint="768"
-      :rail="$vuetify.display.width >= 768"
+  <v-navigation-drawer
+    v-model="drawer"
+    class="border-r border-gray-200 bg-slate-100 pb-6 "
+    expand-on-hover
+    flat
+    :mobile-breakpoint="768"
+    :rail="$vuetify.display.width >= 768"
+    @update:model-value="val => { if (!val) emit('close') }"
+  >
+    <!-- Navigation Menu -->
+    <v-list
+      density="compact"
+      nav
     >
-      <!-- Navigation Menu -->
-      <v-list
-        density="compact"
-        nav
-      >
-        <!-- Main Navigation Items -->
-        <app-menu-item
-           v-if="['regulation_officer'].includes(role)"
-          :to="{ name: 'home' }"
-          :active="$route.name === 'home'"
-          icon="mdi-home"
-          title="Início"
-        />
-
-        <v-list-subheader v-if="['regulation_officer', 'provider_unit_manager'].includes(role)" >Demanda</v-list-subheader>
-        <v-list-subheader v-if="['reception'].includes(role)" >Atendimento</v-list-subheader>
-
-        <app-menu-item
-          v-if="['reception', 'regulation_officer', 'provider_unit_manager'].includes(role)"
-          :to="{name: 'patients'}"
-          :active="$route.name === 'patients'"
-          prepend-icon="mdi-card-account-details"
-          title="Pacientes"
-        />
-        <app-menu-item
-          v-if="['reception', 'regulation_officer', 'provider_unit_manager'].includes(role)"
-          :to="{name: 'solicitations'}"
-          :active="$route.name === 'solicitations'"
-          prepend-icon="mdi-clipboard-list"
-          title="Solicitações"
-        />
-        <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
-          :to="{name: 'appointments'}"
-          :active="$route.name === 'appointments'"
-          prepend-icon="mdi-calendar-check"
-          title="Agendamentos"
-        />
-        <v-list-subheader
-          v-if="['reception','regulation_officer'].includes(role)"
-          >
-          Controle de Procedimentos
-        </v-list-subheader>
-        <app-menu-item
-          v-if="['reception','regulation_officer'].includes(role)"
-          :to="{name: 'procedures'}"
-          :active="$route.name === 'procedures'"
-          prepend-icon="mdi-clipboard-list-outline"
-          title="Procedimentos"
-        />
-        <app-menu-item
-          v-if="['reception','regulation_officer'].includes(role)"
-          :to="{name: 'specialists'}"
-          :active="$route.name === 'specialists'"
-          prepend-icon="mdi-medical-bag"
-          title="Especialidades"
-        />
-        <v-list-subheader
+      <!-- Main Navigation Items -->
+      <app-menu-item
         v-if="['regulation_officer'].includes(role)"
-        >
+        :active="$route.name === 'home'"
+        icon="mdi-home"
+        title="Início"
+        :to="{ name: 'home' }"
+      />
+
+      <v-list-subheader v-if="['regulation_officer', 'provider_unit_manager'].includes(role)">Demanda</v-list-subheader>
+      <v-list-subheader v-if="['reception'].includes(role)">Atendimento</v-list-subheader>
+
+      <app-menu-item
+        v-if="['reception', 'regulation_officer', 'provider_unit_manager'].includes(role)"
+        :active="$route.name === 'patients'"
+        prepend-icon="mdi-card-account-details"
+        title="Pacientes"
+        :to="{name: 'patients'}"
+      />
+      <app-menu-item
+        v-if="['reception', 'regulation_officer', 'provider_unit_manager'].includes(role)"
+        :active="$route.name === 'solicitations'"
+        prepend-icon="mdi-clipboard-list"
+        title="Solicitações"
+        :to="{name: 'solicitations'}"
+      />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'appointments'"
+        prepend-icon="mdi-calendar-check"
+        title="Agendamentos"
+        :to="{name: 'appointments'}"
+      />
+      <v-list-subheader
+        v-if="['reception','regulation_officer'].includes(role)"
+      >
+        Controle de Procedimentos
+      </v-list-subheader>
+      <app-menu-item
+        v-if="['reception','regulation_officer'].includes(role)"
+        :active="$route.name === 'procedures'"
+        prepend-icon="mdi-clipboard-list-outline"
+        title="Procedimentos"
+        :to="{name: 'procedures'}"
+      />
+      <app-menu-item
+        v-if="['reception','regulation_officer'].includes(role)"
+        :active="$route.name === 'specialists'"
+        prepend-icon="mdi-medical-bag"
+        title="Especialidades"
+        :to="{name: 'specialists'}"
+      />
+      <v-list-subheader
+        v-if="['regulation_officer'].includes(role)"
+      >
         Cadastro de Unidades e Profissionais
       </v-list-subheader>
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'doctors'"
+        prepend-icon="mdi-stethoscope"
+        title="Médicos"
+        :to="{name: 'doctors'}"
+      />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'health-units'"
+        prepend-icon="mdi-hospital-building"
+        title="Unidades de saúde"
+        :to="{name: 'health-units'}"
+      />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'requesting-units'"
+        prepend-icon="mdi-office-building"
+        title="Unidades Solicitantes"
+        :to="{name: 'requesting-units'}"
+      />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'provider-units'"
+        prepend-icon="mdi-hospital-building"
+        title="Unidades Prestadoras"
+        :to="{name: 'provider-units'}"
+      />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'health-agents'"
+        prepend-icon="mdi-account-heart"
+        title="Agentes C. de Saúde"
+        :to="{name: 'health-agents'}"
+      />
+      <div v-if="['provider_unit_manager'].includes(role)">
+        <v-list-subheader>Gestão</v-list-subheader>
         <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
-          :to="{name: 'doctors'}"
-          :active="$route.name === 'doctors'"
-          prepend-icon="mdi-stethoscope"
-          title="Médicos"
+          :active="$route.name === 'appointments-management'"
+          prepend-icon="mdi-clipboard-text-clock"
+          title="Controle de Agendamentos"
+          :to="{name: 'appointments-management'}"
         />
+      </div>
+      <div v-if="['admin'].includes(role)">
+        <v-list-subheader>Administração</v-list-subheader>
         <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
-          :to="{name: 'health-units'}"
-          :active="$route.name === 'health-units'"
-          prepend-icon="mdi-hospital-building"
-          title="Unidades de saúde"
+          :active="$route.name === 'users'"
+          prepend-icon="mdi-account-group"
+          title="Usuários"
+          :to="{name: 'users'}"
         />
+      </div>
+      <div v-if="['tfd'].includes(role)">
+        <v-list-subheader>TFD</v-list-subheader>
         <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
-          :to="{name: 'requesting-units'}"
-          :active="$route.name === 'requesting-units'"
-          prepend-icon="mdi-office-building"
-          title="Unidades Solicitantes"
-        />
-        <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
-          :to="{name: 'provider-units'}"
-          :active="$route.name === 'provider-units'"
-          prepend-icon="mdi-hospital-building"
-          title="Unidades Prestadoras"
-        />
-        <app-menu-item
-          v-if="['regulation_officer'].includes(role)"
-          :to="{name: 'health-agents'}"
-          :active="$route.name === 'health-agents'"
-          prepend-icon="mdi-account-heart"
-          title="Agentes C. de Saúde"
-        />
-        <div v-if="['provider_unit_manager'].includes(role)">
-          <v-list-subheader>Gestão</v-list-subheader>
-          <app-menu-item
-            :to="{name: 'appointments-management'}"
-            :active="$route.name === 'appointments-management'"
-            prepend-icon="mdi-clipboard-text-clock"
-            title="Controle de Agendamentos"
-          />
-        </div>
-        <div v-if="['admin'].includes(role)">
-          <v-list-subheader >Administração</v-list-subheader>
-          <app-menu-item
-            :to="{name: 'users'}"
-            :active="$route.name === 'users'"
-            prepend-icon="mdi-account-group"
-            title="Usuários"
-          />
-        </div>
-        <div v-if="['tfd'].includes(role)">
-        <v-list-subheader >TFD</v-list-subheader>
-        <app-menu-item
-          :to="{name: 'patients'}"
           :active="$route.name === 'patients'"
           prepend-icon="mdi-card-account-details"
           title="Pacientes"
+          :to="{name: 'patients'}"
         />
         <app-menu-item
-          :to="{name: 'travels'}"
           :active="$route.name === 'travels'"
           prepend-icon="mdi-map-marker-distance"
           title="Viagens"
+          :to="{name: 'travels'}"
         />
-       <app-menu-item
-          :to="{name: 'patients-tfd'}"
+        <app-menu-item
           :active="$route.name === 'patients-tfd'"
           prepend-icon="mdi-text-box-search"
           title="Histórico Pacientes TFD"
+          :to="{name: 'patients-tfd'}"
         />
         <app-menu-item
-          :to="{name: 'companions'}"
           :active="$route.name === 'companions'"
           prepend-icon="mdi-card-account-details"
           title="Acompanhantes"
+          :to="{name: 'companions'}"
         />
         <app-menu-item
-          :to="{name: 'deceased'}"
           :active="$route.name === 'deceased'"
           prepend-icon="mdi-cross"
           title="Lista de Falecidos"
+          :to="{name: 'deceased'}"
         />
         <app-menu-item
-          :to="{name: 'hospitals'}"
           :active="$route.name === 'hospitals'"
           prepend-icon="mdi-hospital-building"
           title="Hospitais"
+          :to="{name: 'hospitals'}"
         />
         <app-menu-item
-          :to="{name: 'cities'}"
           :active="$route.name === 'cities'"
           prepend-icon="mdi-city"
           title="Cidades"
+          :to="{name: 'cities'}"
         />
         <app-menu-item
-          :to="{name: 'drivers'}"
           :active="$route.name === 'drivers'"
           prepend-icon="mdi-badge-account"
           title="Motoristas"
+          :to="{name: 'drivers'}"
         />
         <app-menu-item
-          :to="{name: 'vehicles'}"
           :active="$route.name === 'vehicles'"
           prepend-icon="mdi-car-estate"
           title="Veículos"
+          :to="{name: 'vehicles'}"
         />
-       <app-menu-item
+        <app-menu-item
           v-if="false"
-          :to="{name: 'bpa-settings'}"
           :active="$route.name === 'bpa-settings'"
           prepend-icon="mdi-map-marker-distance"
           title="Definições do BPA"
+          :to="{name: 'bpa-settings'}"
         />
-        </div>
+      </div>
 
-      </v-list>
-    </v-navigation-drawer>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script setup>
@@ -203,13 +203,13 @@
   const props = defineProps({
     open: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   });
 
   const emit = defineEmits(['close']);
 
-  watch(() => props.open, (val) => {
+  watch(() => props.open, val => {
     drawer.value = val;
   });
   onMounted(() => {

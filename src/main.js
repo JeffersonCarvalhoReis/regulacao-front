@@ -14,6 +14,7 @@ import App from './App.vue'
 import { createApp } from 'vue'
 
 import './assets/tailwind.css'
+import './services/echo'
 
 const app = createApp(App)
 

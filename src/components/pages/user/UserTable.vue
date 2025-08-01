@@ -12,9 +12,9 @@
       :show-delete="props.showDelete"
       :total-items="meta.total"
       @delete-item="handleDelete"
+      @edit-item="handleEdit"
       @update-options="updateOptions"
       @view-item="viewUser"
-      @edit-item="handleEdit"
     />
   </div>
   <v-dialog v-model="viewUserDetails">
@@ -106,13 +106,13 @@
         title: 'Usuário',
         key: 'user',
         sortable: true,
-        align: 'center'
+        align: 'center',
       },
-     {
+      {
         title: 'Unidade de Saúde',
         key: 'health_unit',
         sortable: true,
-        align: 'center'
+        align: 'center',
       },
 
     ];

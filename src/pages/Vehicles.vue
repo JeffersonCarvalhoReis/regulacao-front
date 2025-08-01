@@ -1,5 +1,5 @@
 <template>
-  <vehicle-table ref='vehicleTableRef' :edit="true" :show-delete="true">
+  <vehicle-table ref="vehicleTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerVehicle = true" />
     </div>
@@ -8,7 +8,7 @@
     v-model="registerVehicle"
     class="z-999"
   >
-    <vehicle-form @close="registerVehicle = false"  @save="submit" />
+    <vehicle-form @close="registerVehicle = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -22,7 +22,7 @@
   const vehicleTableRef = ref(null);
 
 
-  const submit = async (vehicle) => {
+  const submit = async vehicle => {
     const success = await showFeedback(() => create(vehicle));
     if (success) {
       vehicleTableRef.value?.refetch();

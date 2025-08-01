@@ -1,28 +1,28 @@
 <template>
- <div>
+  <div>
     <patient-search @search-patient="search">
       <slot />
     </patient-search>
     <base-table
       class="rounted-t-none"
       :headers="headers"
+      :icon-view="iconView"
       :items="data"
       :loading="loadingList"
-      :total-items="meta.total"
-      :icon-view="iconView"
       :text-view="textView"
+      :total-items="meta.total"
       @update-options="updateOptions"
       @view-item="viewPatient"
     >
-    <template #item.birth_date="{ item }">
-      {{ formatDate(item.birth_date) }}
-    </template>
-  </base-table>
+      <template #item.birth_date="{ item }">
+        {{ formatDate(item.birth_date) }}
+      </template>
+    </base-table>
   </div>
   <v-dialog
-   v-model="dialogPatientTfdHistory"
-   class="z-900"
-   >
+    v-model="dialogPatientTfdHistory"
+    class="z-900"
+  >
     <patient-tfd-history :patient-data="patientData" @close="dialogPatientTfdHistory = false" />
   </v-dialog>
 </template>
@@ -129,4 +129,3 @@
     clearFilters,
   });
 </script>
-

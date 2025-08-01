@@ -3,16 +3,16 @@ import { useAttachmentApi } from '../api/useAttachmentApi';
 
 
 export function useSolicitationApi () {
-   const {
-      createWithAttachment,
-      updateWithAttachment
-     } = useAttachmentApi('solicitations');
+  const {
+    createWithAttachment,
+    updateWithAttachment,
+  } = useAttachmentApi('solicitations');
 
-     const userApiModule = useApiModule('solicitations');
+  const userApiModule = useApiModule('solicitations');
 
-   return {
-      ...userApiModule,
-      createWithAttachment,
-      updateWithAttachment
-   }
+  return {
+    ...userApiModule,
+    createWithAttachment,
+    updateWithAttachment,
+  }
 }

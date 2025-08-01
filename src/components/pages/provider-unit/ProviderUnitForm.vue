@@ -4,31 +4,31 @@
       <v-form class="flex flex-col gap-2">
         <v-text-field
           v-model="name"
-          :error-messages="errors.name"
           class="required"
           density="compact"
+          :error-messages="errors.name"
           label="Nome"
           placeholder="Nome da Unidade Prestadora"
           variant="outlined"
         />
         <v-text-field
           v-model="localization"
-          :error-messages="errors.localization"
           density="compact"
+          :error-messages="errors.localization"
           label="Localização ou ponto referência"
           placeholder="Nome da Unidade Prestadora"
           variant="outlined"
         />
         <v-autocomplete
-        v-if="!isEditing"
-        v-model="doctor_ids"
-        multiple
-        density="compact"
-        item-title="name"
-        item-value="id"
-        :items="data"
-        label="Médicos"
-        variant="outlined"
+          v-if="!isEditing"
+          v-model="doctor_ids"
+          density="compact"
+          item-title="name"
+          item-value="id"
+          :items="data"
+          label="Médicos"
+          multiple
+          variant="outlined"
         />
       </v-form>
     </v-card-text>
@@ -65,7 +65,7 @@
   const schema = yup.object({
     name: yup.string().required('Nome da unidade é obrigatório'),
     localization: yup.string().nullable(),
-    doctor_ids: yup.array().of(yup.number()).nullable()
+    doctor_ids: yup.array().of(yup.number()).nullable(),
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
@@ -80,7 +80,7 @@
   onMounted( async () => {
     if (isEditing.value) {
       resetForm({ values: props.modelValue })
-    };
+    }
     params.value.per_page = -1;
     await nextTick();
     refetch();

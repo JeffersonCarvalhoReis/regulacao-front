@@ -1,6 +1,6 @@
 import { api } from '@/config/axios'
 
-export function useAddPassengerApi() {
+export function useAddPassengerApi () {
   const loading = ref(false)
   const error = ref(null)
 

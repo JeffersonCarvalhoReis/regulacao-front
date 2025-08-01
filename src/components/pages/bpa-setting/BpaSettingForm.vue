@@ -1,8 +1,8 @@
 <template>
-    <BaseCard @close="emit('close')" :title="title">
+  <BaseCard :title="title" @close="emit('close')">
 
-      <v-card-text>
-        <v-form class="flex gap-4">
+    <v-card-text>
+      <v-form class="flex gap-4">
         <v-text-field
           v-model="name"
           class="required"
@@ -18,9 +18,9 @@
           density="compact"
           :error-messages="errors.cns"
           label="CNS"
+          maxlength="15"
           placeholder="Cartão Nacional de Saúde"
           variant="outlined"
-          maxlength="15"
           @keypress="onlyNumbers"
         />
         <v-text-field
@@ -29,22 +29,22 @@
           density="compact"
           :error-messages="errors.cbo"
           label="CBO"
+          maxlength="6"
           variant="outlined"
           @keypress="onlyNumbers"
-          maxlength="6"
         />
-         </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <div class="m-4">
-          <base-button-register
-            button-icon="mdi-content-save"
-            button-text="Salvar"
-            @register="onSubmit"
-          />
-        </div>
-      </v-card-actions>
-    </BaseCard>
+      </v-form>
+    </v-card-text>
+    <v-card-actions>
+      <div class="m-4">
+        <base-button-register
+          button-icon="mdi-content-save"
+          button-text="Salvar"
+          @register="onSubmit"
+        />
+      </div>
+    </v-card-actions>
+  </BaseCard>
 </template>
 
 <script setup>
@@ -57,7 +57,7 @@
 
   const emit = defineEmits(['save', 'close', 'update']);
 
- const title = computed(() =>
+  const title = computed(() =>
     isEditing.value ? 'Editar Dados do Profissional' : 'Cadastrar Novo Profissional'
   );
 
@@ -74,7 +74,7 @@
   });
 
   const { handleSubmit, errors, resetForm } = useForm({
-    validationSchema: schema
+    validationSchema: schema,
   });
 
   const { value: name } = useField('name');
@@ -88,11 +88,11 @@
   });
 
   const onSubmit = handleSubmit(values => {
-     if (isEditing.value) {
-        emit('update', values)
-     } else {
-        emit('save', values)
-     }
+    if (isEditing.value) {
+      emit('update', values)
+    } else {
+      emit('save', values)
+    }
 
   });
 </script>

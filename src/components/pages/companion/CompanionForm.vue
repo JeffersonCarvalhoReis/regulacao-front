@@ -98,8 +98,8 @@
             variant="outlined"
           />
           <v-select
-            class="col-span-2 required"
             v-model="race"
+            class="col-span-2 required"
             density="compact"
             :error-messages="errors.race"
             :items="raceOptions"
@@ -138,8 +138,8 @@
   const isEditing = computed(() => !!props.modelValue?.id);
 
   const genderOptions = [
-  { label: 'Feminino', value: 'F' },
-  { label: 'Masculino', value: 'M' },
+    { label: 'Feminino', value: 'F' },
+    { label: 'Masculino', value: 'M' },
   ];
   const raceOptions = [
     'Branco',

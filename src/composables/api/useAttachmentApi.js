@@ -11,11 +11,11 @@ export function useAttachmentApi (resource) {
 
     try {
       const response = await api({ method, url, data, headers: {
-        "Content-Type": "multipart/form-data",
-        },
+        'Content-Type': 'multipart/form-data',
+      },
       });
 
-     return response.data
+      return response.data
     }
     catch (err) { error.value = err
       throw err

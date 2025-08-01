@@ -6,6 +6,7 @@ export const useMeStore = defineStore('me', () => {
   const role = ref(null);
   const health_unit = ref(null);
   const health_unit_cnes = ref(null);
+  const providerUnit = ref(null)
   const isLoggedIn = computed(() => !!user.value)
 
   const getMe = async () => {
@@ -15,6 +16,9 @@ export const useMeStore = defineStore('me', () => {
       role.value = response.data.role;
       health_unit.value = response.data.health_unit;
       health_unit_cnes.value = response.data.health_unit_cnes;
+      providerUnit.value = response.data.provider_unit;
+      return response.data
+
 
     } catch (err) {
       if (err.response?.status === 401) {
@@ -27,10 +31,10 @@ export const useMeStore = defineStore('me', () => {
     role.value = null;
   };
 
-  return { isLoggedIn, role, user, health_unit, health_unit_cnes, getMe, reset }
+  return { isLoggedIn, role, user, health_unit, health_unit_cnes, providerUnit, getMe, reset }
 },{
   persist: {
     storage: localStorage,
-    pick: ['user', 'role'],
+    pick: ['user', 'role', 'providerUnit'],
   },
 })

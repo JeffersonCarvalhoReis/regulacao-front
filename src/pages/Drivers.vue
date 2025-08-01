@@ -1,5 +1,5 @@
 <template>
-  <driver-table ref='driverTableRef' :edit="true" :show-delete="true">
+  <driver-table ref="driverTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerDriver = true" />
 
@@ -9,7 +9,7 @@
     v-model="registerDriver"
     class="z-999"
   >
-    <driver-form @close="registerDriver = false"  @save="submit" />
+    <driver-form @close="registerDriver = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const driverTableRef = ref(null);
 
 
-  const submit = async (driver) => {
+  const submit = async driver => {
     const success = await showFeedback(() => create(driver));
     if (success) {
       driverTableRef.value?.refetch();

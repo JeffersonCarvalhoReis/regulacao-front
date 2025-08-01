@@ -5,7 +5,6 @@
   >
     <div
       class="w-full text-xs"
-
     >
       &copy; {{ (new Date()).getFullYear() }} <span class="d-none d-sm-inline-block">Itaguaçu da Bahia</span>
     </div>

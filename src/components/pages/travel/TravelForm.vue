@@ -4,8 +4,8 @@
       <v-form class="grid grid-cols-2 gap-x-4">
         <base-input-date-picker
           v-model="date"
-          class-field="required"
           class-date-picker="absolute right-[-175px] top-0"
+          class-field="required"
           :error-messages="errors.date"
           label="Data"
         />
@@ -13,20 +13,20 @@
           v-model="time"
           class="required"
           density="compact"
-          variant="outlined"
-          label="Escolha um horário"
-          @update:model-value="onTimeInput"
-          @keypress="onlyNumbers"
           :error-messages="errors.time"
+          label="Escolha um horário"
           maxlength="5"
           prepend-inner-icon="mdi-clock-time-four-outline"
+          variant="outlined"
+          @keypress="onlyNumbers"
+          @update:model-value="onTimeInput"
         />
         <v-autocomplete
           :key="autocompleteKey"
           v-model="city_id"
           class="required"
-          :error-messages="errors.city_id"
           density="compact"
+          :error-messages="errors.city_id"
           item-title="name"
           item-value="id"
           :items="cityData"
@@ -37,8 +37,8 @@
           :key="autocompleteKey"
           v-model="driver_id"
           class="required"
-          :error-messages="errors.driver_id"
           density="compact"
+          :error-messages="errors.driver_id"
           item-title="name"
           item-value="id"
           :items="driverData"
@@ -49,8 +49,8 @@
           :key="autocompleteKey"
           v-model="vehicle_id"
           class="required col-span-2"
-          :error-messages="errors.vehicle_id"
           density="compact"
+          :error-messages="errors.vehicle_id"
           item-title="vehicle_model"
           item-value="id"
           :items="vehicleData"
@@ -100,30 +100,30 @@
     driver_id: yup.string().required('Motorista é obrigatório'),
     vehicle_id: yup.string().required('Veículo é obrigatório'),
     time: yup
-    .string()
-    .required('Horário é obrigatório')
-    .test('dynamic-time-validation', 'Horário inválido', value => {
-      if (!value) return false;
-      if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
+      .string()
+      .required('Horário é obrigatório')
+      .test('dynamic-time-validation', 'Horário inválido', value => {
+        if (!value) return false;
+        if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
 
-      const [h, m = ''] = value.split(':');
+        const [h, m = ''] = value.split(':');
 
-      if (h.length > 0) {
-        const hour = parseInt(h);
-        if (isNaN(hour)) return false;
-        if (h.length === 1 && hour > 2) return false;
-        if (h.length === 2 && hour > 23) return false;
-      }
+        if (h.length > 0) {
+          const hour = parseInt(h);
+          if (isNaN(hour)) return false;
+          if (h.length === 1 && hour > 2) return false;
+          if (h.length === 2 && hour > 23) return false;
+        }
 
-      if (m.length > 0) {
-        const minute = parseInt(m);
-        if (isNaN(minute)) return false;
-        if (m.length === 1 && minute > 5) return false;
-        if (m.length === 2 && minute > 59) return false;
-      }
+        if (m.length > 0) {
+          const minute = parseInt(m);
+          if (isNaN(minute)) return false;
+          if (m.length === 1 && minute > 5) return false;
+          if (m.length === 2 && minute > 59) return false;
+        }
 
-      return true;
-    }),
+        return true;
+      }),
     date: yup.date().required('Data da viagem é obrigatório'),
   });
 
@@ -131,8 +131,8 @@
     validationSchema: schema,
     initialValues:  {
       driver_id: null,
-      city_id: null
-    }
+      city_id: null,
+    },
   });
 
   const { value: city_id } = useField('city_id');
@@ -141,17 +141,17 @@
   const { value: time } = useField('time');
   const { value: date } = useField('date');
 
-  const onTimeInput = (val) => {
+  const onTimeInput = val => {
     let digits = val.replace(/\D/g, '')
 
     if (digits.length > 4) digits = digits.slice(0, 4)
 
     if (digits.length >= 3) {
-        time.value = `${digits.slice(0, 2)}:${digits.slice(2)}`
-      } else {
-        time.value = digits
-      }
-    };
+      time.value = `${digits.slice(0, 2)}:${digits.slice(2)}`
+    } else {
+      time.value = digits
+    }
+  };
 
   onMounted( async () => {
     cityParams.value.per_page = -1;

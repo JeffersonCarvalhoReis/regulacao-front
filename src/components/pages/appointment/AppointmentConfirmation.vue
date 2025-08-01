@@ -1,114 +1,114 @@
 <template>
-  <BaseCard :title="title" @close="emit('close')" >
+  <BaseCard :title="title" @close="emit('close')">
     <div class="flex justify-end gap-4 m-4">
       <v-btn
-        prepend-icon="mdi-alert-circle"
         color="primary"
+        prepend-icon="mdi-alert-circle"
         @click="editRecomendationDialog = true"
       >
-       Recomendações
+        Recomendações
         <v-tooltip activator="parent">Escrever novas recomendações</v-tooltip>
       </v-btn>
       <v-btn
-        prepend-icon="mdi-printer"
         color="success"
+        prepend-icon="mdi-printer"
         @click="printConfirmation"
       >
         Imprimir
         <v-tooltip activator="parent">Imprimir</v-tooltip>
       </v-btn>
     </div>
-    <div class="mx-auto mb-10 flex flex-col justify-end" id="appointmentConfirmation">
+    <div id="appointmentConfirmation" class="mx-auto mb-10 flex flex-col justify-end">
       <v-card-title>
-      <hr>
-          <h1 class="text-lg">Comprovante de Agendamento</h1>
         <hr>
-        </v-card-title>
-        <v-card-text>
-          <div class=" leading-6">
-            <div class="flex items-center my-2">
-              <img class="w-20" alt="Brasao do municipio de itaguaçu" src="/src/assets/images/brasao.svg">
-              <div class="flex flex-col gap-5 ml-3">
-                <h3 class="font-bold ">Prefeitura Municipal de Itaguaçu da Bahia</h3>
-                <p class="font-bold">Secretaria Municipal de Saúde de Itaguaçu da Bahia</p>
-              </div>
+        <h1 class="text-lg">Comprovante de Agendamento</h1>
+        <hr>
+      </v-card-title>
+      <v-card-text>
+        <div class=" leading-6">
+          <div class="flex items-center my-2">
+            <img alt="Brasao do municipio de itaguaçu" class="w-20" src="/src/assets/images/brasao.svg">
+            <div class="flex flex-col gap-5 ml-3">
+              <h3 class="font-bold ">Prefeitura Municipal de Itaguaçu da Bahia</h3>
+              <p class="font-bold">Secretaria Municipal de Saúde de Itaguaçu da Bahia</p>
             </div>
-            <hr>
+          </div>
+          <hr>
 
-            <strong>Dados do Paciente:</strong><br>
-            <hr>
-            <strong>Nome: </strong><span class="uppercase">{{ props.appointmentData.patient }}</span><br>
-            <strong>CNS: </strong>{{ props.appointmentData.solicitation.patient_cns }}<br>
-            <strong>ACS: </strong><span class="uppercase">{{ props.appointmentData.solicitation.health_agent}}</span><br>
-            <strong>Data de Nasc.: </strong>{{ formatDate(props.appointmentData.solicitation.patient_birth_date) }}<br>
-            <strong>Celular: </strong>{{ props.appointmentData.solicitation.patient_phone }}<br>
-            <strong>Endereço: </strong><span class="uppercase">{{ props.appointmentData.solicitation.patient_street }} - {{ props.appointmentData.solicitation.patient_neighborhood }}</span><br>
+          <strong>Dados do Paciente:</strong><br>
+          <hr>
+          <strong>Nome: </strong><span class="uppercase">{{ props.appointmentData.patient }}</span><br>
+          <strong>CNS: </strong>{{ props.appointmentData.solicitation.patient_cns }}<br>
+          <strong>ACS: </strong><span class="uppercase">{{ props.appointmentData.solicitation.health_agent }}</span><br>
+          <strong>Data de Nasc.: </strong>{{ formatDate(props.appointmentData.solicitation.patient_birth_date) }}<br>
+          <strong>Celular: </strong>{{ props.appointmentData.solicitation.patient_phone }}<br>
+          <strong>Endereço: </strong><span class="uppercase">{{ props.appointmentData.solicitation.patient_street }} - {{ props.appointmentData.solicitation.patient_neighborhood }}</span><br>
 
-            <hr>
+          <hr>
 
           <strong>Dados do Local de Atendimento:</strong><br>
-            <hr>
-            <strong>Data: </strong>{{ formatDate(props.appointmentData.date) }}<br>
-            <strong>Horário: </strong>{{ props.appointmentData.time }}<br>
-            <strong>Local: </strong><span class="uppercase">{{ props.appointmentData.provider_unit }}</span> <br>
-            <div v-if="props.appointmentData.provider_unit_localization">
-              <strong>Localização: </strong><span class="uppercase">{{ props.appointmentData.provider_unit_localization }}</span> <br>
+          <hr>
+          <strong>Data: </strong>{{ formatDate(props.appointmentData.date) }}<br>
+          <strong>Horário: </strong>{{ props.appointmentData.time }}<br>
+          <strong>Local: </strong><span class="uppercase">{{ props.appointmentData.provider_unit }}</span> <br>
+          <div v-if="props.appointmentData.provider_unit_localization">
+            <strong>Localização: </strong><span class="uppercase">{{ props.appointmentData.provider_unit_localization }}</span> <br>
 
-            </div>
-            <hr>
+          </div>
+          <hr>
 
           <strong>Profissional do Atendimento:</strong><br>
-            <hr>
+          <hr>
 
-            <strong v-if="props.appointmentData.doctor">Médico: </strong> <span class="uppercase">{{ props.appointmentData.doctor }}</span><br>
-            <div v-if="isExam">
-              <strong>Procedimento:</strong> <span class="uppercase">{{ props.appointmentData.procedure}}</span><br>
-            </div>
-            <div v-else>
-              <strong>Especialidade: </strong> <span class="uppercase">{{ props.appointmentData.specialist}}</span><br>
-            </div>
-            <p><strong>Recomendações:</strong> <span class="uppercase whitespace-break-spaces">{{ recomendation }}</span></p>
+          <strong v-if="props.appointmentData.doctor">Médico: </strong> <span class="uppercase">{{ props.appointmentData.doctor }}</span><br>
+          <div v-if="isExam">
+            <strong>Procedimento:</strong> <span class="uppercase">{{ props.appointmentData.procedure }}</span><br>
           </div>
-        </v-card-text>
+          <div v-else>
+            <strong>Especialidade: </strong> <span class="uppercase">{{ props.appointmentData.specialist }}</span><br>
+          </div>
+          <p><strong>Recomendações:</strong> <span class="uppercase whitespace-break-spaces">{{ recomendation }}</span></p>
+        </div>
+      </v-card-text>
     </div>
   </BaseCard>
   <v-dialog
-  v-model="editRecomendationDialog"
-  class="z-990"
+    v-model="editRecomendationDialog"
+    class="z-990"
   >
-    <AppointmentRecomendations :recomendationDefault="recomendation" @close ="editRecomendationDialog = false" @save="handleSaveRecomendation"/>
+    <AppointmentRecomendations :recomendation-default="recomendation" @close="editRecomendationDialog = false" @save="handleSaveRecomendation" />
   </v-dialog>
 </template>
 
 <script setup>
-import { useFormatDate } from '@/composables/utils/useFormatDate';
+  import { useFormatDate } from '@/composables/utils/useFormatDate';
 
-const props = defineProps({
-  appointmentData: { type: Object, required: true },
-})
+  const props = defineProps({
+    appointmentData: { type: Object, required: true },
+  })
 
-const { formatDate } = useFormatDate();
-const emit = defineEmits(['close'])
-const title = ref('Comprovante de Agendamento');
-const recomendation = ref('Atenção! O atendimento será por ordem de chegada');
-const editRecomendationDialog = ref(false);
-const isExam = computed(() => props.appointmentData.solicitation.solicitation_type == 'exam' )
+  const { formatDate } = useFormatDate();
+  const emit = defineEmits(['close'])
+  const title = ref('Comprovante de Agendamento');
+  const recomendation = ref('Atenção! O atendimento será por ordem de chegada');
+  const editRecomendationDialog = ref(false);
+  const isExam = computed(() => props.appointmentData.solicitation.solicitation_type == 'exam' )
 
-const handleSaveRecomendation = value => {
-  recomendation.value = value;
-  editRecomendationDialog.value = false;
-};
+  const handleSaveRecomendation = value => {
+    recomendation.value = value;
+    editRecomendationDialog.value = false;
+  };
 
-const printConfirmation = () => {
-  const printContent = document.getElementById('appointmentConfirmation');
-  if (!printContent) return;
+  const printConfirmation = () => {
+    const printContent = document.getElementById('appointmentConfirmation');
+    if (!printContent) return;
 
-  const clonedContent = printContent.cloneNode(true);
-  const splittedContent = clonedContent.querySelector('.leading-6').innerHTML.split('<hr>').slice(1, 7).join('<hr>')
+    const clonedContent = printContent.cloneNode(true);
+    const splittedContent = clonedContent.querySelector('.leading-6').innerHTML.split('<hr>').slice(1, 7).join('<hr>')
 
-  const printWindow = window.open('', '_blank', 'width=800,height=600');
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
 
-  printWindow.document.write(`
+    printWindow.document.write(`
     <html lang="pt-BR">
       <head>
         <meta charset="UTF-8">
@@ -212,7 +212,7 @@ const printConfirmation = () => {
     </html>
   `);
 
-  printWindow.document.close();
-};
+    printWindow.document.close();
+  };
 
 </script>

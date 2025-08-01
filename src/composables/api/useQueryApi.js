@@ -10,7 +10,7 @@ export function useQueryApi (resource) {
   const meta = ref([])
   const {
     params, page, perPage, filters, sort, include,
-    setFilter, setSort, clearFilters, reset, setTableOptions, setInclude
+    setFilter, setSort, clearFilters, reset, setTableOptions, setInclude,
   } = useQueryFilters()
 
   const fetch = async () => {
@@ -37,6 +37,6 @@ export function useQueryApi (resource) {
     params, page, perPage, filters, sort, include,
 
     // métodos
-    setFilter, setSort, clearFilters, reset, setTableOptions, setInclude
+    setFilter, setSort, clearFilters, reset, setTableOptions, setInclude,
   }
 }

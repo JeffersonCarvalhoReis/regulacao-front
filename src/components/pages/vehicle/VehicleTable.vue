@@ -13,8 +13,8 @@
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
       @delete-item="handleDelete"
-      @update-options="updateOptions"
       @edit-item="handleEdit"
+      @update-options="updateOptions"
     />
   </div>
 

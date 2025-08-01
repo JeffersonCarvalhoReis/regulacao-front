@@ -1,5 +1,5 @@
 <template>
-  <city-table ref='cityTableRef' :edit="true" :show-delete="true">
+  <city-table ref="cityTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
       <base-button-register @register="registerCity = true" />
 
@@ -9,7 +9,7 @@
     v-model="registerCity"
     class="z-999"
   >
-    <city-form @close="registerCity = false"  @save="submit" />
+    <city-form @close="registerCity = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const cityTableRef = ref(null);
 
 
-  const submit = async (city) => {
+  const submit = async city => {
     const success = await showFeedback(() => create(city));
     if (success) {
       cityTableRef.value?.refetch();

@@ -9,7 +9,7 @@
         <InfoGroup title="Médicos da Unidade Prestadora">
           <ul>
             <li v-for="doctors in props.providerUnitData.doctors" :key="doctors.id">
-              {{ doctors.name}}
+              {{ doctors.name }}
             </li>
           </ul>
         </InfoGroup>

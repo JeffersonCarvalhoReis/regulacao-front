@@ -1,12 +1,12 @@
 export function useRoles () {
 
-  const translateRole = (role) => {
+  const translateRole = role => {
     const mapRole = {
       'admin': 'Adminstrador',
       'regulation_officer': 'Regulador',
       'reception': 'Recepção',
       'provider_unit_manager' : 'Unidade Prestadora',
-      'tfd' : 'TFD'
+      'tfd' : 'TFD',
     }
     return mapRole[role] || 'Usuário'
   };
@@ -22,6 +22,6 @@ export function useRoles () {
 
   return {
     translateRole,
-    roles
+    roles,
   }
 }

@@ -6,61 +6,61 @@
     <v-card-text class="flex justify-between">
       <div class="flex flex-col w-full">
         <v-text-field
-        v-model="searchAppointment"
-        class="max-w-150"
-        density="compact"
-        hide-details
-        label="Buscar Agendamento de Paciente"
-        placeholder="Nome, SUS ou CPF"
-        variant="outlined"
-        @keyup="emit('search-appointment', searchAppointment)"
-      />
-      <div class="flex gap-4 mt-4">
-        <div class="flex basis-100">
-          <v-btn icon flat @click="subDay">
-            <v-icon>mdi-chevron-left</v-icon>
-          <v-tooltip activator="parent">
-            Voltar dia
-          </v-tooltip>
-        </v-btn>
-        <base-input-date-picker
-          v-model="appointmentDate"
-          class-date-picker="absolute translate-x-100 translate-y-10"
-          label="Data"
-          readonly
-          @update:modelValue="handleDateChange"
+          v-model="searchAppointment"
+          class="max-w-150"
+          density="compact"
+          hide-details
+          label="Buscar Agendamento de Paciente"
+          placeholder="Nome, SUS ou CPF"
+          variant="outlined"
+          @keyup="emit('search-appointment', searchAppointment)"
         />
-        <v-btn icon flat @click="addDay">
-          <v-icon> mdi-chevron-right</v-icon>
-          <v-tooltip activator="parent">
-            Avançar dia
-          </v-tooltip>
-        </v-btn>
-        </div>
+        <div class="flex gap-4 mt-4">
+          <div class="flex basis-100">
+            <v-btn flat icon @click="subDay">
+              <v-icon>mdi-chevron-left</v-icon>
+              <v-tooltip activator="parent">
+                Voltar dia
+              </v-tooltip>
+            </v-btn>
+            <base-input-date-picker
+              v-model="appointmentDate"
+              class-date-picker="absolute translate-x-100 translate-y-10"
+              label="Data"
+              readonly
+              @update:model-value="handleDateChange"
+            />
+            <v-btn flat icon @click="addDay">
+              <v-icon> mdi-chevron-right</v-icon>
+              <v-tooltip activator="parent">
+                Avançar dia
+              </v-tooltip>
+            </v-btn>
+          </div>
 
-      <v-autocomplete
-        v-if="props.isExam"
-        v-model="procedure"
-        density="compact"
-        item-title="name"
-        item-value="id"
-        :items="procedureSelectData"
-        label="Procedimento"
-        variant="outlined"
-        @update:modelValue="emit('search-procedure', procedure)"
-    />
-      <v-autocomplete
-        v-else
-        v-model="specialist"
-        density="compact"
-        item-title="name"
-        item-value="id"
-        :items="specialistSelectData"
-        label="Especialidade"
-        variant="outlined"
-        @update:modelValue="emit('search-specialist', specialist)"
-     />
-      </div>
+          <v-autocomplete
+            v-if="props.isExam"
+            v-model="procedure"
+            density="compact"
+            item-title="name"
+            item-value="id"
+            :items="procedureSelectData"
+            label="Procedimento"
+            variant="outlined"
+            @update:model-value="emit('search-procedure', procedure)"
+          />
+          <v-autocomplete
+            v-else
+            v-model="specialist"
+            density="compact"
+            item-title="name"
+            item-value="id"
+            :items="specialistSelectData"
+            label="Especialidade"
+            variant="outlined"
+            @update:model-value="emit('search-specialist', specialist)"
+          />
+        </div>
       </div>
       <slot />
     </v-card-text>
@@ -70,10 +70,10 @@
 <script setup>
   import { useSpecialistApi } from '@/composables/modules/useSpecialistModule';
   import { useProcedureApi } from '@/composables/modules/useProcedureModule';
-  import { subDays, addDays } from 'date-fns';
+  import { addDays, subDays } from 'date-fns';
 
   const props = defineProps({
-    isExam: { type: Boolean, default: false}
+    isExam: { type: Boolean, default: false },
   })
 
   const { data: specialistData, params: specialistParams, refetch: specialistFetch } = useSpecialistApi();
@@ -88,14 +88,14 @@
   const today = new Date();
   const specialistSelectData = computed(() => [
     { id: null, name: 'Todos' },
-    ...(specialistData.value || [])
+    ...(specialistData.value || []),
   ]);
 
   const procedureSelectData = computed(() => [
     { id: null, name: 'Todos' },
-    ...(procedureData.value || [])
+    ...(procedureData.value || []),
   ]);
-  const handleDateChange = (v) => {
+  const handleDateChange = v => {
     emit('search-appointment-date', v)
   }
 
@@ -106,7 +106,7 @@
     appointmentDate.value = subDays(appointmentDate.value, 1)
   }
 
-  watch(() => appointmentDate.value, (newValue) => {
+  watch(() => appointmentDate.value, newValue => {
     emit('search-appointment-date', newValue)
   })
 
@@ -120,13 +120,13 @@
       procedureFetch(),
     ]);
 
-    watch(() => props.isExam ,(newValue) => {
+    watch(() => props.isExam ,newValue => {
       if(newValue){
         specialist.value = null
       } else {
         procedure.value = null
       }
-    }, { deep: true})
+    }, { deep: true })
 
   })
 

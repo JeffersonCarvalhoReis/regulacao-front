@@ -1,58 +1,58 @@
 <template>
-<base-card :title="title" @close="emit('close')">
-  <v-card-text>
-    <div class="flex gap-4 justify-end mb-2">
-      <BaseButtonRegister button-text="Controle de Embarque" button-icon="mdi-bus-stop" @register="dialogExportCheckIn = true"/>
-      <BaseButtonRegister button-text="Controle de Passageiros" button-icon="mdi-account" @register="dialogPassengerControl = true"/>
-      <BaseButtonRegister button-text="Controle de Diárias" button-icon="mdi-home" @register="dialogPassengerDailyControl = true"/>
-    </div>
+  <base-card :title="title" @close="emit('close')">
+    <v-card-text>
+      <div class="flex gap-4 justify-end mb-2">
+        <BaseButtonRegister button-icon="mdi-bus-stop" button-text="Controle de Embarque" @register="dialogExportCheckIn = true" />
+        <BaseButtonRegister button-icon="mdi-account" button-text="Controle de Passageiros" @register="dialogPassengerControl = true" />
+        <BaseButtonRegister button-icon="mdi-home" button-text="Controle de Diárias" @register="dialogPassengerDailyControl = true" />
+      </div>
       <BaseSection>
-          <InfoGroup title="Partida" class="pt-2">
+        <InfoGroup class="pt-2" title="Partida">
           <div>Data: {{ formatDate(props.travelData.date) }}</div>
           <div>Hora: {{ props.travelData.time }}</div>
         </InfoGroup>
         <v-divider vertical />
-        <InfoGroup title="Destino" class="pt-2">
+        <InfoGroup class="pt-2" title="Destino">
           <div>Cidade: <span :class="textTransform">{{ props.travelData.city }}</span></div>
         </InfoGroup>
         <v-divider vertical />
-        <InfoGroup  title="Informações Sobre a Viagem" class="pt-2">
+        <InfoGroup class="pt-2" title="Informações Sobre a Viagem">
           <div>Motorista: <span :class="textTransform">{{ props.travelData.driver }}</span></div>
           <div>Veículo: <span :class="textTransform">{{ props.travelData.vehicle }}</span></div>
           <div>Quantidade de passageiros: {{ props.travelData.quantity_passengers }}</div>
-          <div>Quantidade de assentos ocupados: {{ occupiedSeats()}}</div>
+          <div>Quantidade de assentos ocupados: {{ occupiedSeats() }}</div>
         </InfoGroup>
       </BaseSection>
     </v-card-text>
     <h2 class="mx-5 text-xl capitalize">passageiros</h2>
     <base-table
       class="rounted-t-none m-5"
-      :headers="headers"
-      :items="props.travelData.patients"
-      :hideDefaultFooter="true"
-      :deletable="true"
-      new-action
-      :icon-new-action="changeTravelIcon"
       :class-new-action="changeTravelClass"
+      :deletable="true"
+      :headers="headers"
+      :hide-default-footer="true"
+      :icon-new-action="changeTravelIcon"
+      :items="props.travelData.patients"
+      new-action
       :text-new-action="changeTravelText"
-      @new-action="handlChangeTravel"
-      @edit-item="handleEditPassengers"
       @delete-item="handleRemovePassenger"
+      @edit-item="handleEditPassengers"
+      @new-action="handlChangeTravel"
       @view-item="handleView"
     >
-    <template #item.name="{ item }">
-          {{ `${item.name }${ageStringLabel(item.birth_date)}` }}
-    </template>
-    <template #item.companion_name="{ item }">
-          {{ item.companion_name ? item.companion_name : 'Sem Acompanhante' }}
-    </template>
-    <template #item.appointment_date="{ item }">
-      {{ formatDate(item.appointment_date) }}
-    </template>
-        <template #item.appointment_time="{ item }">
-    <span class="lowercase">{{ `${item.appointment_time}h` }}</span>
-    </template>
-    <template #item.command="{ item }">
+      <template #item.name="{ item }">
+        {{ `${item.name }${ageStringLabel(item.birth_date)}` }}
+      </template>
+      <template #item.companion_name="{ item }">
+        {{ item.companion_name ? item.companion_name : 'Sem Acompanhante' }}
+      </template>
+      <template #item.appointment_date="{ item }">
+        {{ formatDate(item.appointment_date) }}
+      </template>
+      <template #item.appointment_time="{ item }">
+        <span class="lowercase">{{ `${item.appointment_time}h` }}</span>
+      </template>
+      <template #item.command="{ item }">
         <v-tooltip
           text="Ver Comanda"
         >
@@ -61,60 +61,60 @@
               v-bind="props"
               class="text-ita-green bg-white/0 border-0 ml-1 h-full"
               divided
-              variant="outlined"
               icon
+              variant="outlined"
               @click="handleOpenCommand(item)"
             >
               <v-icon> mdi-text-box</v-icon>
             </v-btn>
           </template>
         </v-tooltip>
-    </template>
-  </base-table>
+      </template>
+    </base-table>
   </base-card>
   <v-dialog
     v-model="dialogEditPassengers"
     class="z-999"
   >
-  <TravelAddPassengerForm
-    :model-value="selectedPassengers"
-    :travel-data="props.travelData"
-    @close="dialogEditPassengers = false"
-    @save="updatePassengers"
-     />
+    <TravelAddPassengerForm
+      :model-value="selectedPassengers"
+      :travel-data="props.travelData"
+      @close="dialogEditPassengers = false"
+      @save="updatePassengers"
+    />
   </v-dialog>
   <v-dialog
     v-model="passengerDetails"
     class="z-999"
   >
-    <TravelPassengerDetails @close="passengerDetails = false" :data="selectedPassengers"/>
+    <TravelPassengerDetails :data="selectedPassengers" @close="passengerDetails = false" />
   </v-dialog>
   <v-dialog
     v-model="dialogExportCheckIn"
   >
-  <TravelPassengerCheckInList  @close="dialogExportCheckIn = false" :data="props.travelData" />
+    <TravelPassengerCheckInList :data="props.travelData" @close="dialogExportCheckIn = false" />
   </v-dialog>
-    <v-dialog
+  <v-dialog
     v-model="dialogPassengerControl"
   >
-  <TravelPassengerControl  @close="dialogPassengerControl = false" :data="props.travelData" />
+    <TravelPassengerControl :data="props.travelData" @close="dialogPassengerControl = false" />
   </v-dialog>
-    <v-dialog
+  <v-dialog
     v-model="dialogPassengerDailyControl"
   >
-  <TravelPassengerDailyControl @close="dialogPassengerDailyControl = false" :data="props.travelData" />
+    <TravelPassengerDailyControl :data="props.travelData" @close="dialogPassengerDailyControl = false" />
   </v-dialog>
   <v-dialog
     v-model="dialogChangeTravel"
     class="z-999"
   >
-  <TravelChangePassengerDate @close="dialogChangeTravel = false" :patientData="selectedPassengers" :travelId="props.travelData.id" @reload=" handleReload" />
+    <TravelChangePassengerDate :patient-data="selectedPassengers" :travel-id="props.travelData.id" @close="dialogChangeTravel = false" @reload=" handleReload" />
   </v-dialog>
   <v-dialog
     v-model="dialogCommand"
     class="z-999"
   >
-  <TravelPassengerCommand @close="dialogCommand = false" :patientData="selectedPassengers"  />
+    <TravelPassengerCommand :patient-data="selectedPassengers" @close="dialogCommand = false" />
   </v-dialog>
 </template>
 
@@ -150,7 +150,7 @@
   const changeTravelClass = 'text-ita-yellow bg-white/0 border-0 ml-1 h-full';
   const changeTravelText = 'Trocar Data da Viagem';
 
-  const ageStringLabel = (date) => {
+  const ageStringLabel = date => {
     const stringLabel = ageLabel(date);
     if(!stringLabel) return '';
     return ` - ${stringLabel}`
@@ -167,15 +167,15 @@
     return props.travelData.quantity_passengers - infant;
   }
 
-  const handleView = (v) => {
+  const handleView = v => {
     passengerDetails.value = true
     selectedPassengers.value = v
   }
-  const handlChangeTravel = (v) => {
+  const handlChangeTravel = v => {
     dialogChangeTravel.value = true;
     selectedPassengers.value = v
   }
-  const handleEditPassengers = async (value) => {
+  const handleEditPassengers = async value => {
     dialogEditPassengers.value = true;
     selectedPassengers.value = value;
   }
@@ -184,7 +184,7 @@
     dialogChangeTravel.value = false;
   }
 
-  const handleOpenCommand = (v) => {
+  const handleOpenCommand = v => {
     dialogCommand.value = true;
     selectedPassengers.value = v
   }
@@ -195,10 +195,10 @@
     emit('refresh', props.travelData.id)
   }
 
-  const handleRemovePassenger = async (values) => {
+  const handleRemovePassenger = async values => {
     const data = {
       patient_id: values.id,
-      companion_id: values.companion_id
+      companion_id: values.companion_id,
     }
     const confirm = await confirmModal(`Tem certeza que deseja excluir o paciente <strong>${values.name}</strong> dessa viagem??`, 'Atenção');
     if(confirm) {
@@ -252,7 +252,7 @@
         value: 'action',
         width: '200px',
         align: 'center',
-      }
+      },
 
     ];
 

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { api } from '@/config/axios'
 
-export function useDirectApi(resource) {
+export function useDirectApi (resource) {
   const loading = ref(false)
   const error = ref(null)
 
@@ -22,8 +22,8 @@ export function useDirectApi(resource) {
 
   return {
     get: () => request('get'),
-    update: (data) => request('put', data),
-    destroy: (data) => request('delete', data),
+    update: data => request('put', data),
+    destroy: data => request('delete', data),
     loading,
     error,
   }

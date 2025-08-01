@@ -1,30 +1,30 @@
 <template>
   <div>
     <base-table
+      :class-new-action="appointmentClass"
       :edit="false"
       :headers="headers"
+      :icon-new-action="appointmentIcon"
       :items="data"
       :loading="loadingList"
-      :show-delete="false"
-      :total-items="meta.total"
       :new-action="appointmentPermission"
-      :icon-new-action="appointmentIcon"
+      :show-delete="false"
       :text-new-action="appointmentText"
-      :class-new-action="appointmentClass"
+      :total-items="meta.total"
+      @new-action="openAppointment"
       @update-options="updateOptions"
       @view-item="viewSolicitation"
-      @new-action="openAppointment"
     >
       <template #item.solicitation_date="{ item }">
-          {{ formatDate(item.solicitation_date) }}
-        </template>
-        <template #item.is_first_time="{ item }">
-          {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
-        </template>
-        <template #item.is_urgent="{ item }">
-          {{ booleanToLabel(item.is_urgent) }}
-        </template>
-      </base-table>
+        {{ formatDate(item.solicitation_date) }}
+      </template>
+      <template #item.is_first_time="{ item }">
+        {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
+      </template>
+      <template #item.is_urgent="{ item }">
+        {{ booleanToLabel(item.is_urgent) }}
+      </template>
+    </base-table>
   </div>
   <v-dialog
     v-model="dialogAppointment"
@@ -47,7 +47,7 @@
 
   const props = defineProps({
     patientId: { type: Number, required: true },
-    solicitationType: { type: String, default: 'exam'}
+    solicitationType: { type: String, default: 'exam' },
   });
 
   const emit = defineEmits(['submit']);
@@ -72,8 +72,8 @@
   const options = ref({});
   const viewSolicitationDetails = ref(false);
   const solicitationData = ref({});
-  const appointmentIcon = "mdi-calendar-check"
-  const appointmentText = "Agendar Solicitação"
+  const appointmentIcon = 'mdi-calendar-check'
+  const appointmentText = 'Agendar Solicitação'
   const appointmentClass = 'text-green-600 bg-white/0 border-0 ml-1 h-full';
   const dialogAppointment = ref(false);
   const selectedSolicitation = ref({});
@@ -110,53 +110,53 @@
   watch(
     () => props.solicitationType,
     newValue => {
-    setFilter('solicitation_type', newValue)
-    refetch()
+      setFilter('solicitation_type', newValue)
+      refetch()
     },
     { deep: true }
   );
 
   const headers = computed( () => {
     const baseHeaders = [
-    {
-      title: 'Detalhes',
-      value: 'view',
-      align: 'center',
-      width: '20px',
-    },
-    {
-      title: 'Paciente',
-      key: 'patient',
-      sortable: true,
-      align: 'center',
+      {
+        title: 'Detalhes',
+        value: 'view',
+        align: 'center',
+        width: '20px',
+      },
+      {
+        title: 'Paciente',
+        key: 'patient',
+        sortable: true,
+        align: 'center',
 
-    },
-    {
-      title: 'Data da Solicitação',
-      key: 'solicitation_date',
-      sortable: true,
-      align: 'center',
+      },
+      {
+        title: 'Data da Solicitação',
+        key: 'solicitation_date',
+        sortable: true,
+        align: 'center',
 
-    },
-    {
-      title: 'Retorno',
-      key: 'is_first_time',
-      sortable: true,
-      align: 'center',
+      },
+      {
+        title: 'Retorno',
+        key: 'is_first_time',
+        sortable: true,
+        align: 'center',
 
-    },
-    {
-      title: 'Urgência',
-      key: 'is_urgent',
-      sortable: true,
-      align: 'center',
-    },
-    {
-      title: 'Cadastrado por',
-      key: 'created_by',
-      sortable: true,
-      align: 'center',
-    },
+      },
+      {
+        title: 'Urgência',
+        key: 'is_urgent',
+        sortable: true,
+        align: 'center',
+      },
+      {
+        title: 'Cadastrado por',
+        key: 'created_by',
+        sortable: true,
+        align: 'center',
+      },
 
 
     ];
@@ -170,18 +170,18 @@
     }
     if(props.solicitationType == 'exam') {
       baseHeaders.splice(2, 0, {
-      title: 'Procedimento',
-      key: 'procedure',
-      sortable: true,
-      align: 'center',
-    });
+        title: 'Procedimento',
+        key: 'procedure',
+        sortable: true,
+        align: 'center',
+      });
     } else if(props.solicitationType == 'consultation') {
       baseHeaders.splice(2, 0, {
-      title: 'Especialidade',
-      key: 'specialist',
-      sortable: true,
-      align: 'center',
-    });
+        title: 'Especialidade',
+        key: 'specialist',
+        sortable: true,
+        align: 'center',
+      });
     }
     return baseHeaders
   });

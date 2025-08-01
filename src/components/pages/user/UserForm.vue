@@ -4,9 +4,9 @@
       <v-form class="flex flex-col gap-4">
         <v-text-field
           v-model="user"
-          :error-messages="errors.user"
           autocomplete="username"
           density="compact"
+          :error-messages="errors.user"
           label="Usuário"
           placeholder="Nome do Usuário"
           variant="outlined"
@@ -14,44 +14,45 @@
 
         <v-text-field
           v-model="password"
-          :error-messages="errors.password"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
           autocomplete="new-password"
           density="compact"
-          :type="showPassword ? 'text' : 'password'"
+          :error-messages="errors.password"
           :label="isEditing ? 'Nova senha' : 'Senha'"
-          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="showPassword ? 'text' : 'password'"
           variant="outlined"
           @click:append-inner="showPassword = !showPassword"
           @keydown.space.prevent
         />
-        <div class="max-w-100 relative mt-2"
+        <div
           v-if="password?.length > 0 "
+          class="max-w-100 relative mt-2"
         >
           <div
-          class="mt-1 text-sm font-medium absolute bottom-2"
-          :class="colorPasswordStrength"
+            class="mt-1 text-sm font-medium absolute bottom-2"
+            :class="colorPasswordStrength"
           >
             Força da senha: {{ textPasswordStrength }}
           </div>
           <!-- Barra visual -->
           <div
-              class="h-2 rounded mt-1 bg-gray-300 absolute max-w-100 w-full bottom-0 z-0"
+            class="h-2 rounded mt-1 bg-gray-300 absolute max-w-100 w-full bottom-0 z-0"
           />
           <div
-              class="h-2 rounded mt-1 transition-all duration-300 absolute bottom-0 z-10"
+            class="h-2 rounded mt-1 transition-all duration-300 absolute bottom-0 z-10"
             :class="[colorPasswordBar]"
           />
 
         </div>
         <v-text-field
           v-model="passwordConfirm"
-          :error-messages="errors.passwordConfirm"
-          autocomplete="new-password"
-          :disabled="!password"
-          density="compact"
-          :type="showPassword ? 'text' : 'password'"
-          :label="isEditing ? 'Confirmar nova senha' : 'Confirmar senha'"
           :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          autocomplete="new-password"
+          density="compact"
+          :disabled="!password"
+          :error-messages="errors.passwordConfirm"
+          :label="isEditing ? 'Confirmar nova senha' : 'Confirmar senha'"
+          :type="showPassword ? 'text' : 'password'"
           variant="outlined"
           @click:append-inner="showPassword = !showPassword"
           @keydown.space.prevent
@@ -59,35 +60,35 @@
 
         <v-select
           v-model="role"
-          :items="roles"
-          :error-messages="errors.role"
           density="compact"
+          :error-messages="errors.role"
           item-title="name"
           item-value="value"
+          :items="roles"
           label="Função"
           variant="outlined"
         />
-          <v-autocomplete
-            v-model="health_unit_id"
-            :error-messages="errors.health_unit_id"
-            density="compact"
-            item-title="name"
-            item-value="id"
-            :items="healthUnitData"
-            label="Unidade de Saúde"
-            variant="outlined"
-          />
         <v-autocomplete
-            v-if="role == 'provider_unit_manager'"
-            v-model="provider_unit_id"
-            :error-messages="errors.provider_unit_id"
-            density="compact"
-            item-title="name"
-            item-value="id"
-            :items="providerUnitData"
-            label="Unidade Prestadora"
-            variant="outlined"
-          />
+          v-model="health_unit_id"
+          density="compact"
+          :error-messages="errors.health_unit_id"
+          item-title="name"
+          item-value="id"
+          :items="healthUnitData"
+          label="Unidade de Saúde"
+          variant="outlined"
+        />
+        <v-autocomplete
+          v-if="role == 'provider_unit_manager'"
+          v-model="provider_unit_id"
+          density="compact"
+          :error-messages="errors.provider_unit_id"
+          item-title="name"
+          item-value="id"
+          :items="providerUnitData"
+          label="Unidade Prestadora"
+          variant="outlined"
+        />
       </v-form>
     </v-card-text>
     <v-card-actions class="flex justify-between mx-4 mb-4">
@@ -126,25 +127,25 @@
   const { roles } = useRoles();
   const isEditing = computed(() => !!props.modelValue?.id);
   const schema = computed(() =>
-  yup.object({
-    user: yup.string().required('Usuário é obrigatório'),
-    health_unit_id: yup.string().nullable(),
-    provider_unit_id: yup
+    yup.object({
+      user: yup.string().required('Usuário é obrigatório'),
+      health_unit_id: yup.string().nullable(),
+      provider_unit_id: yup
         .number()
         .when('role', {
           is: 'provider_unit_manager',
-          then: (schema) => schema.required('Unidade Prestadora é obrigatória'),
-          otherwise: (schema) => schema.nullable()
+          then: schema => schema.required('Unidade Prestadora é obrigatória'),
+          otherwise: schema => schema.nullable(),
         }),
 
-    password: isEditing.value
-      ? yup
+      password: isEditing.value
+        ? yup
           .string()
           .min(8, 'A senha deve ter no mínimo 8 caracteres')
           .matches(/[A-Za-z]/, 'A senha deve conter ao menos uma letra')
           .matches(/[0-9]/, 'A senha deve conter ao menos um número')
           .notRequired()
-      : yup
+        : yup
           .string()
           .required('Senha é obrigatória')
           .min(8, 'A senha deve ter no mínimo 8 caracteres')
@@ -192,7 +193,7 @@
     await nextTick();
     await Promise.all([
       providerUnitFetch(),
-      healthUnitFetch()
+      healthUnitFetch(),
     ])
   });
 

@@ -1,6 +1,6 @@
-export function usePasswordStrength(passwordRef) {
+export function usePasswordStrength (passwordRef) {
 
-  const checkPasswordStrength = (password) => {
+  const checkPasswordStrength = password => {
     let score = 0;
 
     if (!password) return 0

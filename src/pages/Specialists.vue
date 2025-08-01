@@ -9,7 +9,7 @@
     v-model="registerSpecialist"
     class="z-999"
   >
-    <specialist-form @close="registerSpecialist = false" @save="submit"/>
+    <specialist-form @close="registerSpecialist = false" @save="submit" />
   </v-dialog>
 </template>
 <script setup>
@@ -23,7 +23,7 @@
   const specialistTableRef = ref(null);
 
 
-  const submit = async (specialist) => {
+  const submit = async specialist => {
     const success = await showFeedback(() => create(specialist));
     if (success) {
       specialistTableRef.value?.refetch();

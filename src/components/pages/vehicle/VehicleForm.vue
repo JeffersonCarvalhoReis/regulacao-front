@@ -2,9 +2,9 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <v-form class="grid grid-cols-3 gap-x-4">
-          <v-text-field
-          class="required col-span-2"
+        <v-text-field
           v-model="vehicle_model"
+          class="required col-span-2"
           density="compact"
           :error-messages="errors.vehicle_model"
           label="Veículo"

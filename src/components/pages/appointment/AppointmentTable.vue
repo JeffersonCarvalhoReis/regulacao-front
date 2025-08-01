@@ -10,75 +10,149 @@
       </v-btn>
     </div>
     <v-tabs
-        v-model="tab"
-        class="bg-white border-t border-x border-gray-200"
-        selected-class="text-blue-800 bg-blue-100"
-      >
-        <v-tab class="font-bold px-10" value="consultation">
-          Consultas
-        </v-tab>
-        <v-tab class="font-bold  px-10" value="exam">
-          Exames
-        </v-tab>
-      </v-tabs>
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item value="consultation">
-            <base-table
-            class="rounted-t-none"
-            :edit="props.edit"
-            :headers="headers"
-            :items="data"
-            :loading="loadingList"
-            :show-delete="props.showDelete"
-            :tooltip-text-delete="tooltipTextDelete"
-            :total-items="meta.total"
-            :icon-delete="iconDelete"
-            :text-delete="textDelete"
-            new-action
-            :icon-new-action="appointmentConfirmationIcon"
-            :class-new-action="appointmentConfirmationClass"
-            :text-new-action="appointmentConfirmationText"
-            @delete-item="handleDelete"
-            @edit-item="handleEdit"
-            @update-options="updateOptions"
-            @view-item="viewAppointment"
-            @new-action="openAppointmentConfirmation"
-          >
+      v-model="tab"
+      class="bg-white border-t border-x border-gray-200"
+      selected-class="text-blue-800 bg-blue-100"
+    >
+      <v-tab class="font-bold px-10" value="consultation">
+        Consultas
+      </v-tab>
+      <v-tab class="font-bold  px-10" value="exam">
+        Exames
+      </v-tab>
+    </v-tabs>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item value="consultation">
+        <base-table
+          class="rounted-t-none"
+          :class-new-action="appointmentConfirmationClass"
+          :edit="props.edit"
+          :headers="headers"
+          :icon-delete="iconDelete"
+          :icon-new-action="appointmentConfirmationIcon"
+          :items="data"
+          :loading="loadingList"
+          new-action
+          :show-delete="props.showDelete"
+          :text-delete="textDelete"
+          :text-new-action="appointmentConfirmationText"
+          :tooltip-text-delete="tooltipTextDelete"
+          :total-items="meta.total"
+          @delete-item="handleDelete"
+          @edit-item="handleEdit"
+          @new-action="openAppointmentConfirmation"
+          @update-options="updateOptions"
+          @view-item="viewAppointment"
+        >
           <template #item.date="{ item }">
-          {{ formatDate(item.date) }}
-        </template>
+            {{ formatDate(item.date) }}
+          </template>
+          <template #item.action="{ item }">
+            <v-btn-group
+              divided
+              variant="outlined"
+            >
+              <v-tooltip
+                text="Aceitar"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    class="text-green-500 border-0 ml-1 h-full"
+                    flat
+                    icon
+                    @click="confirmAppointment(item)"
+                  >
+                    <v-icon>mdi-check</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+              <v-tooltip
+                text="Recusar"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    class="text-red-500 border-0 ml-1 h-full"
+                    flat
+                    icon
+                    @click="handleDelete(item)"
+                  >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+            </v-btn-group>
+          </template>
         </base-table>
 
       </v-tabs-window-item>
 
-        <v-tabs-window-item value="exam">
-          <base-table
-            class="rounted-t-none"
-            :edit="props.edit"
-            :headers="headers"
-            :items="data"
-            :loading="loadingList"
-            :show-delete="props.showDelete"
-            :tooltip-text-delete="tooltipTextDelete"
-            :total-items="meta.total"
-            :icon-delete="iconDelete"
-            :text-delete="textDelete"
-            new-action
-            :icon-new-action="appointmentConfirmationIcon"
-            :class-new-action="appointmentConfirmationClass"
-            :text-new-action="appointmentConfirmationText"
-            @delete-item="handleDelete"
-            @edit-item="handleEdit"
-            @update-options="updateOptions"
-            @view-item="viewAppointment"
-            @new-action="openAppointmentConfirmation"
-          >
+      <v-tabs-window-item value="exam">
+        <base-table
+          class="rounted-t-none"
+          :class-new-action="appointmentConfirmationClass"
+          :edit="props.edit"
+          :headers="headers"
+          :icon-delete="iconDelete"
+          :icon-new-action="appointmentConfirmationIcon"
+          :items="data"
+          :loading="loadingList"
+          new-action
+          :show-delete="props.showDelete"
+          :text-delete="textDelete"
+          :text-new-action="appointmentConfirmationText"
+          :tooltip-text-delete="tooltipTextDelete"
+          :total-items="meta.total"
+          @delete-item="handleDelete"
+          @edit-item="handleEdit"
+          @new-action="openAppointmentConfirmation"
+          @update-options="updateOptions"
+          @view-item="viewAppointment"
+        >
           <template #item.date="{ item }">
-          {{ formatDate(item.date) }}
-        </template>
+            {{ formatDate(item.date) }}
+          </template>
+          <template #item.action="{ item }">
+            <v-btn-group
+              divided
+              variant="outlined"
+            >
+              <v-tooltip
+                text="Aceitar"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    class="text-green-500 border-0 ml-1 h-full"
+                    flat
+                    icon
+                    @click="confirmAppointment(item)"
+                  >
+                    <v-icon>mdi-check</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+              <v-tooltip
+                text="Recusar"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    class="text-red-500 border-0 ml-1 h-full"
+                    flat
+                    icon
+                    @click="handleDelete(item)"
+                  >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
+            </v-btn-group>
+          </template>
         </base-table>
-        </v-tabs-window-item>
-      </v-tabs-window>
+      </v-tabs-window-item>
+    </v-tabs-window>
 
 
   </div>
@@ -93,17 +167,18 @@
     <appointment-form :model-value="selectedAppointment" @close="editAppointment = false" @save="submit" />
   </v-dialog>
   <v-dialog
-  v-model="dialogAppointmentConfirmation"
-  class="z-985"
+    v-model="dialogAppointmentConfirmation"
+    class="z-985"
   >
-  <appointment-confirmation @close="dialogAppointmentConfirmation = false" :appointment-data="appointmentData" />
-</v-dialog>
+    <appointment-confirmation :appointment-data="appointmentData" @close="dialogAppointmentConfirmation = false" />
+  </v-dialog>
 </template>
 
 <script setup>
   import { useAppointmentApi } from '@/composables/modules/useAppointmentModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
   import { useAppointmentExportApi } from '@/composables/modules/useAppointmentExportModule';
+  import { useMeStore } from '@/stores/me';
   import debounce from 'lodash/debounce'
 
   const props = defineProps({
@@ -111,6 +186,7 @@
     showDelete: { type: Boolean, default: true },
 
   });
+  const role = useMeStore().role;
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, destroy, clearFilters, setSort, update } = useAppointmentApi();
   const { setFilter: filterExport, exportAppointments, setSort: sortExport, clearFilters: clearFiltersExport } = useAppointmentExportApi();
   const { showFeedback, confirmModal, showFeedbackLoading } = useSweetAlertFeedback();
@@ -132,7 +208,14 @@
   const updateOptions = newOptions => {
     options.value = { ...newOptions }
   };
-
+  onMounted(() => {
+    window.Echo.channel('appointments')
+      .listen('.created', event => {
+        if(role == 'regulation_officer') {
+          refetch()
+        }
+      });
+  });
   const clearFiltersTab = () => {
     clearFilters();
     clearFiltersExport();
@@ -140,6 +223,15 @@
     filterExport('solicitation_type', tab.value)
     setSort('-updated_at')
     sortExport('-updated_at')
+  }
+
+  const confirmAppointment = async appointment => {
+    const confirm = await confirmModal(`Confirmar agendamento de <strong>${appointment.patient}</strong>?`, 'Confirmação', 'question', 'bg-green-500 text-white shadow-sm', 'bg-red-500 text-white shadow-sm');
+    if(confirm) {
+      appointment.status = 'scheduled';
+      await showFeedback(() => update(appointment.id, appointment));
+      refetch();
+    }
   }
 
   const handleExportAppointments = async () => {
@@ -203,80 +295,80 @@
   )
 
   const headers = computed( () => {
-        const baseHeaders = [
+    const baseHeaders = [
 
-    {
-      title: 'Detalhes',
-      value: 'view',
-      align: 'center',
-      width: '20px',
-    },
-    // Campos do agendamento
-  {
-    title: 'Nome do Paciente',
-    key: 'patient',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Data do Agendamento',
-    key: 'created_at',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Data da Consulta',
-    key: 'date',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Hora da Consulta',
-    key: 'time',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Unidade Prestadora',
-    key: 'provider_unit',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Médico',
-    key: 'doctor',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Agendado Por',
-    key: 'scheduled_by',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Ações',
-    value: 'action',
-    align: 'center',
-    width: '10px',
-  }];
-  if(tab.value == 'exam') {
+      {
+        title: 'Detalhes',
+        value: 'view',
+        align: 'center',
+        width: '20px',
+      },
+      // Campos do agendamento
+      {
+        title: 'Nome do Paciente',
+        key: 'patient',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Data do Agendamento',
+        key: 'created_at',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Data da Consulta',
+        key: 'date',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Hora da Consulta',
+        key: 'time',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Unidade Prestadora',
+        key: 'provider_unit',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Médico',
+        key: 'doctor',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Agendado Por',
+        key: 'scheduled_by',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Ações',
+        value: 'action',
+        align: 'center',
+        width: '10px',
+      }];
+    if(tab.value == 'exam') {
       baseHeaders.splice(5, 0, {
-      title: 'Procedimento',
-      key: 'procedure',
-      align: 'center',
-      sortable: true,
-    });
+        title: 'Procedimento',
+        key: 'procedure',
+        align: 'center',
+        sortable: true,
+      });
     } else if(tab.value == 'consultation') {
       baseHeaders.splice(5, 0, {
-      title: 'Especialidade',
-      key: 'specialist',
-      align: 'center',
-      sortable: true,
-   });
-  }
+        title: 'Especialidade',
+        key: 'specialist',
+        align: 'center',
+        sortable: true,
+      });
+    }
     return baseHeaders;
-});
+  });
 
   defineExpose({
     setFilter,

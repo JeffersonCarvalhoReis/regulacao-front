@@ -10,15 +10,15 @@
       @update-options="updateOptions"
       @view-item="viewAppointment"
     >
-    <template #item.date="{ item }">
-      {{ formatDate(item.date) }}
-    </template>
+      <template #item.date="{ item }">
+        {{ formatDate(item.date) }}
+      </template>
     </base-table>
   </div>
   <v-dialog
     v-model="viewAppointmentDetails"
     class="z-999"
-    >
+  >
     <appointment-details :appointment-data="appointmentData" @close="viewAppointmentDetails = false" />
   </v-dialog>
 </template>
@@ -28,8 +28,8 @@
 
   const props = defineProps({
     patientId: { type: Number, required: true },
-    solicitationType: { type: String, default: 'exam'},
-    appointmentStatus: { type: String, required: true }
+    solicitationType: { type: String, default: 'exam' },
+    appointmentStatus: { type: String, required: true },
   })
 
   const { data, loadingList, refetch, setTableOptions, meta, setFilter } = useAppointmentApi();
@@ -71,84 +71,84 @@
   watch(
     () => props.solicitationType,
     newValue => {
-    setFilter('solicitation_type', newValue)
-    refetch()
+      setFilter('solicitation_type', newValue)
+      refetch()
     },
     { deep: true }
   );
 
 
   const headers = computed( () => {
-        const baseHeaders = [
-  {
-    title: 'Detalhes',
-    value: 'view',
-    align: 'center',
-    width: '20px',
-  },
-    // Campos do agendamento
-  {
-    title: 'Nome do Paciente',
-    key: 'patient',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Data do Agendamento',
-    key: 'created_at',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Data da Consulta',
-    key: 'date',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Hora da Consulta',
-    key: 'time',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Unidade Prestadora',
-    key: 'provider_unit',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Médico',
-    key: 'doctor',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    title: 'Agendado Por',
-    key: 'scheduled_by',
-    align: 'center',
-    sortable: true,
-  },
-  ];
-  if(props.solicitationType == 'exam') {
+    const baseHeaders = [
+      {
+        title: 'Detalhes',
+        value: 'view',
+        align: 'center',
+        width: '20px',
+      },
+      // Campos do agendamento
+      {
+        title: 'Nome do Paciente',
+        key: 'patient',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Data do Agendamento',
+        key: 'created_at',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Data da Consulta',
+        key: 'date',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Hora da Consulta',
+        key: 'time',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Unidade Prestadora',
+        key: 'provider_unit',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Médico',
+        key: 'doctor',
+        align: 'center',
+        sortable: true,
+      },
+      {
+        title: 'Agendado Por',
+        key: 'scheduled_by',
+        align: 'center',
+        sortable: true,
+      },
+    ];
+    if(props.solicitationType == 'exam') {
       baseHeaders.splice(5, 0, {
-      title: 'Procedimento',
-      key: 'procedure',
-      sortable: true,
-      align: 'center',
-    });
+        title: 'Procedimento',
+        key: 'procedure',
+        sortable: true,
+        align: 'center',
+      });
     } else if(props.solicitationType == 'consultation') {
       baseHeaders.splice(5, 0, {
-      title: 'Especialidade',
-      key: 'specialist',
-      sortable: true,
-      align: 'center',
-    });
+        title: 'Especialidade',
+        key: 'specialist',
+        sortable: true,
+        align: 'center',
+      });
     }
     return baseHeaders;
   });
 
   defineExpose({
-    fetchData
+    fetchData,
   });
 </script>

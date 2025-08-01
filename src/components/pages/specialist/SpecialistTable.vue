@@ -5,22 +5,22 @@
     </specialist-search>
     <base-table
       class="rounted-t-none"
+      :class-new-action="classAddDoctor"
       :edit="props.edit"
       :headers="headers"
+      :icon-new-action="iconAddDoctor"
       :items="data"
       :loading="loadingList"
+      :new-action="addDoctor"
       :show-delete="props.showDelete"
+      :text-new-action="textAddDoctor"
       :tooltip-text-delete="tooltipTextDelete"
       :total-items="meta.total"
-      :newAction="addDoctor"
-      :iconNewAction="iconAddDoctor"
-      :classNewAction="classAddDoctor"
-      :textNewAction="textAddDoctor"
       @delete-item="handleDelete"
-      @update-options="updateOptions"
-      @view-item="viewSpecialist"
       @edit-item="handleEdit"
       @new-action="openDoctorManager"
+      @update-options="updateOptions"
+      @view-item="viewSpecialist"
     />
   </div>
   <v-dialog v-model="viewSpecialistDetails">
@@ -38,7 +38,7 @@
     v-model="dialogDoctorManager"
     class="z-999"
   >
-    <specialist-doctor-manager :model-value="selectedSpecialist" @close="dialogDoctorManager = false" @save="submitUpdateDoctors" @update-table="updateTable"/>
+    <specialist-doctor-manager :model-value="selectedSpecialist" @close="dialogDoctorManager = false" @save="submitUpdateDoctors" @update-table="updateTable" />
   </v-dialog>
 
 </template>
@@ -54,7 +54,7 @@
     showDelete: { type: Boolean, default: false },
 
   })
-  const {data, loadingList, refetch, setTableOptions, meta, setFilter, clearFilters, update, destroy, setInclude } = useSpecialistApi();
+  const { data, loadingList, refetch, setTableOptions, meta, setFilter, clearFilters, update, destroy, setInclude } = useSpecialistApi();
   const { showFeedback, confirmModal } = useSweetAlertFeedback();
 
   const meStore = useMeStore();
