@@ -78,7 +78,7 @@
     <v-card-actions class="mx-4 mb-4 flex justify-end">
       <base-button-register
         button-icon="mdi-content-save"
-        button-text="Salvar"
+        :button-text="role == 'provider_unit_manager' ? 'Solicitar' : 'Salvar'"
         @register="onSubmit"
       />
     </v-card-actions>
@@ -153,7 +153,8 @@
 
   const emit = defineEmits(['close', 'save']);
 
-  const title = computed(() => isEditing.value ? 'Editar Agendamento' : 'Novo Agendamento' )
+  const msgAppointment = role == 'provider_unit_manager' ? 'Solicitar Agendamento' : 'Novo Agendamento'
+  const title = computed(() => isEditing.value ? 'Editar Agendamento' : msgAppointment )
 
   const schema = yup.object({
     date: yup.date().required('Data do agendamento é obrigatório'),
