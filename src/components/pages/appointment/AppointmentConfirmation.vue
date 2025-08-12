@@ -90,7 +90,7 @@
   const { formatDate } = useFormatDate();
   const emit = defineEmits(['close'])
   const title = ref('Comprovante de Agendamento');
-  const recomendation = ref('Atenção! O atendimento será por ordem de chegada');
+  const recomendation = ref('Atenção, OBRIGATÓRIO LEVAR REQUISIÇÃO MÉDICA ORIGINAL!');
   const editRecomendationDialog = ref(false);
   const isExam = computed(() => props.appointmentData.solicitation.solicitation_type == 'exam' )
 
