@@ -74,14 +74,37 @@
 
   const tableRows = computed(() => {
     const rows = [];
-    props.data.patients.forEach(patient => {
-      rows.push({ ...patient, type: 'patient' });
+
+    (props.data?.patients || []).forEach(patient => {
+      rows.push({
+        __row_key: `${patient.id}-patient`,
+        type: 'patient',
+        name: patient.name,
+      });
       if (patient.companion_name) {
-        rows.push({ ...patient, type: 'companion' });
+        rows.push({
+          __row_key: `${patient.id}-companion`,
+          type: 'companion',
+          companion_name: patient.companion_name,
+        });
       }
+
+      const extras = patient.extra_companions ?? [];
+      extras.forEach((extra, idx) => {
+        const comp = extra?.companion ?? {};
+        const compId = comp?.id ?? `extra-${patient.id}-${idx}`;
+
+        rows.push({
+          __row_key: `${patient.id}-extra-${compId}`,
+          type: 'companion',
+          companion_name: comp?.name ?? null,
+        });
+      });
     });
+
     return rows;
-  })
+  });
+
   const columns = ['Nº', 'Passageiro', 'Entrada', 'Saída', 'Quantidade de Diárias'];
   const travelInfo = {
     city: props.data.city,

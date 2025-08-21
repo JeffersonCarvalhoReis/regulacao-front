@@ -44,8 +44,12 @@
         {{ `${item.name }${ageStringLabel(item.birth_date)}` }}
       </template>
       <template #item.companion_name="{ item }">
-        {{ item.companion_name ? item.companion_name : 'Sem Acompanhante' }}
-      </template>
+        <div>
+          <div>{{ item.companion_name ? `${item.companion_name + (item.kinship ? " - " + item.kinship : '' )}`:'Sem Acompanhante' }}</div>
+          <div v-for="(extra, i) in item.extra_companions" :key="i">
+            {{ `${extra.companion?.name} ${extra.kinship ? " - " + extra.kinship : ''}` }}
+          </div>
+        </div>      </template>
       <template #item.appointment_date="{ item }">
         {{ formatDate(item.appointment_date) }}
       </template>

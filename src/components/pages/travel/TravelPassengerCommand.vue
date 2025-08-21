@@ -34,7 +34,7 @@
               <LabeledLine label="Nome do Paciente" :value="props.patientData.name" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Acompanhante" :value="props.patientData.companion_name" />
+              <LabeledLine label="Nome do Acompanhante" :value="companions" />
             </LabeledLineGroup>
             <LabeledLineGroup>
               <LabeledLine label="Endereço" :value="props.patientData.street" />
@@ -83,6 +83,14 @@
     patientData: { type: Object, requird: true },
   })
   const emit = defineEmits(['close']);
+  const companions = computed(() => {
+    return [
+      props.patientData.companion_name,
+      ...(props.patientData.extra_companions?.map(ec => ec.companion?.name) || []),
+    ]
+      .filter(Boolean) // remove null/undefined
+      .join(', ')
+  })
 
   const { exportToImagePDF, clickPrint } = useExportToPdf();
 

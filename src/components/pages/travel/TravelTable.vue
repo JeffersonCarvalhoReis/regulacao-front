@@ -95,7 +95,7 @@
   }
 
   const refreshPassengers = async travelId => {
-    setInclude('companion_patient_travel')
+    setInclude('companion_patient_travel', 'companion_patient_travel_multi')
     const travelData = await getById(travelId);
     refetch()
     selectedTravel.value = travelData
