@@ -108,14 +108,53 @@
 
   const tableRows = computed(() => {
     const rows = [];
-    props.data.patients.forEach(patient => {
-      rows.push({ ...patient, type: 'patient' });
+
+    (props.data?.patients || []).forEach(patient => {
+      rows.push({
+        __row_key: `${patient.id}-patient`,
+        type: 'patient',
+        patient_id: patient.id,
+        ...patient,
+      });
+
       if (patient.companion_name) {
-        rows.push({ ...patient, type: 'companion' });
+        rows.push({
+          __row_key: `${patient.id}-companion`,
+          type: 'companion',
+          companion_name: patient.companion_name ?? null,
+          companion_phone: patient.companion_phone ?? null,
+          companion_cns: patient.companion_cns,
+          appointment_date: patient.appointment_date,
+          appointment_time: patient.appointment_time,
+          hospital_name: patient.hospital_name,
+          companion_street: patient.companion_street,
+          companion_neighborhood: patient.companion_neighborhood,
+        });
       }
+
+      const extras = patient.extra_companions ?? [];
+      extras.forEach((extra, idx) => {
+        const comp = extra?.companion ?? {};
+        const compId = comp?.id ?? `extra-${patient.id}-${idx}`;
+
+        rows.push({
+          __row_key: `${patient.id}-extra-${compId}`,
+          type: 'extra_companion',
+          companion_name: comp?.name ?? null,
+          companion_phone: comp?.phone ?? null,
+          companion_cns: comp?.cns ?? null,
+          companion_street: comp?.street ?? null,
+          companion_neighborhood: comp?.neighborhood ?? null,
+          appointment_date: patient.appointment_date,
+          appointment_time: patient.appointment_time,
+          hospital_name: patient.hospital_name,
+        });
+      });
     });
+
     return rows;
-  })
+  });
+
   const columns = ['Nº', 'Passageiro', 'SUS', 'Motivo', 'Instituição', 'Data da Consulta', 'Hora da Consulta', 'Celular', 'Endereço']
   const travelInfo = {
     city: props.data.city,
