@@ -31,17 +31,6 @@
         />
         <v-autocomplete
           :key="autocompleteKey"
-          v-model="companion_id"
-          density="compact"
-          :error-messages="errors.companion_id"
-          item-title="name"
-          item-value="id"
-          :items="companionData"
-          label="Acompanhante"
-          variant="outlined"
-        />
-        <v-autocomplete
-          :key="autocompleteKey"
           v-model="hospital_id"
           class="required"
           density="compact"
@@ -52,14 +41,76 @@
           label="Hospital"
           variant="outlined"
         />
+        <v-autocomplete
+          v-model="companion_id"
+          density="compact"
+          :error-messages="errors.companion_id"
+          item-title="name"
+          item-value="id"
+          :items="companionData"
+          label="Acompanhante"
+          variant="outlined"
+        />
+
         <v-text-field
           v-model="kinship"
           density="compact"
           :disabled="!companion_id"
           :error-messages="errors.kinship"
-          label="Parentesco do acompanhante com o paciente"
+          label="Parentesco"
           variant="outlined"
         />
+        <div v-for="(companion, index) in companions" :key="index" class="col-span-2 grid grid-cols-2 gap-x-4">
+          <v-autocomplete
+            v-model="companion.companion.id"
+            density="compact"
+            :error-messages="errors[`companions.${index}.companion.id`]"
+            item-title="name"
+            item-value="id"
+            :items="companionData"
+            label="Acompanhante"
+            variant="outlined"
+          />
+
+          <!-- wrapper flex: campo ocupa todo espaço, botão fica apenas com a largura do ícone -->
+          <div class="flex items-start gap-x-2">
+            <!-- campo ocupa todo o espaço disponível -->
+            <div class="flex-1">
+              <v-text-field
+                v-model="companion.kinship"
+                class="w-full"
+                density="compact"
+                :disabled="!companion.companion.id"
+                :error-messages="errors[`companions.${index}.kinship`]"
+                label="Parentesco"
+                variant="outlined"
+              />
+            </div>
+
+            <!-- botão com largura fixa para ficar só o ícone -->
+            <div class="flex items-center">
+              <v-btn
+                v-if="companions.length > 0"
+                aria-label="Remover acompanhante"
+                class="text-red-600 bg-white/0 w-10 h-10 p-0"
+                icon="mdi-delete"
+                variant="text"
+                @click="removeCompanion(index)"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Botão de adicionar -->
+        <v-btn
+          v-if="companions.length < 1"
+          class="w-full justify-start items-center pl-2 text-ita-blue"
+          prepend-icon="mdi-plus"
+          variant="text"
+          @click="addCompanion"
+        >
+          Adicionar outro acompanhante
+        </v-btn>
+        <v-spacer v-if="companions.length < 1" />
         <base-input-date-picker
           v-model="appointment_date"
           class-date-picker="absolute right-[-175px] top-[-175px]"
@@ -165,34 +216,50 @@
 
         return true;
       }),
-    kinship: yup.string().nullable(),
-    notes: yup.string().nullable(),
     companion_id: yup.string().nullable(),
-
+    kinship: yup.string().nullable(),
+    companions: yup.array().of(
+      yup.object({
+        companion: yup.object({
+          id: yup.string().nullable(),
+        }),
+        kinship: yup.string().nullable(),
+      })
+    ),
+    notes: yup.string().nullable(),
   });
 
   const { handleSubmit, errors, resetForm, setValues } = useForm({
     validationSchema: schema,
     initialValues:  {
       patient_id: null,
-      companion_id: null,
+      companions: [],
       appointment_date: null,
       appointment_time: '',
       is_priority: false,
       hospital_id: null,
-      kinship: '',
       notes: '',
     },
   });
 
   const { value: patient_id } = useField('patient_id');
-  const { value: companion_id } = useField('companion_id');
   const { value: hospital_id } = useField('hospital_id');
   const { value: is_priority } = useField('is_priority');
   const { value: appointment_date } = useField('appointment_date');
   const { value: appointment_time } = useField('appointment_time');
-  const { value: kinship } = useField('kinship');
   const { value: notes } = useField('notes');
+  const { value: companions } = useField('companions');
+  const { value: companion_id } = useField('companion_id');
+  const { value: kinship } = useField('kinship');
+
+
+  const addCompanion = () => {
+    companions.value.push({ companion: { id: null }, kinship: '' });
+  };
+
+  const removeCompanion = index => {
+    companions.value.splice(index, 1);
+  };
 
   const onTimeInput = val => {
     let digits = val.replace(/\D/g, '')
@@ -256,8 +323,9 @@
     if (isEditing.value) {
       setValues({
         patient_id: props.modelValue.id,
-        companion_id: props.modelValue?.companion_id,
+        companions: props.modelValue?.extra_companions,
         kinship: props.modelValue?.kinship,
+        companion_id: props.modelValue?.companion_id,
         notes: props.modelValue?.notes,
         appointment_date: props.modelValue?.appointment_date,
         appointment_time: props.modelValue?.appointment_time,
@@ -271,7 +339,37 @@
     clearFilters
   })
   const onSubmit = handleSubmit(values => {
-    emit('save', values)
+    const list = Array.isArray(values.companions) ? [...values.companions] : [];
+    if (values.companion_id) {
+      const first = {
+        companion: { id: values.companion_id },
+        kinship: values.kinship ?? '',
+      };
+
+      const filtered = list.filter(c => c?.companion?.id !== values.companion_id);
+
+      filtered.unshift(first);
+
+      const payload = {
+        ...values,
+        companions: filtered,
+      };
+
+      delete payload.companion_id;
+      delete payload.kinship;
+
+      emit('save', payload);
+      return;
+    }
+
+    const payload = {
+      ...values,
+      companions: list,
+    };
+    delete payload.companion_id;
+    delete payload.kinship;
+
+    emit('save', payload);
   });
 
   const clear = () => {

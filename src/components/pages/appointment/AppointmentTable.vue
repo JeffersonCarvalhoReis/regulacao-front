@@ -178,6 +178,7 @@
   import { useAppointmentApi } from '@/composables/modules/useAppointmentModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
   import { useAppointmentExportApi } from '@/composables/modules/useAppointmentExportModule';
+  import { useMeStore } from '@/stores/me';
   import debounce from 'lodash/debounce'
 
   const props = defineProps({
@@ -185,7 +186,7 @@
     showDelete: { type: Boolean, default: true },
 
   });
-
+  const role = useMeStore().role;
   const { data, loadingList, refetch, setTableOptions, meta, setFilter, destroy, clearFilters, setSort, update } = useAppointmentApi();
   const { setFilter: filterExport, exportAppointments, setSort: sortExport, clearFilters: clearFiltersExport } = useAppointmentExportApi();
   const { showFeedback, confirmModal, showFeedbackLoading } = useSweetAlertFeedback();
@@ -207,7 +208,14 @@
   const updateOptions = newOptions => {
     options.value = { ...newOptions }
   };
-
+  onMounted(() => {
+    window.Echo.channel('appointments')
+      .listen('.created', event => {
+        if(role == 'regulation_officer') {
+          refetch()
+        }
+      });
+  });
   const clearFiltersTab = () => {
     clearFilters();
     clearFiltersExport();

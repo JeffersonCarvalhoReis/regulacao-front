@@ -28,6 +28,19 @@
           <div>Endereço: {{ `${props.data.companion_street} - ${props.data.companion_neighborhood}` }}</div>
         </InfoGroup>
       </BaseSection>
+      <BaseSection v-for="(extra, i) in props.data.extra_companions" :key="i">
+        <InfoGroup title="Dados do Acompanhante">
+          <div>Nome: {{ extra.companion.name }}</div>
+          <div v-if="extra.kinship">Parentesco: {{ extra.kinship }}</div>
+          <div>Data de Nascimento: {{ formatDate(extra.companion.birth_date) }}</div>
+          <div>Idade: {{ calculateAge(extra.companion.birth_date) }}</div>
+          <div>CPF: {{ extra.companion.cpf }}</div>
+          <div>CNS: {{ extra.companion.cns }}</div>
+          <div>Nome da Mãe: {{ extra.companion.mother_name }}</div>
+          <div v-if=" extra.companion.phone">Telefone: {{ extra.companion.phone }}</div>
+          <div>Endereço: {{ `${extra.companion.street} - ${extra.companion.neighborhood}` }}</div>
+        </InfoGroup>
+      </BaseSection>
       <BaseSection>
         <InfoGroup title="Dados da Consulta">
           <div>Local: {{ props.data.hospital_name }}</div>

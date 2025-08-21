@@ -114,6 +114,7 @@
 <script setup>
   import { useAppointmentApi } from '@/composables/modules/useAppointmentModule';
   import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+  import { useMeStore } from '@/stores/me';
   import debounce from 'lodash/debounce'
 
   const props = defineProps({
@@ -125,6 +126,8 @@
   const { showFeedback, confirmModal, showFeedbackLoading } = useSweetAlertFeedback();
   const { formatDate } = useFormatDate();
 
+  const providerUnit = computed(() => useMeStore().providerUnit);
+  const getMe = useMeStore().getMe;
   const options = ref({});
   const viewAppointmentDetails = ref(false);
   const appointmentData = ref({});
@@ -143,6 +146,19 @@
   const updateOptions = newOptions => {
     options.value = { ...newOptions }
   };
+  onMounted(async () => {
+    await getMe();
+    window.Echo.channel('appointments')
+      .listen('.updated', event => {
+        if(providerUnit.value == event.provider_unit)
+          refetch();
+      });
+    window.Echo.channel('appointments')
+      .listen('.deleted', event => {
+        if(providerUnit.value == event.provider_unit)
+          refetch();
+      });
+  });
   const chooseAction = async appointment => {
     if( appointment.status == 'scheduled') {
       await handleDelete(appointment)
