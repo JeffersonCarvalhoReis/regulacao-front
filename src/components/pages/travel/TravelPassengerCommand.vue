@@ -13,7 +13,7 @@
         </v-btn>
       </div>
       <div class="flex justify-center">
-        <div ref="printSection" class="max-w-256">
+        <div ref="printSection" class="w-256 min-w-236">
           <div class="flex justify-center gap-4">
             <div class="max-w-46">
               <img alt="logo prefeitura itaguaçu" src="/src/assets/images/logo-gestao.png">
@@ -31,27 +31,27 @@
           </div>
           <div class="flex flex-col gap-2">
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Paciente" :value="props.patientData.name" />
+              <LabeledLine label="Nome do Paciente" :value="props.patientData?.name" :text-field="props.newCommand"/>
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Acompanhante" :value="companions" />
+              <LabeledLine label="Nome do Acompanhante" :value="companions" :text-field="props.newCommand"/>
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Endereço" :value="props.patientData.street" />
+              <LabeledLine label="Endereço" :value="props.patientData?.street" :text-field="props.newCommand"/>
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Bairro" :value="props.patientData.neighborhood" />
+              <LabeledLine label="Bairro" :value="props.patientData?.neighborhood" :text-field="props.newCommand"/>
               <LabeledLine label="Cidade" value="Itaguaçu da Bahia" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Hospital" :value="props.patientData.hospital_name" />
+              <LabeledLine label="Hospital" :value="props.patientData?.hospital_name" :text-field="props.newCommand"/>
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Motivo do Tratamento" :value="props.patientData.notes" />
+              <LabeledLine label="Motivo do Tratamento" :value="props.patientData?.notes" :text-field="props.newCommand"/>
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="CPF" :value="props.patientData.cpf" />
-              <LabeledLine label="SUS" :value="props.patientData.cns" />
+              <LabeledLine label="CPF" :value="props.patientData?.cpf" :text-field="props.newCommand"/>
+              <LabeledLine label="SUS" :value="props.patientData?.cns" :text-field="props.newCommand"/>
             </LabeledLineGroup>
             <LabeledLineGroup>
               <LabeledLine label="Data da Entrada" :value="datePaceholder" />
@@ -80,13 +80,14 @@
 
 <script setup>
   const props = defineProps({
-    patientData: { type: Object, requird: true },
+    patientData: { type: Object, default: () => {} },
+    newCommand: { type: Boolean, default: false }
   })
   const emit = defineEmits(['close']);
   const companions = computed(() => {
     return [
-      props.patientData.companion_name,
-      ...(props.patientData.extra_companions?.map(ec => ec.companion?.name) || []),
+      props.patientData?.companion_name,
+      ...(props.patientData?.extra_companions?.map(ec => ec.companion?.name) || []),
     ]
       .filter(Boolean) // remove null/undefined
       .join(', ')
