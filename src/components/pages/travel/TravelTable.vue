@@ -3,6 +3,9 @@
     <travel-search @search-travel="search">
       <slot />
     </travel-search>
+    <div class="text-left mt-4">
+      <base-button-filter button-text="Nova Comanda" button-icon="mdi-text-box" @filters="dialogNewCommand = true"/>
+    </div>
     <base-table
       class="rounted-t-none"
       :edit="props.edit"
@@ -53,6 +56,11 @@
       @save="submitPassenger"
     />
   </v-dialog>
+  <v-dialog
+  v-model="dialogNewCommand"
+  >
+    <travel-passenger-command :new-command="true" @close="dialogNewCommand = false"/>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -77,6 +85,7 @@
   const selectedTravel = ref({});
   const tooltipTextDelete = 'Não é possível excluir viagem enquanto houver passageiros.'
   const dialogAddPassenger = ref(false)
+  const dialogNewCommand = ref(false)
   const textAddPassenger = 'Adicionar passageiros'
   const iconAddPassenger = 'mdi-account-multiple-plus'
 
