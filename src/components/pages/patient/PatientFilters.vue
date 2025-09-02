@@ -108,7 +108,7 @@
         />
       </div>
       <v-divider />
-      <h2 class="font-bold text-lg">Refências de Saúde</h2>
+      <h2 class="font-bold text-lg">Referências de Saúde</h2>
       <div class="grid grid-cols-2 gap-2">
         <v-autocomplete
           v-model="filterForm.health_unit_id"
