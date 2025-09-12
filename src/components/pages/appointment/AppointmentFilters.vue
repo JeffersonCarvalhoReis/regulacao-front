@@ -231,6 +231,9 @@
   const title = 'Busca Avançada de Pacientes';
   const filterForm = ref({
     solicitation_date_between: [null, null],
+    date_between: [null, null],
+    date: null,
+    solicitation_date: null,
   });
 
   const genderOptions = [
@@ -246,6 +249,15 @@
     }
     else {
       delete filterForm.value.solicitation_date_between;
+    }
+  });
+  watch(() => appointmentDateInterval.value, newValue => {
+    if (newValue == 1) {
+      filterForm.value.date_between = [null, null]
+      delete filterForm.value.date
+    } else {
+      delete filterForm.value.date_between
+      filterForm.value.date = null
     }
   });
 </script>

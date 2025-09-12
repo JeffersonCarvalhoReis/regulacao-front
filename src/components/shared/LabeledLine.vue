@@ -1,11 +1,11 @@
 <template>
   <span class="whitespace-nowrap" :class="{'self-end': textField}">{{ `${label}:` }}</span>
   <v-text-field
-  v-if="textField"
-    density="compact"
-    variant="underlined"
-    hide-details
+    v-if="textField"
     class="pl-2"
+    density="compact"
+    hide-details
+    variant="underlined"
   />
   <div
     v-else
@@ -19,7 +19,7 @@
   defineProps({
     label: { type: String, required: true },
     value: { type: String, default: '' },
-    textField: { type: Boolean, default: false}
+    textField: { type: Boolean, default: false },
   });
 </script>
 
@@ -51,4 +51,3 @@
   box-shadow: none !important;
 }
 </style>
-
