@@ -4,7 +4,7 @@
       <slot />
     </travel-search>
     <div class="text-left mt-4">
-      <base-button-filter button-text="Nova Comanda" button-icon="mdi-text-box" @filters="dialogNewCommand = true"/>
+      <base-button-filter button-icon="mdi-text-box" button-text="Nova Comanda" @filters="dialogNewCommand = true" />
     </div>
     <base-table
       class="rounted-t-none"
@@ -57,9 +57,9 @@
     />
   </v-dialog>
   <v-dialog
-  v-model="dialogNewCommand"
+    v-model="dialogNewCommand"
   >
-    <travel-passenger-command :new-command="true" @close="dialogNewCommand = false"/>
+    <travel-passenger-command :new-command="true" @close="dialogNewCommand = false" />
   </v-dialog>
 </template>
 

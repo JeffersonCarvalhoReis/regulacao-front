@@ -31,27 +31,27 @@
           </div>
           <div class="flex flex-col gap-2">
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Paciente" :value="props.patientData?.name" :text-field="props.newCommand"/>
+              <LabeledLine label="Nome do Paciente" :text-field="props.newCommand" :value="props.patientData?.name" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Acompanhante" :value="companions" :text-field="props.newCommand"/>
+              <LabeledLine label="Nome do Acompanhante" :text-field="props.newCommand" :value="companions" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Endereço" :value="props.patientData?.street" :text-field="props.newCommand"/>
+              <LabeledLine label="Endereço" :text-field="props.newCommand" :value="props.patientData?.street" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Bairro" :value="props.patientData?.neighborhood" :text-field="props.newCommand"/>
+              <LabeledLine label="Bairro" :text-field="props.newCommand" :value="props.patientData?.neighborhood" />
               <LabeledLine label="Cidade" value="Itaguaçu da Bahia" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Hospital" :value="props.patientData?.hospital_name" :text-field="props.newCommand"/>
+              <LabeledLine label="Hospital" :text-field="props.newCommand" :value="props.patientData?.hospital_name" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Motivo do Tratamento" :value="props.patientData?.notes" :text-field="props.newCommand"/>
+              <LabeledLine label="Motivo do Tratamento" :text-field="props.newCommand" :value="props.patientData?.notes" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="CPF" :value="props.patientData?.cpf" :text-field="props.newCommand"/>
-              <LabeledLine label="SUS" :value="props.patientData?.cns" :text-field="props.newCommand"/>
+              <LabeledLine label="CPF" :text-field="props.newCommand" :value="props.patientData?.cpf" />
+              <LabeledLine label="SUS" :text-field="props.newCommand" :value="props.patientData?.cns" />
             </LabeledLineGroup>
             <LabeledLineGroup>
               <LabeledLine label="Data da Entrada" :value="datePaceholder" />
@@ -69,7 +69,7 @@
               <LabeledLineGroup class="text-left">
                 <LabeledLine label="Data" :value="datePaceholder" />
               </LabeledLineGroup>
-              <span>Serviço Social</span>
+              <span>Profissional Responsável <br> Secretaria Municipal de Saúde</span>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
 <script setup>
   const props = defineProps({
     patientData: { type: Object, default: () => {} },
-    newCommand: { type: Boolean, default: false }
+    newCommand: { type: Boolean, default: false },
   })
   const emit = defineEmits(['close']);
   const companions = computed(() => {
