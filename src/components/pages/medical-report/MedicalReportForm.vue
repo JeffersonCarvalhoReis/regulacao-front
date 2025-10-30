@@ -193,7 +193,9 @@
                 item-value="id"
                 :items="companionData"
                 label="Acompanhante"
+                :loading="isLoadingCompanion"
                 variant="outlined"
+                @update:search="onSearchCompanion"
               />
               <v-text-field
                 v-model="companion_cpf"
@@ -523,8 +525,15 @@ const {
   clearFilters,
 } = usePatientApi() as UseApiReturn<PersonBase> & { clearFilters?: () => void };
 
-const { data: companionData, refetch: companionFetch } =
-  useCompanionApi() as UseApiReturn<PersonBase>;
+const {
+  data: companionData,
+  refetch: companionFetch,
+  setFilter: companionFilter,
+  isLoading: isLoadingCompanion,
+  clearFilters: clearFiltersCompanion,
+} = useCompanionApi() as UseApiReturn<PersonBase> & {
+  clearFilters?: () => void;
+};
 
 const isEditing = computed(() => !!props.modelValue?.id);
 const isActiveTab = computed(() => props.currentTab === "active");
@@ -799,6 +808,13 @@ const onSearch = debounce(async (v: string) => {
   const name = (v || "").split("-")[0].trim();
   if (name && patientFilter) patientFilter("name", name);
   await patientFetch();
+}, 250);
+
+const onSearchCompanion = debounce(async (v: string) => {
+  clearFiltersCompanion?.();
+  const name = (v || "").split("-")[0].trim();
+  if (name && companionFilter) companionFilter("name", name);
+  await companionFetch();
 }, 250);
 
 /* -------------------------
