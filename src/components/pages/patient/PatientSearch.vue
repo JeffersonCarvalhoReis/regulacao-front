@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="border border-gray-200 shadow-sm mb-2"
-    flat
-  >
+  <v-card class="border border-gray-200 shadow-sm mb-2" flat>
     <v-card-text class="flex justify-between">
       <v-text-field
         v-model="searchPatient"
@@ -13,6 +10,7 @@
         label="Buscar Paciente"
         placeholder="Nome, SUS ou CPF"
         variant="outlined"
+        clearable
         @keyup="emit('search-patient', searchPatient)"
       />
       <slot />
@@ -21,6 +19,23 @@
 </template>
 
 <script setup>
-  const emit = defineEmits(['search-patient'])
-  const searchPatient = ref(null);
+const emit = defineEmits(["search-patient"]);
+const searchPatient = ref(null);
+
+const clear = () => {
+  searchPatient.value = "";
+};
+
+watch(
+  () => searchPatient.value,
+  (newVal) => {
+    if (!newVal) {
+      emit("search-patient");
+    }
+  }
+);
+
+defineExpose({
+  clear,
+});
 </script>

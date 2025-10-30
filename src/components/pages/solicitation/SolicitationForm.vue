@@ -9,9 +9,7 @@
             button-text="Cadastrar Paciente"
             @register="dialogPatientForm = true"
           >
-            <v-tooltip
-              activator="parent"
-            >
+            <v-tooltip activator="parent">
               Cadastrar novo paciente caso não encontre na lista
             </v-tooltip>
           </base-button-register>
@@ -24,10 +22,9 @@
                 button-text="Cadastrar Especialidade"
                 @register="dialogSpecialistForm = true"
               >
-                <v-tooltip
-                  activator="parent"
-                >
-                  Clique para cadastrar nova especialidade caso não encontre na lista
+                <v-tooltip activator="parent">
+                  Clique para cadastrar nova especialidade caso não encontre na
+                  lista
                 </v-tooltip>
               </base-button-register>
             </div>
@@ -38,9 +35,7 @@
                 button-text="Cadastrar Procedimento"
                 @register="dialogProcedureForm = true"
               >
-                <v-tooltip
-                  activator="parent"
-                >
+                <v-tooltip activator="parent">
                   Cadastrar novo procedimento caso não encontre na lista
                 </v-tooltip>
               </base-button-register>
@@ -53,9 +48,7 @@
               button-text="Cadastrar Unidade Solicitante"
               @register="dialogRequestingUnitForm = true"
             >
-              <v-tooltip
-                activator="parent"
-              >
+              <v-tooltip activator="parent">
                 Cadastrar nova unidade solicitante caso não encontre na lista
               </v-tooltip>
             </base-button-register>
@@ -104,7 +97,7 @@
             />
             <v-select
               v-model="is_first_time"
-              class="required "
+              class="required"
               density="compact"
               :error-messages="errors.is_first_time"
               item-title="label"
@@ -141,15 +134,11 @@
               label="Especialidade"
               variant="outlined"
             />
-
           </div>
-          <div
-            v-else
-            class="flex  items-start gap-1"
-          >
+          <div v-else class="flex items-start gap-1">
             <v-autocomplete
               v-model="procedure_id"
-              :class="{ 'required': solicitation_type}"
+              :class="{ required: solicitation_type }"
               density="compact"
               :disabled="!solicitation_type"
               :error-messages="errors.procedure_id"
@@ -195,7 +184,11 @@
     </v-card-text>
 
     <v-card-actions class="flex justify-end items-end mx-4 mb-4">
-      <base-button-clear v-if="!isEditing" button-text="Limpar Campos" @clear="clear" />
+      <base-button-clear
+        v-if="!isEditing"
+        button-text="Limpar Campos"
+        @clear="clear"
+      />
       <v-spacer />
       <base-button-register
         button-icon="mdi-content-save"
@@ -203,272 +196,323 @@
         @register="onSubmit"
       />
     </v-card-actions>
-    <v-dialog
-      v-model="dialogPatientForm"
-      class="z-999"
-    >
-      <patient-form @close="dialogPatientForm = false" @save="submitNewPatient" />
+    <v-dialog v-model="dialogPatientForm" class="z-999">
+      <patient-form
+        @close="dialogPatientForm = false"
+        @save="submitNewPatient"
+      />
     </v-dialog>
-    <v-dialog
-      v-model="dialogProcedureForm"
-      class="z-999"
-    >
-      <procedure-form @close="dialogProcedureForm = false" @save="submitNewProcedure" />
+    <v-dialog v-model="dialogProcedureForm" class="z-999">
+      <procedure-form
+        @close="dialogProcedureForm = false"
+        @save="submitNewProcedure"
+      />
     </v-dialog>
-    <v-dialog
-      v-model="dialogSpecialistForm"
-      class="z-999"
-    >
-      <specialist-form @close="dialogSpecialistForm = false" @save="submitNewSpecialist" />
+    <v-dialog v-model="dialogSpecialistForm" class="z-999">
+      <specialist-form
+        @close="dialogSpecialistForm = false"
+        @save="submitNewSpecialist"
+      />
     </v-dialog>
-    <v-dialog
-      v-model="dialogRequestingUnitForm"
-      class="z-999"
-    >
-      <requesting-unit-form @close="dialogRequestingUnitForm = false" @save="submitNewRequestingUnit" />
+    <v-dialog v-model="dialogRequestingUnitForm" class="z-999">
+      <requesting-unit-form
+        @close="dialogRequestingUnitForm = false"
+        @save="submitNewRequestingUnit"
+      />
     </v-dialog>
   </base-card>
 </template>
 
 <script setup>
-  import { usePatientApi } from '@/composables/modules/usePatientModule';
-  import { useSpecialistApi } from '@/composables/modules/useSpecialistModule';
-  import { useProcedureApi } from '@/composables/modules/useProcedureModule';
-  import { useRequestingUnitApi } from '@/composables/modules/useRequestingUnitModule';
-  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
-  import { usePatientLabel } from '@/composables/utils/usePatientLabel';
-  import { useMeStore } from '@/stores/me';
-  import { useField, useForm } from 'vee-validate'
-  import debounce from 'lodash/debounce';
-  import * as yup from 'yup'
+import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
+import { usePatientApi } from "@/composables/modules/usePatientModule";
+import { useProcedureApi } from "@/composables/modules/useProcedureModule";
+import { useRequestingUnitApi } from "@/composables/modules/useRequestingUnitModule";
+import { useSpecialistApi } from "@/composables/modules/useSpecialistModule";
+import { usePatientLabel } from "@/composables/utils/usePatientLabel";
+import { useMeStore } from "@/stores/me";
+import debounce from "lodash/debounce";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 
+const props = defineProps({
+  modelValue: { type: Object, default: () => ({}) },
+});
 
-  const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-  })
+const {
+  data: patientData,
+  refetch: patientFetch,
+  create: patientCreate,
+  setFilter: patientFilter,
+  isLoading,
+  clearFilters,
+} = usePatientApi();
+const {
+  data: specialistData,
+  refetch: specialistFetch,
+  params: specialistParams,
+  create: specialistCreate,
+} = useSpecialistApi();
+const {
+  data: procedureData,
+  refetch: procedureFetch,
+  params: procedureParams,
+  create: procedureCreate,
+} = useProcedureApi();
+const {
+  data: requestingUnitData,
+  refetch: requestingUnitFetch,
+  params: requestingUnitParams,
+  create: requestingUnitCreate,
+} = useRequestingUnitApi();
+const { showFeedback, showFeedbackLoading } = useSweetAlertFeedback();
+const { calculateAge } = useCalculateAge();
+const { patientLabel } = usePatientLabel();
 
-  const { data: patientData, refetch: patientFetch, create: patientCreate, setFilter: patientFilter, isLoading, clearFilters } = usePatientApi();
-  const { data: specialistData, refetch: specialistFetch, params: specialistParams, create: specialistCreate } = useSpecialistApi();
-  const { data: procedureData, refetch: procedureFetch, params: procedureParams, create: procedureCreate } = useProcedureApi();
-  const { data: requestingUnitData, refetch: requestingUnitFetch, params: requestingUnitParams, create: requestingUnitCreate } = useRequestingUnitApi();
-  const { showFeedback, showFeedbackLoading } = useSweetAlertFeedback();
-  const { calculateAge } = useCalculateAge();
-  const { patientLabel } = usePatientLabel();
+const meStore = useMeStore();
+const role = meStore.role;
+const isEditing = computed(() => !!props.modelValue?.id);
+const dialogPatientForm = ref(false);
+const dialogProcedureForm = ref(false);
+const dialogSpecialistForm = ref(false);
+const dialogRequestingUnitForm = ref(false);
+const patient_age = computed(() => {
+  const ageLabel = calculateAge(
+    patientData.value.find((v) => v.id == patient_id.value)?.birth_date
+  );
+  const match = ageLabel.match(/^(\d+)\s+ano/);
+  return match ? Number(match[1]) : 0;
+});
+const procedure_max_age = computed(
+  () => procedureData.value.find((v) => v.id === procedure_id.value)?.max_age
+);
+const procedure_min_age = computed(
+  () => procedureData.value.find((v) => v.id === procedure_id.value)?.min_age
+);
+const specialist_max_age = computed(
+  () => specialistData.value.find((v) => v.id === specialist_id.value)?.max_age
+);
+const specialist_min_age = computed(
+  () => specialistData.value.find((v) => v.id === specialist_id.value)?.min_age
+);
 
-  const meStore = useMeStore();
-  const role = meStore.role
-  const isEditing = computed(() => !!props.modelValue?.id);
-  const dialogPatientForm = ref(false)
-  const dialogProcedureForm = ref(false)
-  const dialogSpecialistForm = ref(false)
-  const dialogRequestingUnitForm = ref(false)
-  const patient_age = computed(() => {
-    const ageLabel = calculateAge(patientData.value.find(v => v.id == patient_id.value)?.birth_date);
-    const match = ageLabel.match(/^(\d+)\s+ano/);
-    return match ? Number(match[1]) : 0;
-  });
-  const procedure_max_age = computed(() => procedureData.value.find(v => v.id === procedure_id.value)?.max_age)
-  const procedure_min_age = computed(() => procedureData.value.find(v => v.id === procedure_id.value)?.min_age)
-  const specialist_max_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.max_age)
-  const specialist_min_age = computed(() => specialistData.value.find(v => v.id === specialist_id.value)?.min_age)
+const solicitationTypeOptions = [
+  { label: "Consulta", value: "consultation" },
+  { label: "Exame", value: "exam" },
+];
+const isFirstTimeOptions = [
+  { label: "Sim", value: 0 },
+  { label: "Não", value: 1 },
+];
+const isUrgentOptions = [
+  { label: "Sim", value: 1 },
+  { label: "Não", value: 0 },
+];
 
-  const solicitationTypeOptions = [
-    { label: 'Consulta', value: 'consultation' },
-    { label: 'Exame', value: 'exam' },
-  ];
-  const isFirstTimeOptions = [
-    { label: 'Sim', value: 0 },
-    { label: 'Não', value: 1 },
-  ];
-  const isUrgentOptions = [
-    { label: 'Sim', value: 1 },
-    { label: 'Não', value: 0 },
-  ];
+onMounted(async () => {
+  specialistParams.value.per_page = -1;
+  procedureParams.value.per_page = -1;
+  requestingUnitParams.value.per_page = -1;
+  specialistParams.value.sort = "name";
+  procedureParams.value.sort = "name";
+  requestingUnitParams.value.sort = "name";
 
+  await nextTick();
 
-  onMounted(async () => {
-
-    specialistParams.value.per_page = -1;
-    procedureParams.value.per_page = -1;
-    requestingUnitParams.value.per_page = -1;
-    specialistParams.value.sort = 'name';
-    procedureParams.value.sort = 'name';
-    requestingUnitParams.value.sort = 'name';
-
-    await nextTick();
-
-    await showFeedbackLoading(
-      async () => await Promise.all([
+  await showFeedbackLoading(
+    async () =>
+      await Promise.all([
         loadPatient(),
         specialistFetch(),
         procedureFetch(),
         requestingUnitFetch(),
       ]),
-      {
-        loadingText: 'Carregando Dados',
-        erroTitle: 'Falha ao Carregar dados',
-      }
-    )
-  });
-
-  const loadPatient = async () => {
-    if (isEditing.value) {
-      patientFilter('id', props.modelValue?.patient_id);
-      await patientFetch();
-      await nextTick();
-      resetForm({ values: props.modelValue })
-    } else {
-      patientFetch()
+    {
+      loadingText: "Carregando Dados",
+      erroTitle: "Falha ao Carregar dados",
     }
+  );
+});
+
+const loadPatient = async () => {
+  if (isEditing.value) {
+    patientFilter("id", props.modelValue?.patient_id);
+    await patientFetch();
+    await nextTick();
+    resetForm({ values: props.modelValue });
+  } else {
+    patientFetch();
   }
+};
 
-  const onSearch = debounce(async v => {
-    clearFilters();
-    const name = v.split('-');
-    patientFilter('name', name[0]);
-    await nextTick()
-    patientFetch()
-  }, 250);
+const onSearch = debounce(async (v) => {
+  clearFilters();
+  const name = v.split("-");
+  patientFilter("name", name[0]);
+  await nextTick();
+  patientFetch();
+}, 250);
 
+const emit = defineEmits(["close", "save"]);
 
-  const emit = defineEmits(['close', 'save']);
+const title = computed(() =>
+  isEditing.value ? "Editar Solicitação" : "Cadastrar Solicitação"
+);
 
-  const title = computed(() =>
-    isEditing.value ? 'Editar Solicitação' : 'Cadastrar Solicitação'
-  )
-
-  const schema = yup.object({
-    patient_id: yup.number().required('Paciente é obrigatório'),
-    cid: yup.string().nullable(),
-    solicitation_type: yup.string().required('Tipo de solicitação é obrigatório'),
-    solicitation_date: yup.date().required('Data da solicitação é obrigatório'),
-    is_first_time: yup.number().required('Obrigátorio identificar se é retorno'),
-    is_urgent: yup.number().required('Obrigátorio identificar se é urgente'),
-    reason: yup.string().required('Motivo é obrigatório'),
-    attachment: yup
-      .mixed()
-      .nullable()
-      .test('fileSize', 'O arquivo deve ter no máximo 10MB', value => {
-        if (!value) return true;
-        return value.size <= 10 * 1024 * 1024;
-      })
-      .test('fileType', 'Tipo de arquivo inválido', value => {
-        if (!value) return true;
-        const allowedTypes = [
-          'application/pdf',
-          'image/jpeg',
-          'image/png',
-        ];
-        return allowedTypes.includes(value.type);
-      }),
-    requesting_unit_id: yup.number().required('Unidade solicitante é obrigatório'),
-    specialist_id: yup
-      .number()
-      .nullable()
-      .when('solicitation_type', {
-        is: 'consultation',
-        then: schema => schema
-          .required('Especialidade é obrigatória')
-          .test('check_min_age', `Paciente não tem a idade mínima exigida para essa especialidade (${specialist_min_age.value} anos)`, () => {
-            if(patient_age.value != null && specialist_min_age.value != null) {
-              return patient_age.value >= specialist_min_age.value;
+const schema = yup.object({
+  patient_id: yup.number().required("Paciente é obrigatório"),
+  cid: yup.string().nullable(),
+  solicitation_type: yup.string().required("Tipo de solicitação é obrigatório"),
+  solicitation_date: yup.date().required("Data da solicitação é obrigatório"),
+  is_first_time: yup.number().required("Obrigátorio identificar se é retorno"),
+  is_urgent: yup.number().required("Obrigátorio identificar se é urgente"),
+  reason: yup.string().required("Motivo é obrigatório"),
+  attachment: yup
+    .mixed()
+    .nullable()
+    .test("fileSize", "O arquivo deve ter no máximo 10MB", (value) => {
+      if (!value) return true;
+      return value.size <= 10 * 1024 * 1024;
+    })
+    .test("fileType", "Tipo de arquivo inválido", (value) => {
+      if (!value) return true;
+      const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+      return allowedTypes.includes(value.type);
+    }),
+  requesting_unit_id: yup
+    .number()
+    .required("Unidade solicitante é obrigatório"),
+  specialist_id: yup
+    .number()
+    .nullable()
+    .when("solicitation_type", {
+      is: "consultation",
+      then: (schema) =>
+        schema
+          .required("Especialidade é obrigatória")
+          .test(
+            "check_min_age",
+            `Paciente não tem a idade mínima exigida para essa especialidade (${specialist_min_age.value} anos)`,
+            () => {
+              if (
+                patient_age.value != null &&
+                specialist_min_age.value != null
+              ) {
+                return patient_age.value >= specialist_min_age.value;
+              }
+              return true;
             }
-            return true;
-          })
-          .test('check_max_age', `Paciente ultrapassou a idade máxima permitida para essa especialidade (${specialist_max_age.value} anos)`, () => {
-            if(patient_age.value != null && specialist_max_age.value != null) {
-              return patient_age.value <= specialist_max_age.value;
+          )
+          .test(
+            "check_max_age",
+            `Paciente ultrapassou a idade máxima permitida para essa especialidade (${specialist_max_age.value} anos)`,
+            () => {
+              if (
+                patient_age.value != null &&
+                specialist_max_age.value != null
+              ) {
+                return patient_age.value <= specialist_max_age.value;
+              }
+              return true;
             }
-            return true;
-          }),
-        otherwise: schema => schema.nullable(),
-      })
-    ,
-
-    procedure_id: yup
-      .number()
-      .nullable()
-      .when('solicitation_type', {
-        is: 'exam',
-        then: schema => schema
-          .required('Procedimento é obrigatório')
-          .test('check_min_age', `Paciente não tem a idade mínima exigida para esse procedimento (${procedure_min_age.value} anos)`, () => {
-            if(patient_age.value != null && procedure_min_age.value != null) {
-              return patient_age.value >= procedure_min_age.value;
+          ),
+      otherwise: (schema) => schema.nullable(),
+    }),
+  procedure_id: yup
+    .number()
+    .nullable()
+    .when("solicitation_type", {
+      is: "exam",
+      then: (schema) =>
+        schema
+          .required("Procedimento é obrigatório")
+          .test(
+            "check_min_age",
+            `Paciente não tem a idade mínima exigida para esse procedimento (${procedure_min_age.value} anos)`,
+            () => {
+              if (
+                patient_age.value != null &&
+                procedure_min_age.value != null
+              ) {
+                return patient_age.value >= procedure_min_age.value;
+              }
+              return true;
             }
-            return true;
-          })
-          .test('check_max_age', `Paciente ultrapassou a idade máxima permitida para esse procedimento (${procedure_max_age.value} anos)`, () => {
-            if(patient_age.value != null && procedure_max_age.value != null) {
-              return patient_age.value <= procedure_max_age.value;
+          )
+          .test(
+            "check_max_age",
+            `Paciente ultrapassou a idade máxima permitida para esse procedimento (${procedure_max_age.value} anos)`,
+            () => {
+              if (
+                patient_age.value != null &&
+                procedure_max_age.value != null
+              ) {
+                return patient_age.value <= procedure_max_age.value;
+              }
+              return true;
             }
-            return true;
-          }),
-        otherwise: schema => schema.nullable(),
-      }),
-  });
+          ),
+      otherwise: (schema) => schema.nullable(),
+    }),
+});
 
-  const today = new Date();
+const today = new Date();
 
-  const { handleSubmit, errors, resetForm } = useForm({
-    validationSchema: schema,
-    initialValues: {
-      attachment: null,
-      solicitation_date: today,
-    },
-  });
+const { handleSubmit, errors, resetForm } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    attachment: null,
+    solicitation_date: today,
+  },
+});
 
-  const { value: patient_id } = useField('patient_id');
-  const { value: solicitation_type } = useField('solicitation_type');
-  const { value: solicitation_date } = useField('solicitation_date');
-  const { value: is_first_time } = useField('is_first_time');
-  const { value: is_urgent } = useField('is_urgent');
-  const { value: reason } = useField('reason');
-  const { value: specialist_id } = useField('specialist_id');
-  const { value: procedure_id } = useField('procedure_id');
-  const { value: requesting_unit_id } = useField('requesting_unit_id');
-  const { value: attachment } = useField('attachment');
-  const { value: cid } = useField('cid')
+const { value: patient_id } = useField("patient_id");
+const { value: solicitation_type } = useField("solicitation_type");
+const { value: solicitation_date } = useField("solicitation_date");
+const { value: is_first_time } = useField("is_first_time");
+const { value: is_urgent } = useField("is_urgent");
+const { value: reason } = useField("reason");
+const { value: specialist_id } = useField("specialist_id");
+const { value: procedure_id } = useField("procedure_id");
+const { value: requesting_unit_id } = useField("requesting_unit_id");
+const { value: attachment } = useField("attachment");
+const { value: cid } = useField("cid");
 
-  const onSubmit = handleSubmit(values => {
-    if(values.solicitation_type == 'consultation') delete values.procedure_id
-    if(values.solicitation_type == 'exam') delete values.specialist_id
-    emit('save', values)
-  })
+const onSubmit = handleSubmit((values) => {
+  if (values.solicitation_type == "consultation") delete values.procedure_id;
+  if (values.solicitation_type == "exam") delete values.specialist_id;
+  emit("save", values);
+});
 
-  const submitNewPatient = async val => {
-    const success = await showFeedback(() => patientCreate(val));
-    if (success) {
-      patientFetch(),
-      dialogPatientForm.value = false;
-    }
+const submitNewPatient = async (val) => {
+  const success = await showFeedback(() => patientCreate(val));
+  if (success) {
+    patientFetch(), (dialogPatientForm.value = false);
   }
+};
 
-  const submitNewSpecialist = async val => {
-    const success = await showFeedback(() => specialistCreate(val));
-    if (success) {
-      specialistFetch(),
-      dialogSpecialistForm.value = false;
-    }
+const submitNewSpecialist = async (val) => {
+  const success = await showFeedback(() => specialistCreate(val));
+  if (success) {
+    specialistFetch(), (dialogSpecialistForm.value = false);
   }
+};
 
-  const submitNewProcedure = async val => {
-    const success = await showFeedback(() => procedureCreate(val));
-    if (success) {
-      procedureFetch(),
-      dialogProcedureForm.value = false;
-    }
+const submitNewProcedure = async (val) => {
+  const success = await showFeedback(() => procedureCreate(val));
+  if (success) {
+    procedureFetch(), (dialogProcedureForm.value = false);
   }
+};
 
-  const submitNewRequestingUnit = async val => {
-    const success = await showFeedback(() => requestingUnitCreate(val));
-    if (success) {
-      requestingUnitFetch(),
-      dialogRequestingUnitForm.value = false;
-    }
+const submitNewRequestingUnit = async (val) => {
+  const success = await showFeedback(() => requestingUnitCreate(val));
+  if (success) {
+    requestingUnitFetch(), (dialogRequestingUnitForm.value = false);
   }
+};
 
-  const clear = () => {
-    resetForm()
-  }
+const clear = () => {
+  resetForm();
+};
 </script>

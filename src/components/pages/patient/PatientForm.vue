@@ -47,8 +47,13 @@
             placeholder="CPF do paciente"
             variant="outlined"
             @keypress="onlyNumbers"
-            @paste="event => handlePaste(event, formatCpf, val => cpf = val, { maxDigits: 14 })"
-            @update:model-value="val => cpf = formatCpf(val)"
+            @paste="
+              (event) =>
+                handlePaste(event, formatCpf, (val) => (cpf = val), {
+                  maxDigits: 14,
+                })
+            "
+            @update:model-value="(val) => (cpf = formatCpf(val))"
           />
 
           <v-select
@@ -77,6 +82,7 @@
             class-field="required"
             :error-messages="errors.birth_date"
             label="Data de Nascimento"
+            :position="position"
           />
 
           <v-text-field
@@ -89,8 +95,13 @@
             placeholder="Número de telefone para contato"
             variant="outlined"
             @keypress="onlyNumbers"
-            @paste="event => handlePaste(event, formatPhone, val => phone = val, { maxDigits: 11 })"
-            @update:model-value="val => phone = formatPhone(val)"
+            @paste="
+              (event) =>
+                handlePaste(event, formatPhone, (val) => (phone = val), {
+                  maxDigits: 11,
+                })
+            "
+            @update:model-value="(val) => (phone = formatPhone(val))"
           />
 
           <v-autocomplete
@@ -151,12 +162,15 @@
             />
           </div>
         </div>
-
       </v-form>
     </v-card-text>
 
     <v-card-actions class="flex justify-end items-end mx-4 mb-4">
-      <base-button-clear v-if="!isEditing" button-text="Limpar Campos" @clear="clear" />
+      <base-button-clear
+        v-if="!isEditing"
+        button-text="Limpar Campos"
+        @clear="clear"
+      />
       <v-spacer />
       <base-button-register
         button-icon="mdi-content-save"
@@ -168,105 +182,121 @@
 </template>
 
 <script setup>
-  import { useField, useForm } from 'vee-validate'
-  import * as yup from 'yup'
-  import { useHealthAgentApi } from '@/composables/modules/useHealthAgentModule'
+import { useHealthAgentApi } from "@/composables/modules/useHealthAgentModule";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 
-  const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-  })
+const props = defineProps({
+  modelValue: { type: Object, default: () => ({}) },
+});
 
-  const { formatCpf } = useFormatCpf();
-  const { formatPhone } = usePhoneFormatter();
-  const { onlyNumbers, handlePaste } = useOnlyNumbers();
-  const { data, refetch, params } = useHealthAgentApi();
-  const { isValidCns } = useCnsValidator();
-  const { isValidCpf } = useCpfValidator();
-  const isEditing = computed(() => !!props.modelValue?.id);
+const { formatCpf } = useFormatCpf();
+const { formatPhone } = usePhoneFormatter();
+const { onlyNumbers, handlePaste } = useOnlyNumbers();
+const { data, refetch, params } = useHealthAgentApi();
+const { isValidCns } = useCnsValidator();
+const { isValidCpf } = useCpfValidator();
+const isEditing = computed(() => !!props.modelValue?.id);
+const position = ref("bottom");
 
-  onMounted(async () => {
-    params.value.per_page = -1
-    params.value.sort = 'name'
-    await nextTick()
-    await refetch()
+onMounted(async () => {
+  params.value.per_page = -1;
+  params.value.sort = "name";
+  await nextTick();
+  await refetch();
 
-    if (isEditing.value) {
-      resetForm({ values: props.modelValue })
-    }
-  });
-
-  const emit = defineEmits(['close', 'save']);
-
-  const title = computed(() =>
-    isEditing.value ? 'Editar Paciente' : 'Cadastrar Paciente'
-  )
-
-  const genderOptions = [
-    { label: 'Feminino', value: 'F' },
-    { label: 'Masculino', value: 'M' },
-    { label: 'Outro', value: 'O' },
-  ];
-  const raceOptions = [
-    'Branco',
-    'Preto',
-    'Pardo',
-    'Amarelo',
-    'Indígena',
-  ];
-
-  const schema = yup.object({
-    name: yup.string().required('Nome é obrigatório'),
-    race: yup.string().required('Raça/Cor é obrigatório'),
-    cns: yup.string().min(15, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
-    mother_name: yup.string().required('Nome da mãe é obrigatório'),
-    cpf: yup.string().required('CPF é obrigatório').test('valid-cpf', 'CPF inválido', value => isValidCpf(value)),
-    gender: yup.string().required('Gênero é obrigatório'),
-    birth_date: yup.date().required('Data de nascimento é obrigatória'),
-    phone: yup.string().required('Telefone é obrigatório'),
-    health_agent_id: yup.number().required('Agente de saúde é obrigatório'),
-    street: yup.string().required('Rua é obrigatória'),
-    neighborhood: yup.string().required('Bairro é obrigatório'),
-    observation: yup.string().nullable(),
-    is_deceased: yup.boolean().nullable(),
-    date_of_dead: yup.date()
-      .when('is_deceased', {
-        is: true,
-        then: schema => schema
-          .required('Data do falecimento é obrigatória'),
-        otherwise: schema => schema.nullable(),
-      }),
-  });
-
-  const { handleSubmit, errors, resetForm } = useForm({
-    validationSchema: schema,
-  });
-
-  const { value: name } = useField('name');
-  const { value: cns } = useField('cns');
-  const { value: mother_name } = useField('mother_name');
-  const { value: cpf } = useField('cpf');
-  const { value: gender } = useField('gender');
-  const { value: race } = useField('race');
-  const { value: birth_date } = useField('birth_date');
-  const { value: phone } = useField('phone');
-  const { value: health_agent_id } = useField('health_agent_id');
-  const { value: street } = useField('street');
-  const { value: neighborhood } = useField('neighborhood');
-  const { value: observation } = useField('observation');
-  const { value: is_deceased } = useField('is_deceased')
-  const { value: date_of_dead } = useField('date_of_dead');
-
-  const onSubmit = handleSubmit(values => {
-    emit('save', values)
-  })
-
-  const clear = () => {
-    resetForm()
+  if (isEditing.value) {
+    resetForm({ values: props.modelValue });
   }
+});
 
-  watch(() => is_deceased.value, newValue => {
-    if(newValue && !props.modelValue.is_deceased) {
+const updatePosition = () => {
+  position.value = window.innerWidth > 1035 ? "bottom" : "bottom-left";
+};
+
+onMounted(() => {
+  updatePosition(); // define posição inicial
+  window.addEventListener("resize", updatePosition);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updatePosition);
+});
+
+const emit = defineEmits(["close", "save"]);
+
+const title = computed(() =>
+  isEditing.value ? "Editar Paciente" : "Cadastrar Paciente"
+);
+
+const genderOptions = [
+  { label: "Feminino", value: "F" },
+  { label: "Masculino", value: "M" },
+  { label: "Outro", value: "O" },
+];
+const raceOptions = ["Branco", "Preto", "Pardo", "Amarelo", "Indígena"];
+
+const schema = yup.object({
+  name: yup.string().required("Nome é obrigatório"),
+  race: yup.string().required("Raça/Cor é obrigatório"),
+  cns: yup
+    .string()
+    .min(15, "CNS incompleto")
+    .required("CNS é obrigatório")
+    .test("valid-cns", "CNS inválido", (value) => isValidCns(value)),
+  mother_name: yup.string().required("Nome da mãe é obrigatório"),
+  cpf: yup
+    .string()
+    .required("CPF é obrigatório")
+    .test("valid-cpf", "CPF inválido", (value) => isValidCpf(value)),
+  gender: yup.string().required("Gênero é obrigatório"),
+  birth_date: yup.date().required("Data de nascimento é obrigatória"),
+  phone: yup.string().required("Telefone é obrigatório"),
+  health_agent_id: yup.number().required("Agente de saúde é obrigatório"),
+  street: yup.string().required("Rua é obrigatória"),
+  neighborhood: yup.string().required("Bairro é obrigatório"),
+  observation: yup.string().nullable(),
+  is_deceased: yup.boolean().nullable(),
+  date_of_dead: yup.date().when("is_deceased", {
+    is: true,
+    then: (schema) => schema.required("Data do falecimento é obrigatória"),
+    otherwise: (schema) => schema.nullable(),
+  }),
+});
+
+const { handleSubmit, errors, resetForm } = useForm({
+  validationSchema: schema,
+});
+
+const { value: name } = useField("name");
+const { value: cns } = useField("cns");
+const { value: mother_name } = useField("mother_name");
+const { value: cpf } = useField("cpf");
+const { value: gender } = useField("gender");
+const { value: race } = useField("race");
+const { value: birth_date } = useField("birth_date");
+const { value: phone } = useField("phone");
+const { value: health_agent_id } = useField("health_agent_id");
+const { value: street } = useField("street");
+const { value: neighborhood } = useField("neighborhood");
+const { value: observation } = useField("observation");
+const { value: is_deceased } = useField("is_deceased");
+const { value: date_of_dead } = useField("date_of_dead");
+
+const onSubmit = handleSubmit((values) => {
+  emit("save", values);
+});
+
+const clear = () => {
+  resetForm();
+};
+
+watch(
+  () => is_deceased.value,
+  (newValue) => {
+    if (newValue && !props.modelValue.is_deceased) {
       date_of_dead.value = new Date();
     }
-  })
+  }
+);
 </script>
