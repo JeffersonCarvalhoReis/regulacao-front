@@ -82,8 +82,13 @@
           placeholder="CPF do paciente"
           variant="outlined"
           @keypress="onlyNumbers"
-          @paste="event => handlePaste(event, formatCpf, val => filterForm.cpf = val, { maxDigits: 14 })"
-          @update:model-value="val => filterForm.cpf = formatCpf(val)"
+          @paste="
+            (event) =>
+              handlePaste(event, formatCpf, (val) => (filterForm.cpf = val), {
+                maxDigits: 14,
+              })
+          "
+          @update:model-value="(val) => (filterForm.cpf = formatCpf(val))"
         />
       </div>
 
@@ -143,54 +148,66 @@
 </template>
 
 <script setup>
-  import { useHealthAgentApi } from '@/composables/modules/useHealthAgentModule';
-  import { useHealthUnitApi } from '@/composables/modules/useHealthUnitModule';
+import { useHealthAgentApi } from "@/composables/modules/useHealthAgentModule";
+import { useHealthUnitApi } from "@/composables/modules/useHealthUnitModule";
 
-  const { formatCpf } = useFormatCpf();
-  const { onlyNumbers, handlePaste } = useOnlyNumbers();
-  const { data: healthAgentData, params: healthAgentParams, refetch: healtAgentRefeth, setFilter: healthAgentFilter } = useHealthAgentApi();
-  const { data: healthUnitData, params: healthUnitParams, refetch: healthUnitRefetch } = useHealthUnitApi();
+const { formatCpf } = useFormatCpf();
+const { onlyNumbers, handlePaste } = useOnlyNumbers();
+const {
+  data: healthAgentData,
+  params: healthAgentParams,
+  refetch: healtAgentRefeth,
+  setFilter: healthAgentFilter,
+} = useHealthAgentApi();
+const {
+  data: healthUnitData,
+  params: healthUnitParams,
+  refetch: healthUnitRefetch,
+} = useHealthUnitApi();
 
-  const emit = defineEmits(['filters']);
+const emit = defineEmits(["filters"]);
 
-  const handleClick = () => {
-    emit('filters', filterForm.value)
-  }
-  onMounted(async () => {
-    healthAgentParams.value.per_page = -1;
-    healthUnitParams.value.per_page = -1;
-    await nextTick();
+const handleClick = () => {
+  emit("filters", filterForm.value);
+};
+onMounted(async () => {
+  healthAgentParams.value.per_page = -1;
+  healthUnitParams.value.per_page = -1;
+  await nextTick();
+  healtAgentRefeth();
+  healthUnitRefetch();
+});
+
+const dateInterval = ref(0);
+const title = "Busca Avançada de Pacientes";
+const filterForm = ref({
+  birth_date_between: [null, null],
+});
+
+const genderOptions = [
+  { label: "Feminino", value: "F" },
+  { label: "Masculino", value: "M" },
+  { label: "Outro", value: "O" },
+];
+watch(
+  () => filterForm.value.health_unit_id,
+  (newValue) => {
+    delete filterForm.value.health_agent_id;
+    healthAgentFilter("health_unit_id", newValue);
     healtAgentRefeth();
-    healthUnitRefetch();
-  });
-
-  const dateInterval = ref(0)
-  const title = 'Busca Avançada de Pacientes';
-  const filterForm = ref({
-    birth_date_between: [null, null],
-  });
-
-  const genderOptions = [
-    { label: 'Feminino', value: 'F' },
-    { label: 'Masculino', value: 'M' },
-    { label: 'Outro', value: 'O' },
-  ];
-  watch(() => filterForm.value.health_unit_id, newValue => {
-    delete filterForm.value.health_agent_id
-    healthAgentFilter('health_unit_id', newValue);
-    healtAgentRefeth()
-  });
-  watch(() => dateInterval.value, newValue => {
-    if(newValue == 1) {
+  }
+);
+watch(
+  () => dateInterval.value,
+  (newValue) => {
+    if (newValue == 1) {
       filterForm.value.birth_date_between = [null, null];
       delete filterForm.value.birth_date;
-    }
-    else {
+    } else {
       delete filterForm.value.birth_date_between;
     }
-  });
+  }
+);
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
