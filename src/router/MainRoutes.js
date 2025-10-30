@@ -22,6 +22,7 @@ import Travels from '@/pages/Travels.vue'
 import PatientsTfd from '@/pages/PatientsTfd.vue'
 import Deceased from '@/pages/Deceased.vue'
 import BpaSettings from '@/pages/BpaSettings.vue'
+import MedicalReport from '@/pages/MedicalReport.vue'
 // import { auth, redirectIfAuthenticated } from './guard'
 
 export default [
@@ -237,6 +238,15 @@ export default [
     path: '/bpa-definicoes',
     name: 'bpa-settings',
     component: BpaSettings,
+    meta: {
+      requiresAuth: true,
+      roles: ['tfd'],
+    },
+  },
+  {
+    path: '/laudos-medicos',
+    name: 'medical-reports',
+    component: MedicalReport,
     meta: {
       requiresAuth: true,
       roles: ['tfd'],

@@ -1,47 +1,47 @@
 @import "tailwindcss" important;
 
-
 * {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
     font-family: OpenSans, Roboto, sans-serif;
 }
 @font-face {
-    font-family: 'Roboto';
-    src: url('fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+    font-family: "Roboto";
+    src: url("fonts/Roboto/Roboto-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
-  }
-@font-face {
-  font-family: 'OpenSans';
-  src: url('fonts/OpenSans/OpenSans-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
 }
 @font-face {
-  font-family: 'Inter';
-  src: url('fonts/Inter/Inter_28pt-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-    font-family: 'Neuropol';
-    src: url('fonts/Neuropol/Neuropol.otf') format('opentype');
+    font-family: "OpenSans";
+    src: url("fonts/OpenSans/OpenSans-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
-  }
+}
+@font-face {
+    font-family: "Inter";
+    src: url("fonts/Inter/Inter_28pt-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Neuropol";
+    src: url("fonts/Neuropol/Neuropol.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
 
-  @theme {
+@theme {
     --color-ita-blue: #1261bd;
     --color-ita-green: #01954e;
     --color-ita-yellow: #eeb534;
     --color-ita-light-blue: #00bff3;
-  }
-
+}
 
 .required .v-field:not(.v-field--active) .v-field__overlay {
     border-left: 5px solid rgba(235, 97, 97, 0.808);
     border-radius: 5px;
 }
 
-  
+.swal2-container {
+    z-index: 9999 !important;
+}
