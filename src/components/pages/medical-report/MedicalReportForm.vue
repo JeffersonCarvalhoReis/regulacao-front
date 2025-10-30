@@ -724,7 +724,6 @@ const { value: companion_relation_to_patient } = useField<string | null>(
 /* -------------------------
      UI state / helpers
      ------------------------- */
-const dialogPatientForm = ref(false);
 const sections = [
   { title: "Dados do Paciente", icon: "mdi-account" },
   { title: "Acompanhante", icon: "mdi-account-group" },
