@@ -402,14 +402,6 @@ const loadExtraCompanion = async () => {
   }
 };
 
-watch(
-  () => companionData,
-  (newValue, oldValue) => {
-    console.console.log("novo", newValue, "velho", oldValue);
-  }
-),
-  { immediate: true };
-
 onMounted(async () => {
   hospitalParams.value.per_page = -1;
   await nextTick();
