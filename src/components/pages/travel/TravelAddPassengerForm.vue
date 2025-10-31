@@ -374,7 +374,7 @@ watch(
     hospitalParams.value.filter = { city_id: currentHospitalCity.value };
 
     await nextTick();
-    await hospitalFetch();
+    hospitalFetch();
   },
   { immediate: true }
 );
@@ -382,8 +382,8 @@ watch(
 const loadCompanion = async () => {
   if (isEditing.value && props.modelValue?.companion_id) {
     companionFilter("id", props.modelValue?.companion_id);
-    await companionFetch();
     await nextTick();
+    companionFetch();
   } else {
     await companionFetch();
   }
