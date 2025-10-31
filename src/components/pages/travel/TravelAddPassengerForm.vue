@@ -60,9 +60,9 @@
           density="compact"
           item-title="name"
           item-value="id"
-          :items="companionDataGlobal"
+          :items="companionData"
           label="Acompanhante"
-          :loading="isLoadingCompanionGlobal"
+          :loading="isLoadingCompanion"
           variant="outlined"
           @update:search="onSearchCompanionGlobal"
         />
@@ -88,8 +88,8 @@
             item-value="id"
             label="Acompanhante"
             variant="outlined"
-            :items="companionextraCompanionDataGlobal"
-            :loading="isLoadingExtraCompanionGlobal"
+            :items="extraCompanionData"
+            :loading="isLoadingExtraCompanion"
             @update:search="onSearchExtraCompanionGlobal"
           />
 
@@ -206,17 +206,17 @@ const title = computed(() =>
 );
 
 const {
-  data: companionDataGlobal,
+  data: companionData,
   refetch: companionFetch,
   setFilter: companionFilter,
-  isLoading: isLoadingCompanionGlobal,
+  isLoading: isLoadingCompanion,
   clearFilters: companionClearFilters,
 } = useCompanionApi();
 const {
-  data: companionextraCompanionDataGlobal,
+  data: extraCompanionData,
   refetch: extraCompanionFetch,
   setFilter: extraCompanionFilter,
-  isLoading: isLoadingExtraCompanionGlobal,
+  isLoading: isLoadingExtraCompanion,
   clearFilters: extraCompanionClearFilters,
 } = useCompanionApi();
 
@@ -390,10 +390,10 @@ const loadCompanion = async () => {
 };
 
 const loadExtraCompanion = async () => {
-  if (isEditing.value && props.modelValue?.extra_companions[0].companion.id) {
+  if (isEditing.value && props.modelValue?.extra_companions[0]?.companion.id) {
     extraCompanionFilter(
       "id",
-      props.modelValue?.extra_companions[0].companion.id
+      props.modelValue?.extra_companions[0]?.companion.id
     );
     await extraCompanionFetch();
     await nextTick();
@@ -402,11 +402,18 @@ const loadExtraCompanion = async () => {
   }
 };
 
+watch(
+  () => companionData,
+  (newValue, oldValue) => {
+    console.console.log("novo", newValue, "velho", oldValue);
+  }
+),
+  { immediate: true };
+
 onMounted(async () => {
   hospitalParams.value.per_page = -1;
   await nextTick();
-
-  await Promise.all[(loadCompanion(), loadExtraCompanion())];
+  await Promise.all([loadCompanion(), loadExtraCompanion()]);
 
   if (isEditing.value) {
     setValues({
