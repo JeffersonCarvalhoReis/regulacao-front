@@ -60,11 +60,11 @@
           density="compact"
           item-title="name"
           item-value="id"
-          :items="companionData"
+          :items="companionDataGlobal"
           label="Acompanhante"
-          :loading="isLoadingCompanion"
+          :loading="isLoadingCompanionGlobal"
           variant="outlined"
-          @update:search="onSearchCompanion"
+          @update:search="onSearchCompanionGlobal"
         />
 
         <v-text-field
@@ -86,9 +86,11 @@
             :error-messages="errors[`companions.${index}.companion.id`]"
             item-title="name"
             item-value="id"
-            :items="companionData"
             label="Acompanhante"
             variant="outlined"
+            :items="companionextraCompanionDataGlobal"
+            :loading="isLoadingExtraCompanionGlobal"
+            @update:search="onSearchExtraCompanionGlobal"
           />
 
           <!-- wrapper flex: campo ocupa todo espaço, botão fica apenas com a largura do ícone -->
@@ -204,11 +206,18 @@ const title = computed(() =>
 );
 
 const {
-  data: companionData,
+  data: companionDataGlobal,
   refetch: companionFetch,
   setFilter: companionFilter,
-  isLoading: isLoadingCompanion,
-  clearFilters: clearFiltersCompanion,
+  isLoading: isLoadingCompanionGlobal,
+  clearFilters: companionClearFilters,
+} = useCompanionApi();
+const {
+  data: companionextraCompanionDataGlobal,
+  refetch: extraCompanionFetch,
+  setFilter: extraCompanionFilter,
+  isLoading: isLoadingExtraCompanionGlobal,
+  clearFilters: extraCompanionClearFilters,
 } = useCompanionApi();
 
 const {
@@ -217,6 +226,7 @@ const {
   params: hospitalParams,
   clearFilters,
 } = useHospitalApi();
+
 const { formatDate } = useFormatDate();
 const { calculateAge, ageLabel } = useCalculateAge();
 const { onlyNumbers } = useOnlyNumbers();
@@ -287,18 +297,28 @@ const { value: companions } = useField("companions");
 const { value: companion_id } = useField("companion_id");
 const { value: kinship } = useField("kinship");
 
-const addCompanion = () => {
+const addCompanion = async () => {
+  await extraCompanionFetch();
   companions.value.push({ companion: { id: null }, kinship: "" });
 };
 
 const removeCompanion = (index) => {
+  extraCompanionClearFilters();
   companions.value.splice(index, 1);
 };
-const onSearchCompanion = debounce(async (v) => {
-  clearFiltersCompanion?.();
-  const name = (v || "").split("-")[0].trim();
-  if (name && companionFilter) companionFilter("name", name);
-  await companionFetch();
+
+const onSearchCompanionGlobal = debounce(async (v) => {
+  companionClearFilters();
+  companionFilter?.("name", v);
+  await nextTick();
+  companionFetch();
+}, 250);
+
+const onSearchExtraCompanionGlobal = debounce(async (v) => {
+  extraCompanionClearFilters();
+  extraCompanionFilter?.("name", v);
+  await nextTick();
+  extraCompanionFetch();
 }, 250);
 
 const onTimeInput = (val) => {
@@ -359,15 +379,38 @@ watch(
   { immediate: true }
 );
 
+const loadCompanion = async () => {
+  if (isEditing.value && props.modelValue?.companion_id) {
+    companionFilter("id", props.modelValue?.companion_id);
+    await companionFetch();
+    await nextTick();
+  } else {
+    await companionFetch();
+  }
+};
+
+const loadExtraCompanion = async () => {
+  if (isEditing.value && props.modelValue?.extra_companions[0].companion.id) {
+    extraCompanionFilter(
+      "id",
+      props.modelValue?.extra_companions[0].companion.id
+    );
+    await extraCompanionFetch();
+    await nextTick();
+  } else {
+    await extraCompanionFetch();
+  }
+};
+
 onMounted(async () => {
   hospitalParams.value.per_page = -1;
   await nextTick();
-  await Promise.all([companionFetch()]);
+
+  await Promise.all[(loadCompanion(), loadExtraCompanion())];
 
   if (isEditing.value) {
     setValues({
       patient_id: props.modelValue.id,
-      companions: props.modelValue?.extra_companions,
       kinship: props.modelValue?.kinship,
       companion_id: props.modelValue?.companion_id,
       notes: props.modelValue?.notes,
@@ -375,6 +418,7 @@ onMounted(async () => {
       appointment_time: props.modelValue?.appointment_time,
       is_priority: props.modelValue?.is_priority,
       hospital_id: props.modelValue?.hospital_id,
+      companions: props.modelValue?.extra_companions,
     });
   }
 });
