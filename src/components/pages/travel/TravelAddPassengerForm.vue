@@ -404,8 +404,8 @@ const loadExtraCompanion = async () => {
 
 onMounted(async () => {
   hospitalParams.value.per_page = -1;
-  await nextTick();
   await Promise.all([loadCompanion(), loadExtraCompanion()]);
+  await nextTick();
 
   if (isEditing.value) {
     setValues({
