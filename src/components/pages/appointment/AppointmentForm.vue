@@ -4,14 +4,56 @@
       <BaseSection>
         <InfoGroup title="Dados da Solicitação">
           <div class="grid grid-cols-3 gap-x-10">
-            <div>Paciente: {{ props.modelValue.solicitation?.patient || props.solicitationData.patient }}</div>
-            <div v-if="isExam">Exame: {{ props.modelValue.solicitation?.procedure || props.solicitationData.procedure }}</div>
-            <div v-if="!isExam">Consulta com {{ props.modelValue.solicitation?.specialist || props.solicitationData.specialist }}</div>
-            <div :class="{'text-red-500': isUrgent }">Urgência: {{ isEditing ? isUrgentToEditLabel : isUrgentLabel }}</div>
-            <div>Unidade Solicitante: {{ props.modelValue.solicitation?.requesting_unit || props.solicitationData.requesting_unit }} </div>
-            <div>Data da Solicitação: {{ formatDate(props.modelValue.solicitation?.solicitation_date || props.solicitationData.solicitation_date) }}</div>
-            <div>Retorno: {{ isEditing ? isReturnToEditLabel : isReturnLabel }}</div>
-            <div>Motivo: {{ props.modelValue.solicitation?.reason || props.solicitationData.reason }}</div>
+            <div>
+              Paciente:
+              {{
+                props.modelValue.solicitation?.patient ||
+                props.solicitationData.patient
+              }}
+            </div>
+            <div v-if="isExam">
+              Exame:
+              {{
+                props.modelValue.solicitation?.procedure ||
+                props.solicitationData.procedure
+              }}
+            </div>
+            <div v-if="!isExam">
+              Consulta com
+              {{
+                props.modelValue.solicitation?.specialist ||
+                props.solicitationData.specialist
+              }}
+            </div>
+            <div :class="{ 'text-red-500': isUrgent }">
+              Urgência: {{ isEditing ? isUrgentToEditLabel : isUrgentLabel }}
+            </div>
+            <div>
+              Unidade Solicitante:
+              {{
+                props.modelValue.solicitation?.requesting_unit ||
+                props.solicitationData.requesting_unit
+              }}
+            </div>
+            <div>
+              Data da Solicitação:
+              {{
+                formatDate(
+                  props.modelValue.solicitation?.solicitation_date ||
+                    props.solicitationData.solicitation_date
+                )
+              }}
+            </div>
+            <div>
+              Retorno: {{ isEditing ? isReturnToEditLabel : isReturnLabel }}
+            </div>
+            <div>
+              Motivo:
+              {{
+                props.modelValue.solicitation?.reason ||
+                props.solicitationData.reason
+              }}
+            </div>
           </div>
         </InfoGroup>
       </BaseSection>
@@ -20,7 +62,7 @@
         <div class="grid grid-cols-2 gap-2 mt-4">
           <base-input-date-picker
             v-model="date"
-            class-date-picker="absolute right-[-175px] top-[-175px]"
+            position="top"
             class-field="required"
             :error-messages="errors.date"
             label="Data"
@@ -86,128 +128,153 @@
 </template>
 
 <script setup>
-  import { useProviderUnitApi } from '@/composables/modules/useProviderUnitModule';
-  import { useFormatDate } from '@/composables/utils/useFormatDate';
-  import { useDoctorApi } from '@/composables/modules/useDoctorModule';
-  import { useOnlyNumbers } from '@/composables/utils/useOnlyNumbers';
-  import { useBooleanLabel } from '@/composables/utils/useBooleanLabel';
-  import { useField, useForm } from 'vee-validate'
-  import { useMeStore } from '@/stores/me';
-  import * as yup from 'yup'
+import { useDoctorApi } from "@/composables/modules/useDoctorModule";
+import { useProviderUnitApi } from "@/composables/modules/useProviderUnitModule";
+import { useBooleanLabel } from "@/composables/utils/useBooleanLabel";
+import { useFormatDate } from "@/composables/utils/useFormatDate";
+import { useOnlyNumbers } from "@/composables/utils/useOnlyNumbers";
+import { useMeStore } from "@/stores/me";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 
-  const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-    solicitationData: { type: Object, default: () => ({}) },
-  })
+const props = defineProps({
+  modelValue: { type: Object, default: () => ({}) },
+  solicitationData: { type: Object, default: () => ({}) },
+});
 
-  const meStore = useMeStore();
-  const role = meStore.role;
-  const { data: providerUnitData, refetch: providerUnitFetch, params: providerUnitParams } = useProviderUnitApi();
-  const { data: doctorData, refetch: doctorFetch, params: doctorParams } = useDoctorApi();
-  const { formatDate } = useFormatDate();
-  const { onlyNumbers } = useOnlyNumbers();
-  const { booleanToLabel } = useBooleanLabel();
-  const isReturnLabel = computed(() => booleanToLabel(props.solicitationData.is_first_time, 'Não', 'Sim'));
-  const isReturnToEditLabel = computed(() => booleanToLabel(props.modelValue.solicitation.is_first_time, 'Não', 'Sim'));
-  const isUrgentLabel = computed(() => booleanToLabel(props.solicitationData.is_urgent));
-  const isUrgentToEditLabel = computed(() => booleanToLabel(props.modelValue.solicitation.is_urgent));
-  const isEditing = computed(() => !!props.modelValue?.id);
+const meStore = useMeStore();
+const role = meStore.role;
+const {
+  data: providerUnitData,
+  refetch: providerUnitFetch,
+  params: providerUnitParams,
+} = useProviderUnitApi();
+const {
+  data: doctorData,
+  refetch: doctorFetch,
+  params: doctorParams,
+} = useDoctorApi();
+const { formatDate } = useFormatDate();
+const { onlyNumbers } = useOnlyNumbers();
+const { booleanToLabel } = useBooleanLabel();
+const isReturnLabel = computed(() =>
+  booleanToLabel(props.solicitationData.is_first_time, "Não", "Sim")
+);
+const isReturnToEditLabel = computed(() =>
+  booleanToLabel(props.modelValue.solicitation.is_first_time, "Não", "Sim")
+);
+const isUrgentLabel = computed(() =>
+  booleanToLabel(props.solicitationData.is_urgent)
+);
+const isUrgentToEditLabel = computed(() =>
+  booleanToLabel(props.modelValue.solicitation.is_urgent)
+);
+const isEditing = computed(() => !!props.modelValue?.id);
 
+const isExam = computed(
+  () =>
+    props.modelValue.solicitation?.solicitation_type ||
+    props.solicitationData.solicitation_type === "exam"
+);
+const isUrgent = computed(
+  () =>
+    props.modelValue.solicitation?.is_urgent == true ||
+    props.solicitationData.is_urgent == true
+);
 
-  const isExam = computed(() => props.modelValue.solicitation?.solicitation_type || props.solicitationData.solicitation_type === 'exam');
-  const isUrgent = computed(() => props.modelValue.solicitation?.is_urgent == true || props.solicitationData.is_urgent == true );
+const onTimeInput = (val) => {
+  let digits = val.replace(/\D/g, "");
 
-  const onTimeInput = val => {
-    let digits = val.replace(/\D/g, '')
+  if (digits.length > 4) digits = digits.slice(0, 4);
 
-    if (digits.length > 4) digits = digits.slice(0, 4)
+  if (digits.length >= 3) {
+    time.value = `${digits.slice(0, 2)}:${digits.slice(2)}`;
+  } else {
+    time.value = digits;
+  }
+};
+const AppointmentStatus = [
+  { value: "scheduled", label: "Agendado" },
+  { value: "not-present", label: "Não compareceu" },
+  { value: "realized", label: "Realizado" },
+  { value: "pending", label: "Pendente" },
+];
 
-    if (digits.length >= 3) {
-      time.value = `${digits.slice(0, 2)}:${digits.slice(2)}`
-    } else {
-      time.value = digits
-    }
-  };
-  const AppointmentStatus = [
-    { value: 'scheduled', label: 'Agendado' },
-    { value: 'not-present', label: 'Não compareceu' },
-    { value: 'realized', label: 'Realizado' },
-    { value: 'pending', label: 'Pendente' },
-  ]
+onMounted(async () => {
+  providerUnitParams.value.per_page = -1;
+  doctorParams.value.per_page = -1;
+  providerUnitParams.value.sort = "name";
+  doctorParams.value.sort = "name";
+  await nextTick();
+  await Promise.all([providerUnitFetch(), doctorFetch()]);
 
-  onMounted(async () => {
-    providerUnitParams.value.per_page = -1;
-    doctorParams.value.per_page = -1;
-    providerUnitParams.value.sort = 'name';
-    doctorParams.value.sort = 'name';
-    await nextTick();
-    await Promise.all([
-      providerUnitFetch(),
-      doctorFetch(),
-    ]);
+  if (isEditing.value) {
+    resetForm({ values: props.modelValue });
+  }
+});
 
-    if (isEditing.value) {
-      resetForm({ values: props.modelValue })
-    }
-  });
+const emit = defineEmits(["close", "save"]);
 
-  const emit = defineEmits(['close', 'save']);
+const msgAppointment =
+  role == "provider_unit_manager"
+    ? "Solicitar Agendamento"
+    : "Novo Agendamento";
+const title = computed(() =>
+  isEditing.value ? "Editar Agendamento" : msgAppointment
+);
 
-  const msgAppointment = role == 'provider_unit_manager' ? 'Solicitar Agendamento' : 'Novo Agendamento'
-  const title = computed(() => isEditing.value ? 'Editar Agendamento' : msgAppointment )
+const schema = yup.object({
+  date: yup.date().required("Data do agendamento é obrigatório"),
+  time: yup
+    .string()
+    .required("Horário é obrigatório")
+    .test("dynamic-time-validation", "Horário inválido", (value) => {
+      if (!value) return false;
+      if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
 
-  const schema = yup.object({
-    date: yup.date().required('Data do agendamento é obrigatório'),
-    time: yup
-      .string()
-      .required('Horário é obrigatório')
-      .test('dynamic-time-validation', 'Horário inválido', value => {
-        if (!value) return false;
-        if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
+      const [h, m = ""] = value.split(":");
 
-        const [h, m = ''] = value.split(':');
+      if (h.length > 0) {
+        const hour = parseInt(h);
+        if (isNaN(hour)) return false;
+        if (h.length === 1 && hour > 2) return false;
+        if (h.length === 2 && hour > 23) return false;
+      }
 
-        if (h.length > 0) {
-          const hour = parseInt(h);
-          if (isNaN(hour)) return false;
-          if (h.length === 1 && hour > 2) return false;
-          if (h.length === 2 && hour > 23) return false;
-        }
+      if (m.length > 0) {
+        const minute = parseInt(m);
+        if (isNaN(minute)) return false;
+        if (m.length === 1 && minute > 5) return false;
+        if (m.length === 2 && minute > 59) return false;
+      }
 
-        if (m.length > 0) {
-          const minute = parseInt(m);
-          if (isNaN(minute)) return false;
-          if (m.length === 1 && minute > 5) return false;
-          if (m.length === 2 && minute > 59) return false;
-        }
+      return true;
+    }),
+  provider_unit_id: yup.number().required("Unidade prestadora é obrigatório"),
+  doctor_id: yup.number().nullable(),
+  status: yup.string().nullable(),
+});
 
-        return true;
-      }),
-    provider_unit_id: yup.number().required('Unidade prestadora é obrigatório'),
-    doctor_id: yup.number().nullable(),
-    status: yup.string().nullable(),
-  });
+const { handleSubmit, errors, resetForm } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    date: null,
+    time: "",
+    solicitation_id:
+      props.modelValue?.solicitation?.id || props.solicitationData?.id,
+    provider_unit_id: null,
+    doctor_id: null,
+  },
+});
 
-  const { handleSubmit, errors, resetForm } = useForm({
-    validationSchema: schema,
-    initialValues: {
-      date: null,
-      time: '',
-      solicitation_id: props.modelValue?.solicitation?.id || props.solicitationData?.id,
-      provider_unit_id: null,
-      doctor_id: null,
-    },
-  });
+const { value: date } = useField("date");
+const { value: time } = useField("time");
+const { value: provider_unit_id } = useField("provider_unit_id");
+const { value: doctor_id } = useField("doctor_id");
+const { value: status } = useField("status");
 
-  const { value: date } = useField('date');
-  const { value: time } = useField('time');
-  const { value: provider_unit_id } = useField('provider_unit_id');
-  const { value: doctor_id } = useField('doctor_id');
-  const { value: status } = useField('status');
-
-  const onSubmit = handleSubmit(values => {
-    if(role == 'provider_unit_manager') values.status = 'pending';
-    emit('save', values)
-  })
-
+const onSubmit = handleSubmit((values) => {
+  if (role == "provider_unit_manager") values.status = "pending";
+  emit("save", values);
+});
 </script>
