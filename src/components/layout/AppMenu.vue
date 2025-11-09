@@ -26,9 +26,12 @@
 
       <v-list-subheader
         v-if="['regulation_officer', 'provider_unit_manager'].includes(role)"
+        class="menu-subheader"
         >Demanda</v-list-subheader
       >
-      <v-list-subheader v-if="['reception'].includes(role)"
+      <v-list-subheader
+        v-if="['reception'].includes(role)"
+        class="menu-subheader"
         >Atendimento</v-list-subheader
       >
 
@@ -63,6 +66,7 @@
       />
       <v-list-subheader
         v-if="['reception', 'regulation_officer'].includes(role)"
+        class="menu-subheader"
       >
         Controle de Procedimentos
       </v-list-subheader>
@@ -80,7 +84,10 @@
         title="Especialidades"
         :to="{ name: 'specialists' }"
       />
-      <v-list-subheader v-if="['regulation_officer'].includes(role)">
+      <v-list-subheader
+        v-if="['regulation_officer'].includes(role)"
+        class="menu-subheader"
+      >
         Cadastro de Unidades e Profissionais
       </v-list-subheader>
       <app-menu-item
@@ -119,7 +126,7 @@
         :to="{ name: 'health-agents' }"
       />
       <div v-if="['provider_unit_manager'].includes(role)">
-        <v-list-subheader>Gestão</v-list-subheader>
+        <v-list-subheader class="menu-subheader">Gestão</v-list-subheader>
         <app-menu-item
           :active="$route.name === 'appointments-management'"
           prepend-icon="mdi-clipboard-text-clock"
@@ -127,7 +134,7 @@
           :to="{ name: 'appointments-management' }"
         />
       </div>
-      <div v-if="['admin'].includes(role)">
+      <div v-if="['admin'].includes(role)" class="menu-subheader">
         <v-list-subheader>Administração</v-list-subheader>
         <app-menu-item
           :active="$route.name === 'users'"
@@ -137,7 +144,7 @@
         />
       </div>
       <div v-if="['tfd'].includes(role)">
-        <v-list-subheader>TFD</v-list-subheader>
+        <v-list-subheader class="menu-subheader">TFD</v-list-subheader>
         <app-menu-item
           :active="$route.name === 'patients'"
           prepend-icon="mdi-card-account-details"
@@ -252,5 +259,12 @@ onMounted(() => {
 
 :deep(.v-navigation-drawer__scrim) {
   z-index: 9 !important;
+}
+.menu-subheader {
+  display: none;
+}
+
+.v-navigation-drawer.v-navigation-drawer--is-hovering .menu-subheader {
+  display: block;
 }
 </style>

@@ -41,7 +41,9 @@
             <span class="uppercase font-bold"> Pedido Nº <br /> </span>
           </div>
         </div>
-        <div class="border-2 my-2 p-1 pb-5 uppercase"><span>Unidade</span></div>
+        <div class="border-2 my-2 p-1 pb-5 uppercase">
+          <span>Unidade: </span> {{ medicalReportData.hospital }}
+        </div>
         <div class="grid grid-cols-6 border-2 my-2">
           <div class="col-span-6 border-b border-black text-center p-2">
             <h2 class="font-bold text-2xl uppercase">Paciente</h2>
