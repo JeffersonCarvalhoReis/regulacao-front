@@ -984,8 +984,13 @@ onMounted(async () => {
      Build payload / submit
      ------------------------- */
 type Payload = Partial<Record<string, unknown>>;
+// altera buildPayload para aceitar opções
+const buildPayload = (
+  vals: Record<string, any>,
+  opts: { includeEmpty?: boolean; emptyToNull?: boolean } = {}
+): Payload => {
+  const { includeEmpty = false, emptyToNull = false } = opts;
 
-const buildPayload = (vals: Record<string, any>): Payload => {
   const allowed = [
     "hospital",
     "patient_id",
@@ -1011,20 +1016,32 @@ const buildPayload = (vals: Record<string, any>): Payload => {
   ];
   const payload: Payload = {};
   for (const k of allowed) {
-    if (vals[k] !== null && vals[k] !== undefined && vals[k] !== "")
-      payload[k] = vals[k];
+    const v = vals[k];
+    // quando includeEmpty === true incluímos também strings vazias e nulls
+    if (includeEmpty) {
+      // se emptyToNull e v === "" converte para null
+      payload[k] = v === "" && emptyToNull ? null : v === undefined ? null : v;
+    } else {
+      // comportamento antigo: só inclui quando tem valor não vazio
+      if (v !== null && v !== undefined && v !== "") payload[k] = v;
+    }
   }
-  if (payload.patient_id)
+  // garantir números
+  if (payload.patient_id !== undefined && payload.patient_id !== null)
     payload.patient_id = Number(payload.patient_id as any);
-  if (payload.companion_id)
+  if (payload.companion_id !== undefined && payload.companion_id !== null)
     payload.companion_id = Number(payload.companion_id as any);
+
   return payload;
 };
 
 const onSubmit = handleSubmit(
   async (vals) => {
-    // válido -> constrói payload e emite
-    const payload = buildPayload(vals);
+    // se for edição queremos permitir limpar campos: includeEmpty true
+    const payload = isEditing.value
+      ? buildPayload(vals, { includeEmpty: true, emptyToNull: true })
+      : buildPayload(vals); // criação mantem comportamento anterior
+
     if (!props.isRenew) {
       emit("save", { ...payload, id: props.modelValue?.id ?? null });
     } else {
