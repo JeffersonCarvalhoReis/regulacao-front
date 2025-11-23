@@ -8,7 +8,7 @@
         density="compact"
         hide-details
         label="Buscar Paciente"
-        placeholder="Nome, SUS ou CPF"
+        :placeholder="placeholder"
         variant="outlined"
         clearable
         @keyup="emit('search-patient', searchPatient)"
@@ -19,6 +19,9 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  placeholder: { type: String, default: "Nome, SUS ou CPF" },
+});
 const emit = defineEmits(["search-patient"]);
 const searchPatient = ref(null);
 

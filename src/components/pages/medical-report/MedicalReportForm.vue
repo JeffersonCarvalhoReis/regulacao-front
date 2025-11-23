@@ -54,8 +54,28 @@
 
       <v-form ref="vform" class="p-6">
         <div class="mb-6">
+          <div
+            v-if="
+              sections[currentSection].title === 'Dados do Paciente e Unidade'
+            "
+          >
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+              Dados da Unidade
+            </h2>
+            <v-text-field
+              v-model="hospital"
+              density="compact"
+              :error-messages="errors.hospital"
+              label="Unidade"
+              variant="outlined"
+            />
+          </div>
           <h2 class="text-xl font-semibold text-gray-800 mb-4">
-            {{ sections[currentSection].title }}
+            {{
+              sections[currentSection].title === "Dados do Paciente e Unidade"
+                ? "Dados do Paciente"
+                : sections[currentSection].title
+            }}
           </h2>
 
           <!-- Section 0: Dados do Paciente -->
@@ -551,6 +571,7 @@ const sixMonthsAgo = date.toISOString().slice(0, 10);
      Validação (yup) e Vee-Validate
      ------------------------- */
 const schema = yup.object({
+  hospital: yup.string().nullable(),
   patient_id: yup.number().required("Paciente é obrigatório"),
   patient_profession: yup.string().nullable(),
   patient_dependency_relation: yup.string().nullable(),
@@ -600,6 +621,7 @@ const { handleSubmit, errors, resetForm, validate, setFieldValue, values } =
   useForm({
     validationSchema: schema,
     initialValues: {
+      hospital: "",
       patient_id: null,
       patient_profession: "",
       patient_dependency_relation: "",
@@ -642,6 +664,7 @@ const { handleSubmit, errors, resetForm, validate, setFieldValue, values } =
 /* -------------------------
      Campos do form (useField com genéricos)
      ------------------------- */
+const { value: hospital } = useField<string | null>("hospital");
 const { value: patient_id } = useField<number | null>("patient_id");
 const { value: companion_id } = useField<number | null>("companion_id");
 const { value: history_of_present_illness } = useField<string | null>(
@@ -725,7 +748,7 @@ const { value: companion_relation_to_patient } = useField<string | null>(
      UI state / helpers
      ------------------------- */
 const sections = [
-  { title: "Dados do Paciente", icon: "mdi-account" },
+  { title: "Dados do Paciente e Unidade", icon: "mdi-account" },
   { title: "Acompanhante", icon: "mdi-account-group" },
   { title: "Histórico e Exames", icon: "mdi-file-document" },
   { title: "Justificativas", icon: "mdi-alert" },
@@ -737,6 +760,7 @@ function fieldToSection(field: string): number {
   if (!field) return 0;
   // paciente
   const patientFields = [
+    "hospital",
     "patient_id",
     "patient_profession",
     "patient_dependency_relation",
@@ -881,6 +905,7 @@ watch(companion_id, async (newId) => {
 
   let c = findCompanion(newId);
   if (!c) {
+    companionFilter?.("id", newId);
     await companionFetch();
     c = findCompanion(newId);
   }
@@ -912,6 +937,7 @@ onMounted(async () => {
         patient_id: m.patient?.id ?? m.patient_id ?? null,
         companion_id: m.companion?.id ?? m.companion_id ?? null,
         patient_profession: m.patient_profession ?? "",
+        hospital: m.hospital ?? "",
         patient_dependency_relation: m.patient_dependency_relation ?? "",
         history_of_present_illness: m.history_of_present_illness ?? "",
         physical_exam: m.physical_exam ?? "",
@@ -958,9 +984,15 @@ onMounted(async () => {
      Build payload / submit
      ------------------------- */
 type Payload = Partial<Record<string, unknown>>;
+// altera buildPayload para aceitar opções
+const buildPayload = (
+  vals: Record<string, any>,
+  opts: { includeEmpty?: boolean; emptyToNull?: boolean } = {}
+): Payload => {
+  const { includeEmpty = false, emptyToNull = false } = opts;
 
-const buildPayload = (vals: Record<string, any>): Payload => {
   const allowed = [
+    "hospital",
     "patient_id",
     "patient_profession",
     "patient_dependency_relation",
@@ -984,20 +1016,32 @@ const buildPayload = (vals: Record<string, any>): Payload => {
   ];
   const payload: Payload = {};
   for (const k of allowed) {
-    if (vals[k] !== null && vals[k] !== undefined && vals[k] !== "")
-      payload[k] = vals[k];
+    const v = vals[k];
+    // quando includeEmpty === true incluímos também strings vazias e nulls
+    if (includeEmpty) {
+      // se emptyToNull e v === "" converte para null
+      payload[k] = v === "" && emptyToNull ? null : v === undefined ? null : v;
+    } else {
+      // comportamento antigo: só inclui quando tem valor não vazio
+      if (v !== null && v !== undefined && v !== "") payload[k] = v;
+    }
   }
-  if (payload.patient_id)
+  // garantir números
+  if (payload.patient_id !== undefined && payload.patient_id !== null)
     payload.patient_id = Number(payload.patient_id as any);
-  if (payload.companion_id)
+  if (payload.companion_id !== undefined && payload.companion_id !== null)
     payload.companion_id = Number(payload.companion_id as any);
+
   return payload;
 };
 
 const onSubmit = handleSubmit(
   async (vals) => {
-    // válido -> constrói payload e emite
-    const payload = buildPayload(vals);
+    // se for edição queremos permitir limpar campos: includeEmpty true
+    const payload = isEditing.value
+      ? buildPayload(vals, { includeEmpty: true, emptyToNull: true })
+      : buildPayload(vals); // criação mantem comportamento anterior
+
     if (!props.isRenew) {
       emit("save", { ...payload, id: props.modelValue?.id ?? null });
     } else {

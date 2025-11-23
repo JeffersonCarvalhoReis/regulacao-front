@@ -197,7 +197,7 @@ const { data, refetch, params } = useHealthAgentApi();
 const { isValidCns } = useCnsValidator();
 const { isValidCpf } = useCpfValidator();
 const isEditing = computed(() => !!props.modelValue?.id);
-const position = ref("bottom");
+const position = ref("center-left");
 
 onMounted(async () => {
   params.value.per_page = -1;
@@ -208,19 +208,6 @@ onMounted(async () => {
   if (isEditing.value) {
     resetForm({ values: props.modelValue });
   }
-});
-
-const updatePosition = () => {
-  position.value = window.innerWidth > 1035 ? "bottom" : "bottom-left";
-};
-
-onMounted(() => {
-  updatePosition(); // define posição inicial
-  window.addEventListener("resize", updatePosition);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", updatePosition);
 });
 
 const emit = defineEmits(["close", "save"]);

@@ -22,8 +22,8 @@ const { showFeedback } = useSweetAlertFeedback();
 const registerMedicalReport = ref(false);
 const medicalReportTableRef = ref(null);
 
-const submit = async (travel) => {
-  const success = await showFeedback(() => create(travel));
+const submit = async (medicalReport) => {
+  const success = await showFeedback(() => create(medicalReport));
   if (success) {
     medicalReportTableRef.value?.refetch();
     registerMedicalReport.value = false;
