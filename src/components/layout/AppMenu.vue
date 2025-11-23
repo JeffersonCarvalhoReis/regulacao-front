@@ -125,6 +125,13 @@
         title="Agentes C. de Saúde"
         :to="{ name: 'health-agents' }"
       />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'fibro-patients'"
+        prepend-icon="mdi-card-account-details"
+        title="Carteirinha Fibromialgia"
+        :to="{ name: 'fibro-patients' }"
+      />
       <div v-if="['provider_unit_manager'].includes(role)">
         <v-list-subheader class="menu-subheader">Gestão</v-list-subheader>
         <app-menu-item

@@ -39,52 +39,69 @@
               <v-card-text>
                 <v-alert
                   v-if="feedbackMessage"
-                  class="mb-4"
+                  type="error"
+                  role="alert"
                   closable
                   close-icon="mdi-close-circle"
-                  icon="mdi-alert-circle"
-                  type="error"
+                  class="mb-4"
                   @click:close="feedbackMessage = ''"
                 >
                   {{ feedbackMessage }}
                 </v-alert>
 
-                <v-form @submit.prevent="submit">
+                <!-- FORM NATIVO (obrigatório p/ autofill) -->
+                <form
+                  id="login-form"
+                  name="login"
+                  autocomplete="on"
+                  @submit.prevent="submit"
+                >
+                  <!-- Usuário -->
                   <v-text-field
                     v-model="user"
-                    autocomplete="username"
-                    density="comfortable"
-                    :error-messages="errors.user"
                     label="Usuário"
                     prepend-icon="mdi-account"
                     variant="solo-filled"
+                    autocomplete="username"
+                    name="username"
+                    id="username"
+                    type="text"
+                    :error-messages="errors.user"
+                    required
+                    density="comfortable"
                   />
 
+                  <!-- Senha -->
                   <v-text-field
                     v-model="password"
+                    :type="showPassword ? 'text' : 'password'"
+                    label="Senha"
+                    prepend-icon="mdi-lock"
                     :append-inner-icon="
                       showPassword ? 'mdi-eye-off' : 'mdi-eye'
                     "
-                    autocomplete="current-password"
-                    density="comfortable"
-                    :error-messages="errors.password"
-                    label="Senha"
-                    prepend-icon="mdi-lock"
-                    :type="showPassword ? 'text' : 'password'"
+                    @click:append-inner="togglePassword"
                     variant="solo-filled"
-                    @click:append-inner="showPassword = !showPassword"
+                    autocomplete="current-password"
+                    name="password"
+                    id="password"
+                    :error-messages="errors.password"
+                    required
+                    density="comfortable"
                   />
 
+                  <!-- Botão -->
                   <v-btn
                     block
                     class="mt-4"
-                    color="primary"
                     :loading="isSubmitting"
+                    :disabled="isSubmitting"
+                    color="primary"
                     type="submit"
                   >
-                    <span v-if="!isSubmitting">Entrar</span>
+                    Entrar
                   </v-btn>
-                </v-form>
+                </form>
               </v-card-text>
             </div>
           </div>
@@ -129,6 +146,10 @@ const showPassword = ref(false);
 const feedbackMessage = ref("");
 
 const authStore = useAuthStore();
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
 const submit = handleSubmit(async (values) => {
   feedbackMessage.value = "";
   try {

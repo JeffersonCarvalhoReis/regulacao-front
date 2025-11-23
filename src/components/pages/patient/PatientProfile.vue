@@ -7,9 +7,13 @@
           <div>Gênero: {{ genderMap(patientData.gender) }}</div>
           <div>Mãe: {{ patientData.mother_name }}</div>
           <div>CNS: {{ patientData.cns }}</div>
-          <div>Data de Nascimento: {{ formatDate(patientData.birth_date) }}</div>
+          <div>
+            Data de Nascimento: {{ formatDate(patientData.birth_date) }}
+          </div>
           <div>Idade: {{ calculateAge(patientData.birth_date) }}</div>
-          <div v-if="patientData.observation">Obs.: {{ patientData.observation }}</div>
+          <div v-if="patientData.observation">
+            Obs.: {{ patientData.observation }}
+          </div>
         </InfoGroup>
 
         <v-divider vertical />
@@ -44,14 +48,10 @@
           </v-tab>
           <v-divider vertical />
 
-          <v-tab class="font-bold px-10" value="scheduled">
-            Agendados
-          </v-tab>
+          <v-tab class="font-bold px-10" value="scheduled"> Agendados </v-tab>
           <v-divider vertical />
 
-          <v-tab class="font-bold px-10" value="realized">
-            Realizados
-          </v-tab>
+          <v-tab class="font-bold px-10" value="realized"> Realizados </v-tab>
           <v-divider vertical />
 
           <v-tab class="font-bold px-10" value="not-present">
@@ -69,7 +69,11 @@
             item-title="label"
             item-value="value"
             :items="solicitationTypeOptions"
-            :label="tab === 'solicitations' ? 'Tipo de Solicitação' : 'Tipo de Agendamento'"
+            :label="
+              tab === 'solicitations'
+                ? 'Tipo de Solicitação'
+                : 'Tipo de Agendamento'
+            "
             variant="outlined"
           />
 
@@ -91,9 +95,15 @@
             />
           </v-tabs-window-item>
 
-          <v-tabs-window-item v-for="tabValue in appointmentTabs" :key="tabValue" :value="tabValue">
+          <v-tabs-window-item
+            v-for="tabValue in appointmentTabs"
+            :key="tabValue"
+            :value="tabValue"
+          >
             <patient-appointment-table
-              :ref="tabValue === 'scheduled' ? setAppointmentTableRef : undefined"
+              :ref="
+                tabValue === 'scheduled' ? setAppointmentTableRef : undefined
+              "
               :appointment-status="tabValue"
               :patient-id="patientData.id"
               :solicitation-type="solicitationType"
@@ -106,43 +116,43 @@
 </template>
 
 <script setup>
-  import { useMeStore } from '@/stores/me';
-  const props = defineProps({
-    patientData: { type: Object, default: () => ({}) },
-  });
+import { useMeStore } from "@/stores/me";
+const props = defineProps({
+  patientData: { type: Object, default: () => ({}) },
+});
 
-  const { formatDate } = useFormatDate();
-  const { calculateAge } = useCalculateAge()
+const { formatDate } = useFormatDate();
+const { calculateAge } = useCalculateAge();
 
-  const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
-  const meStore = useMeStore();
-  const role = meStore.role
+const meStore = useMeStore();
+const role = meStore.role;
 
-  const appointmentTableRef = ref(null);
-  const title = computed(() => `Paciente: ${props.patientData.name}`);
-  const tab = ref();
-  const solicitationType = ref('exam');
-  const appointmentTabs = ['scheduled', 'realized', 'not-present'];
+const appointmentTableRef = ref(null);
+const title = computed(() => `Paciente: ${props.patientData.name}`);
+const tab = ref();
+const solicitationType = ref("exam");
+const appointmentTabs = ["scheduled", "realized", "not-present"];
 
-  const solicitationTypeOptions = [
-    { label: 'Consulta', value: 'consultation' },
-    { label: 'Exame', value: 'exam' },
-  ];
+const solicitationTypeOptions = [
+  { label: "Consulta", value: "consultation" },
+  { label: "Exame", value: "exam" },
+];
 
-  const genderMap = value => {
-    const gender = {
-      'F': 'Feminino',
-      'M': 'Masculino',
-    }
-    return gender[value] || 'Outro'
+const genderMap = (value) => {
+  const gender = {
+    F: "Feminino",
+    M: "Masculino",
   };
+  return gender[value] || "Outro";
+};
 
-  const setAppointmentTableRef = el => {
-    appointmentTableRef.value = el;
-  };
+const setAppointmentTableRef = (el) => {
+  appointmentTableRef.value = el;
+};
 
-  const updateAppointmentTable = () => {
-    appointmentTableRef.value?.fetchData();
-  };
+const updateAppointmentTable = () => {
+  appointmentTableRef.value?.fetchData();
+};
 </script>

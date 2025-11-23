@@ -5,19 +5,19 @@
  */
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 
 // Components
-import App from './App.vue'
+import App from "./App.vue";
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
-import './assets/tailwind.css'
-import './services/echo'
+import "./assets/tailwind.css";
+// import './services/echo'
 
-const app = createApp(App)
+const app = createApp(App);
 
-registerPlugins(app)
+registerPlugins(app);
 
-app.mount('#app')
+app.mount("#app");

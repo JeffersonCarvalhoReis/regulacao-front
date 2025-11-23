@@ -60,7 +60,13 @@ import { CSSProperties } from "vue";
 
 const { onlyNumbers } = useOnlyNumbers();
 
-type Position = "bottom" | "top" | "bottom-left" | "top-left";
+type Position =
+  | "bottom"
+  | "top"
+  | "bottom-left"
+  | "top-left"
+  | "center-left"
+  | "center-right";
 /* props: adiciona valueAsString para decidir se o componente emite string YYYY-MM-DD */
 const componentProps = defineProps({
   label: { type: String, default: "Data" },
@@ -211,7 +217,18 @@ const startPosition = {
   bottom: { left: 0, top: 0 },
   "bottom-left": { left: -150, top: 0 },
   top: { left: 0, top: -550 },
+  "top-left": { left: -150, top: -550 },
+  "center-left": { left: -350, top: -225 },
 };
+
+/*
+  | "bottom"
+  | "top"
+  | "bottom-left"
+  | "top-left"
+  | "center-left"
+  | "center-right";
+*/
 const dragWrapper = ref<HTMLElement | null>(null);
 const dragHandle = ref<HTMLElement | null>(null);
 
