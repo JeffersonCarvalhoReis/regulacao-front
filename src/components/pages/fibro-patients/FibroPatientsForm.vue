@@ -67,7 +67,7 @@
             counter
             prepend-icon=""
             v-model="photo"
-            accept="image/*"
+            accept="image/jpeg, image/png, image/webp"
             class="col-span-2"
             :class="{ required: !isEditing }"
             density="compact"
