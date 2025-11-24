@@ -219,6 +219,7 @@ const startPosition = {
   top: { left: 0, top: -550 },
   "top-left": { left: -150, top: -550 },
   "center-left": { left: -350, top: -225 },
+  "center-right": { left: 350, top: -225 },
 };
 
 /*
