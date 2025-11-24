@@ -133,11 +133,12 @@
         </v-btn>
         <v-spacer v-if="companions.length < 1" />
         <base-input-date-picker
+          :position="position"
           v-model="appointment_date"
-          class-date-picker="absolute right-[-175px] top-[-175px]"
           class-field="required"
           :error-messages="errors.appointment_date"
           label="Data da consulta"
+          W
         />
         <v-text-field
           v-model="appointment_time"
@@ -200,6 +201,7 @@ const autocompleteKey = ref(0);
 const textTransform = "uppercase";
 const patientData = computed(() => props.travelData.patients);
 const currentHospitalCity = ref(null);
+const position = ref("center-right");
 const priorityText = ref("");
 const title = computed(() =>
   isEditing.value ? "Editar Passageiros" : "Cadastrar Passageiros"
@@ -333,14 +335,15 @@ const onTimeInput = (val) => {
   }
 };
 const occupiedSeats = () => {
-  const patients = props.travelData.patients;
+  const patients = props.travelData.patients ?? [];
   let infant = 0;
 
   patients.forEach((patient) => {
     const result = ageLabel(patient.birth_date);
-    if (result == "Criança de colo") infant++;
+    if (result === "Criança de colo") infant++;
   });
-  return props.travelData.quantity_passengers - infant;
+
+  return (props.travelData.quantity_passengers ?? 0) - infant;
 };
 
 watch(
