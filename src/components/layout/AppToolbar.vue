@@ -112,6 +112,7 @@ const pageTitle = computed(() => {
     "patients-tfd": "Pacientes TFD",
     deceased: "Falecidos",
     "medical-reports": "Laudos Médicos",
+    "fibro-patients": "Pacientes Fibromialgia",
   };
 
   return titleMap[route.name] || "";

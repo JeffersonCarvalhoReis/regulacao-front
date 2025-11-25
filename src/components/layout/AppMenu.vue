@@ -125,13 +125,6 @@
         title="Agentes C. de Saúde"
         :to="{ name: 'health-agents' }"
       />
-      <app-menu-item
-        v-if="['regulation_officer'].includes(role)"
-        :active="$route.name === 'fibro-patients'"
-        prepend-icon="mdi-card-account-details"
-        title="Carteirinha Fibromialgia"
-        :to="{ name: 'fibro-patients' }"
-      />
       <div v-if="['provider_unit_manager'].includes(role)">
         <v-list-subheader class="menu-subheader">Gestão</v-list-subheader>
         <app-menu-item
@@ -139,6 +132,12 @@
           prepend-icon="mdi-clipboard-text-clock"
           title="Controle de Agendamentos"
           :to="{ name: 'appointments-management' }"
+        />
+        <app-menu-item
+          :active="$route.name === 'fibro-patients'"
+          prepend-icon="mdi-card-account-details"
+          title="Carteirinha Fibromialgia"
+          :to="{ name: 'fibro-patients' }"
         />
       </div>
       <div v-if="['admin'].includes(role)" class="menu-subheader">

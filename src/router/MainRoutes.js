@@ -263,7 +263,7 @@ export default [
     component: FibroPatients,
     meta: {
       requiresAuth: true,
-      roles: ["regulation_officer"],
+      roles: ["provider_unit_manager"],
     },
   },
 ];
