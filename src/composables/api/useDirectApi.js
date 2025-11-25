@@ -21,8 +21,8 @@ export function useDirectApi(resource) {
   };
 
   return {
-    get: () => request("get"),
-    post: (data) => request("post", data),
+    get: () => request("get", `${resource}`),
+    create: (data) => request("post", resource, data),
     update: (id, data) => request("put", `${resource}/${id}`, data),
     patch: (id, data) => request("patch", `${resource}/${id}`, data),
     destroy: (val) => request("delete", `${resource}/${val.id}`),
