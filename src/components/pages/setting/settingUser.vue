@@ -194,8 +194,6 @@ onMounted(async () => {
 });
 
 const submit = handleUpdateSubmit(async (values) => {
-  console.log("valores: ", values);
-
   const success = await showFeedback(() => updateUser(values));
   if (success) {
     meStore.user = user.value;
