@@ -38,7 +38,7 @@
       <app-menu-item
         v-if="
           ['reception', 'regulation_officer', 'provider_unit_manager'].includes(
-            role
+            role,
           )
         "
         :active="$route.name === 'patients'"
@@ -49,7 +49,7 @@
       <app-menu-item
         v-if="
           ['reception', 'regulation_officer', 'provider_unit_manager'].includes(
-            role
+            role,
           )
         "
         :active="$route.name === 'solicitations'"
@@ -182,6 +182,12 @@
           :to="{ name: 'medical-reports' }"
         />
         <app-menu-item
+          :active="$route.name === 'monitoring-reports'"
+          prepend-icon="mdi-clipboard-text"
+          title="Relatório de Acompanhamento"
+          :to="{ name: 'monitoring-reports' }"
+        />
+        <app-menu-item
           :active="$route.name === 'deceased'"
           prepend-icon="mdi-cross"
           title="Lista de Falecidos"
@@ -243,7 +249,7 @@ watch(
   () => props.open,
   (val) => {
     drawer.value = val;
-  }
+  },
 );
 onMounted(() => {
   if (window.innerWidth >= 768) {
