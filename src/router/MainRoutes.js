@@ -24,6 +24,7 @@ import Specialists from "@/pages/Specialists.vue";
 import Travels from "@/pages/Travels.vue";
 import Users from "@/pages/Users.vue";
 import Vehicles from "@/pages/Vehicles.vue";
+import MonitoringReport from "../pages/MonitoringReport.vue";
 // import { auth, redirectIfAuthenticated } from './guard'
 
 export default [
@@ -252,6 +253,15 @@ export default [
     path: "/laudos-medicos",
     name: "medical-reports",
     component: MedicalReport,
+    meta: {
+      requiresAuth: true,
+      roles: ["tfd"],
+    },
+  },
+  {
+    path: "/relatorio-acompanhamento",
+    name: "monitoring-reports",
+    component: MonitoringReport,
     meta: {
       requiresAuth: true,
       roles: ["tfd"],

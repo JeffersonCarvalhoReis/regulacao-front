@@ -113,6 +113,7 @@ const pageTitle = computed(() => {
     deceased: "Falecidos",
     "medical-reports": "Laudos Médicos",
     "fibro-patients": "Pacientes Fibromialgia",
+    "monitoring-reports": "Relatórios de Acompanhamento",
   };
 
   return titleMap[route.name] || "";
