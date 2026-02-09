@@ -1,6 +1,6 @@
 <template>
   <base-card
-    title="Cadastrar Relatório de Monitoramento"
+    title="Cadastrar Relatório de Acompanhamento"
     @close="emit('close')"
   >
     <v-card-text>
