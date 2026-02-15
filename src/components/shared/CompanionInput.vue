@@ -1,12 +1,12 @@
 <template>
   <v-autocomplete
-    v-model="patient_id"
+    v-model="companion_id"
     density="compact"
     :error-messages="errorMessages"
     :item-title="patientLabel"
     item-value="id"
     :items="data"
-    label="Paciente"
+    label="Acompanhante"
     :loading="isLoading"
     :clearable="isClearable"
     variant="outlined"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { usePatientApi } from "@/composables/modules/usePatientModule";
+import { useCompanionApi } from "@/composables/modules/useCompanionModule";
 import { debounce } from "lodash";
 
 const props = defineProps({
@@ -36,21 +36,21 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const patient_id = ref(props.modelValue);
+const companion_id = ref(props.modelValue);
 
-watch(patient_id, (value) => emit("update:modelValue", value));
+watch(companion_id, (value) => emit("update:modelValue", value));
 watch(
   () => props.modelValue,
   (value) => {
-    patient_id.value = value;
+    companion_id.value = value;
   },
 );
 
-const { data, refetch, setFilter, isLoading, clearFilters } = usePatientApi();
+const { data, refetch, setFilter, isLoading, clearFilters } = useCompanionApi();
 
 const { patientLabel } = usePatientLabel();
 
-const loadPatient = async () => {
+const loadCompanion = async () => {
   if (props.isEditing && props.modelValue) {
     setFilter("id", props.modelValue);
     await refetch();
@@ -70,6 +70,6 @@ const onSearch = debounce(async (v) => {
 
 onMounted(async () => {
   await nextTick();
-  await loadPatient();
+  await loadCompanion();
 });
 </script>
