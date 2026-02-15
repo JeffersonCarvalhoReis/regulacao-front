@@ -8,19 +8,11 @@
         <!-- Seletores -->
         <div class="grid grid-cols-1 gap-2 mb-4">
           <div class="flex gap-2">
-            <v-autocomplete
+            <PatientInput
               v-model="patient_id"
-              density="compact"
-              class="required"
-              :items="patientData"
-              item-title="name"
-              item-value="id"
-              label="Paciente"
-              variant="outlined"
-              :loading="isPatientLoading"
-              clearable
               :error-messages="errors.patient_id"
-              @update:model-value="onPatientSelected"
+              :is-editing="isEditing"
+              :is-clearable="true"
             />
             <base-button-register
               button-icon="mdi-account-box-plus-outline"
@@ -33,17 +25,11 @@
             </base-button-register>
           </div>
           <div class="flex gap-2">
-            <v-autocomplete
+            <companion-input
               v-model="companion_id"
-              density="compact"
-              :items="companionData"
-              item-title="name"
-              item-value="id"
-              label="Acompanhante"
-              variant="outlined"
-              clearable
               :error-messages="errors.companion_id"
-              @update:model-value="onCompanionSelected"
+              :is-editing="isEditing"
+              :is-clearable="true"
             />
 
             <base-button-register
@@ -121,6 +107,7 @@ import { useField, useForm } from "vee-validate";
 import { computed, onMounted, reactive } from "vue";
 import * as yup from "yup";
 
+import CompanionInput from "@/components/shared/CompanionInput.vue";
 import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
 import { useCompanionApi } from "@/composables/modules/useCompanionModule";
 import { usePatientApi } from "@/composables/modules/usePatientModule";
