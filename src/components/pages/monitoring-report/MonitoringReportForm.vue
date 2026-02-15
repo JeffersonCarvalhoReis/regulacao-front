@@ -193,16 +193,7 @@ onMounted(() => {
   }
 });
 
-/* handlers */
-const onPatientSelected = (id) => {
-  const patient = patientData.value?.find((p) => p.id === id);
-  if (!patient) {
-    Object.keys(form)
-      .filter((k) => k.startsWith("patient_"))
-      .forEach((k) => (form[k] = ""));
-    return;
-  }
-
+const fillPatient = (patient) => {
   form.patient_name = patient.name?.toUpperCase() ?? "";
   form.patient_cpf = patient.cpf ?? "";
   form.patient_phone = patient.phone ?? "";
@@ -211,30 +202,16 @@ const onPatientSelected = (id) => {
   form.patient_neighborhood = patient.neighborhood?.toUpperCase() ?? "";
 };
 
-const submitNewPatient = async (val) => {
-  const success = await showFeedback(() => patientCreate(val));
-  if (success) {
-    (patientFetch(), (dialogPatientForm.value = false));
-  }
-};
-const submitNewCompanion = async (val) => {
-  const success = await showFeedback(() => companionCreate(val));
-  if (success) {
-    (companionFetch(), (dialogCompanionForm.value = false));
-  }
+const clearPatient = () => {
+  form.patient_name = "";
+  form.patient_cpf = "";
+  form.patient_phone = "";
+  form.patient_cns = "";
+  form.patient_street = "";
+  form.patient_neighborhood = "";
 };
 
-const onCompanionSelected = (id) => {
-  if (!id) {
-    Object.keys(form)
-      .filter((k) => k.startsWith("companion_"))
-      .forEach((k) => (form[k] = ""));
-    return;
-  }
-
-  const companion = companionData.value?.find((c) => c.id === id);
-  if (!companion) return;
-
+const fillCompanion = (companion) => {
   form.companion_name = companion.name?.toUpperCase() ?? "";
   form.companion_cpf = companion.cpf ?? "";
   form.companion_phone = companion.phone ?? "";
@@ -242,6 +219,61 @@ const onCompanionSelected = (id) => {
   form.companion_street = companion.street?.toUpperCase() ?? "";
   form.companion_neighborhood = companion.neighborhood?.toUpperCase() ?? "";
 };
+
+const clearCompanion = () => {
+  form.companion_name = "";
+  form.companion_cpf = "";
+  form.companion_phone = "";
+  form.companion_cns = "";
+  form.companion_street = "";
+  form.companion_neighborhood = "";
+};
+
+watch(patient_id, (id) => {
+  if (!id) {
+    clearPatient();
+    return;
+  }
+
+  const patient = patientData.value?.find((p) => p.id === id);
+
+  if (!patient) {
+    return;
+  }
+
+  fillPatient(patient);
+});
+
+const submitNewPatient = async (val) => {
+  const success = await showFeedback(() => patientCreate(val));
+
+  if (success) {
+    await patientFetch();
+
+    dialogPatientForm.value = false;
+  }
+};
+
+const submitNewCompanion = async (val) => {
+  const success = await showFeedback(() => companionCreate(val));
+  if (success) {
+    await companionFetch();
+
+    dialogCompanionForm.value = false;
+  }
+};
+
+watch(companion_id, (id) => {
+  if (!id) {
+    clearCompanion();
+    return;
+  }
+
+  const companion = companionData.value?.find((c) => c.id === id);
+  if (!companion) return;
+
+  fillCompanion(companion);
+});
 
 /* submit */
 const onSubmit = handleSubmit((values) => {
