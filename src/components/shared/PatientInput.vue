@@ -10,6 +10,7 @@
     :loading="isLoading"
     :clearable="isClearable"
     variant="outlined"
+    :class="{ required: isRequired }"
     @update:search="onSearch"
   />
 </template>
@@ -29,6 +30,10 @@ const props = defineProps({
     default: false,
   },
   isClearable: {
+    type: Boolean,
+    default: false,
+  },
+  isRequired: {
     type: Boolean,
     default: false,
   },

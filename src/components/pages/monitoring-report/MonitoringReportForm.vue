@@ -13,6 +13,7 @@
               :error-messages="errors.patient_id"
               :is-editing="isEditing"
               :is-clearable="true"
+              :is-required="true"
             />
             <base-button-register
               button-icon="mdi-account-box-plus-outline"
@@ -41,6 +42,18 @@
                 Cadastrar novo acompanhanete caso não encontre na lista
               </v-tooltip>
             </base-button-register>
+          </div>
+          <div>
+            <v-text-field
+              v-model="unit_name"
+              :error-messages="errors.unit_name"
+              :is-clearable="true"
+              name="unit_name"
+              label="Nome da Unidade"
+              density="compact"
+              variant="outlined"
+              maxlength="45"
+            ></v-text-field>
           </div>
         </div>
         <v-dialog v-model="dialogPatientForm" class="z-999">
@@ -127,6 +140,7 @@ const schema = yup.object({
   patient_id: yup.number().required("Paciente é obrigatório"),
 
   companion_id: yup.number().nullable(),
+  unit_name: yup.string().nullable(),
 });
 
 /* vee-validate */
@@ -135,24 +149,25 @@ const { handleSubmit, resetForm, errors } = useForm({
   initialValues: {
     patient_id: null,
     companion_id: null,
+    unit_name: null,
   },
 });
 
 const { value: patient_id } = useField("patient_id");
 const { value: companion_id } = useField("companion_id");
+const { value: unit_name } = useField("unit_name");
 
 /* APIs */
 const {
-  data: patientData,
   refetch: patientFetch,
   create: patientCreate,
-  isLoading: isPatientLoading,
+  getById: patientGet,
 } = usePatientApi();
 
 const {
-  data: companionData,
   refetch: companionFetch,
   create: companionCreate,
+  getById: companionGet,
 } = useCompanionApi();
 
 const { showFeedback } = useSweetAlertFeedback();
@@ -188,6 +203,7 @@ onMounted(() => {
       values: {
         patient_id: props.modelValue.patient_id ?? null,
         companion_id: props.modelValue.companion_id ?? null,
+        unit_name: props.modelValue.unit_name ?? null,
       },
     });
   }
@@ -229,15 +245,15 @@ const clearCompanion = () => {
   form.companion_neighborhood = "";
 };
 
-watch(patient_id, (id) => {
+watch(patient_id, async (id) => {
   if (!id) {
     clearPatient();
     return;
   }
 
-  const patient = patientData.value?.find((p) => p.id === id);
-
+  const patient = await patientGet(id);
   if (!patient) {
+    clearPatient();
     return;
   }
 
@@ -263,14 +279,17 @@ const submitNewCompanion = async (val) => {
   }
 };
 
-watch(companion_id, (id) => {
+watch(companion_id, async (id) => {
   if (!id) {
     clearCompanion();
     return;
   }
 
-  const companion = companionData.value?.find((c) => c.id === id);
-  if (!companion) return;
+  const companion = await companionGet(id);
+  if (!companion) {
+    clearCompanion();
+    return;
+  }
 
   fillCompanion(companion);
 });
