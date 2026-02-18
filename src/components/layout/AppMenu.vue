@@ -218,9 +218,9 @@
           :to="{ name: 'vehicles' }"
         />
         <app-menu-item
-          v-if="false"
+          v-if="true"
           :active="$route.name === 'bpa-settings'"
-          prepend-icon="mdi-map-marker-distance"
+          prepend-icon="mdi-file-cog"
           title="Definições do BPA"
           :to="{ name: 'bpa-settings' }"
         />
