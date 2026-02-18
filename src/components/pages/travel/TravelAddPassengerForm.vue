@@ -39,6 +39,7 @@
           :error-messages="errors.patient_id"
           :is-editing="isEditing"
           :model-value="props.modelValue?.id"
+          :is-clearable="true"
         />
         <v-autocomplete
           :key="autocompleteKey"
@@ -52,19 +53,14 @@
           label="Hospital"
           variant="outlined"
         />
-        <v-autocomplete
+
+        <CompanionInput
+          :key="autocompleteKey"
           v-model="companion_id"
-          name="companion_id"
           :error-messages="errors.companion_id"
-          clearable
-          density="compact"
-          item-title="name"
-          item-value="id"
-          :items="companionData"
-          label="Acompanhante"
-          :loading="isLoadingCompanion"
-          variant="outlined"
-          @update:search="onSearchCompanionGlobal"
+          :is-editing="isEditing"
+          :model-value="props.modelValue.companion_id"
+          :is-clearable="true"
         />
 
         <v-text-field
@@ -80,17 +76,13 @@
           :key="index"
           class="col-span-2 grid grid-cols-2 gap-x-4"
         >
-          <v-autocomplete
+          <CompanionInput
+            :key="autocompleteKey"
             v-model="companion.companion.id"
-            density="compact"
             :error-messages="errors[`companions.${index}.companion.id`]"
-            item-title="name"
-            item-value="id"
-            label="Acompanhante"
-            variant="outlined"
-            :items="extraCompanionData"
-            :loading="isLoadingExtraCompanion"
-            @update:search="onSearchExtraCompanionGlobal"
+            :is-editing="isEditing"
+            :model-value="companion.companion.id"
+            :is-clearable="true"
           />
 
           <!-- wrapper flex: campo ocupa todo espaço, botão fica apenas com a largura do ícone -->
@@ -185,9 +177,7 @@
 </template>
 
 <script setup>
-import { useCompanionApi } from "@/composables/modules/useCompanionModule";
 import { useHospitalApi } from "@/composables/modules/useHospitalModule";
-import debounce from "lodash/debounce";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 
@@ -204,23 +194,8 @@ const currentHospitalCity = ref(null);
 const position = ref("center-right");
 const priorityText = ref("");
 const title = computed(() =>
-  isEditing.value ? "Editar Passageiros" : "Cadastrar Passageiros"
+  isEditing.value ? "Editar Passageiros" : "Cadastrar Passageiros",
 );
-
-const {
-  data: companionData,
-  refetch: companionFetch,
-  setFilter: companionFilter,
-  isLoading: isLoadingCompanion,
-  clearFilters: companionClearFilters,
-} = useCompanionApi();
-const {
-  data: extraCompanionData,
-  refetch: extraCompanionFetch,
-  setFilter: extraCompanionFilter,
-  isLoading: isLoadingExtraCompanion,
-  clearFilters: extraCompanionClearFilters,
-} = useCompanionApi();
 
 const {
   data: hospitalData,
@@ -271,7 +246,7 @@ const schema = yup.object({
         id: yup.string().nullable(),
       }),
       kinship: yup.string().nullable(),
-    })
+    }),
   ),
   notes: yup.string().nullable(),
 });
@@ -300,28 +275,12 @@ const { value: companion_id } = useField("companion_id");
 const { value: kinship } = useField("kinship");
 
 const addCompanion = async () => {
-  await extraCompanionFetch();
   companions.value.push({ companion: { id: null }, kinship: "" });
 };
 
 const removeCompanion = (index) => {
-  extraCompanionClearFilters();
   companions.value.splice(index, 1);
 };
-
-const onSearchCompanionGlobal = debounce(async (v) => {
-  companionClearFilters();
-  companionFilter?.("name", v);
-  await nextTick();
-  companionFetch();
-}, 250);
-
-const onSearchExtraCompanionGlobal = debounce(async (v) => {
-  extraCompanionClearFilters();
-  extraCompanionFilter?.("name", v);
-  await nextTick();
-  extraCompanionFetch();
-}, 250);
 
 const onTimeInput = (val) => {
   let digits = val.replace(/\D/g, "");
@@ -366,7 +325,7 @@ watch(
       priorityText.value = "Paciente com mais de 60 anos";
     }
   },
-  { immediate: false }
+  { immediate: false },
 );
 
 watch(
@@ -379,35 +338,11 @@ watch(
     await nextTick();
     hospitalFetch();
   },
-  { immediate: true }
+  { immediate: true },
 );
-
-const loadCompanion = async () => {
-  if (isEditing.value && props.modelValue?.companion_id) {
-    companionFilter("id", props.modelValue?.companion_id);
-    await nextTick();
-    companionFetch();
-  } else {
-    await companionFetch();
-  }
-};
-
-const loadExtraCompanion = async () => {
-  if (isEditing.value && props.modelValue?.extra_companions[0]?.companion.id) {
-    extraCompanionFilter(
-      "id",
-      props.modelValue?.extra_companions[0]?.companion.id
-    );
-    await extraCompanionFetch();
-    await nextTick();
-  } else {
-    await extraCompanionFetch();
-  }
-};
 
 onMounted(async () => {
   hospitalParams.value.per_page = -1;
-  await Promise.all([loadCompanion(), loadExtraCompanion()]);
   await nextTick();
 
   if (isEditing.value) {
@@ -437,7 +372,7 @@ const onSubmit = handleSubmit((values) => {
     };
 
     const filtered = list.filter(
-      (c) => c?.companion?.id !== values.companion_id
+      (c) => c?.companion?.id !== values.companion_id,
     );
 
     filtered.unshift(first);

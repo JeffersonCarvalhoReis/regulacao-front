@@ -1,6 +1,5 @@
 <template>
   <BaseCard :title="title" @close="emit('close')">
-
     <v-card-text>
       <v-form class="flex gap-4">
         <v-text-field
@@ -44,59 +43,64 @@
         />
       </div>
     </v-card-actions>
+    <pre>
+      {{ props.modeValue }}
+    </pre>
   </BaseCard>
 </template>
 
 <script setup>
-  import { useField, useForm } from 'vee-validate'
-  import * as yup from 'yup'
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 
-  const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-  })
+const props = defineProps({
+  modelValue: { type: Object, default: () => ({}) },
+});
 
-  const emit = defineEmits(['save', 'close', 'update']);
+const emit = defineEmits(["save", "close", "update"]);
 
-  const title = computed(() =>
-    isEditing.value ? 'Editar Dados do Profissional' : 'Cadastrar Novo Profissional'
-  );
+const title = computed(() =>
+  isEditing.value
+    ? "Editar Dados do Profissional"
+    : "Cadastrar Novo Profissional",
+);
 
-  const isEditing = computed(() => !!props.modelValue?.id);
+const isEditing = computed(() => !!props.modelValue?.id);
 
+const { onlyNumbers } = useOnlyNumbers();
+const { isValidCns } = useCnsValidator();
 
-  const { onlyNumbers } = useOnlyNumbers();
-  const { isValidCns } = useCnsValidator();
+const schema = yup.object({
+  name: yup.string().required("Nome é obrigatório"),
+  cbo: yup.string().required("CBO é obrigatório"),
+  cns: yup
+    .string()
+    .min(15, "CNS incompleto")
+    .required("CNS é obrigatório")
+    .test("valid-cns", "CNS inválido", (value) => isValidCns(value)),
+});
 
-  const schema = yup.object({
-    name: yup.string().required('Nome é obrigatório'),
-    cbo: yup.string().required('CBO é obrigatório'),
-    cns: yup.string().min(15, 'CNS incompleto').required('CNS é obrigatório').test('valid-cns', 'CNS inválido', value => isValidCns(value)),
-  });
+const { handleSubmit, errors, resetForm } = useForm({
+  validationSchema: schema,
+});
 
-  const { handleSubmit, errors, resetForm } = useForm({
-    validationSchema: schema,
-  });
+const { value: name } = useField("name");
+const { value: cbo } = useField("cbo");
+const { value: cns } = useField("cns");
 
-  const { value: name } = useField('name');
-  const { value: cbo } = useField('cbo');
-  const { value: cns } = useField('cns')
+onMounted(() => {
+  if (isEditing.value) {
+    resetForm({ values: props.modelValue });
+  }
+});
 
-  onMounted(() => {
-    if (isEditing.value) {
-      resetForm({ values: props.modelValue })
-    }
-  });
-
-  const onSubmit = handleSubmit(values => {
-    if (isEditing.value) {
-      emit('update', values)
-    } else {
-      emit('save', values)
-    }
-
-  });
+const onSubmit = handleSubmit((values) => {
+  if (isEditing.value) {
+    emit("update", values);
+  } else {
+    emit("save", values);
+  }
+});
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

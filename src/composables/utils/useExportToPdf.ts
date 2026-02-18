@@ -20,7 +20,7 @@ export function useExportToPdf() {
         canvas.width = img.width;
         canvas.height = img.height;
         const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
+        ctx!.drawImage(img, 0, 0);
         resolve(canvas.toDataURL("image/png"));
       };
       img.onerror = reject;
@@ -28,7 +28,11 @@ export function useExportToPdf() {
     });
   };
 
-  const exportToPDF = async (columnsRef, travelInfo, fileInfo) => {
+  const exportToPDF = async (
+    columnsRef: any,
+    travelInfo: any,
+    fileInfo: any,
+  ) => {
     clickPrint.value = true;
     const doc = new jsPDF({
       orientation: fileInfo.orientation, // aqui define o modo paisagem
@@ -47,7 +51,7 @@ export function useExportToPdf() {
       fileInfo.orientation == "landscape" ? 240 : 155,
       10,
       40,
-      15
+      15,
     );
 
     // Cabeçalho do PDF
@@ -56,7 +60,7 @@ export function useExportToPdf() {
       `Viagem para ${capitalizeFirstLetter(travelInfo.city)}`,
       fileInfo.docX,
       10,
-      { align: "center" }
+      { align: "center" },
     );
     doc.text(capitalizeFirstLetter(travelInfo.date), fileInfo.docX, 17, {
       align: "center",
@@ -106,7 +110,7 @@ export function useExportToPdf() {
     const centerX = pageWidth / 2;
     const lineStartX = centerX - lineWidth / 2;
     const lineEndX = centerX + lineWidth / 2;
-    const lineY = finalY + 5; // posição vertical da linha
+    const lineY = finalY! + 5; // posição vertical da linha
     const textY = lineY + 5; // texto logo abaixo da linha
 
     // Linha de assinatura
@@ -133,13 +137,13 @@ export function useExportToPdf() {
     times: number = 1,
     pages: number = 1,
     topMargin: number = 10,
-    extraPageSize: number = 0
+    pixelRatio: number = 1,
   ) => {
     const element = printSection;
     clickPrint.value = true;
 
     try {
-      const img: HTMLImageElement = await elementToPng(element);
+      const img: HTMLImageElement = await elementToPng(element, pixelRatio);
       const pdf: jsPDF = newPDF();
 
       const page = pageAdjustment(
@@ -150,7 +154,6 @@ export function useExportToPdf() {
         printSection,
         [".page-break"],
         topMargin,
-        extraPageSize
       );
       const blob = page.output("blob");
       const blobUrl = URL.createObjectURL(blob);
@@ -165,9 +168,10 @@ export function useExportToPdf() {
   };
 
   const elementToPng = async (
-    element: HTMLElement
+    element: HTMLElement,
+    pixelRatio: number = 1,
   ): Promise<HTMLImageElement> => {
-    const dataUrl = await toPng(element, { cacheBust: true, pixelRatio: 1 });
+    const dataUrl = await toPng(element, { cacheBust: true, pixelRatio });
     const img = new Image();
 
     return await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -193,7 +197,6 @@ export function useExportToPdf() {
     containerElement: HTMLElement,
     breakSelectors: string[] = [],
     topMargin: number, // mm
-    extraPageSize: number
   ) => {
     const imgProps = pdf.getImageProperties(img.src);
     const imgPxW = imgProps.width;
@@ -209,18 +212,18 @@ export function useExportToPdf() {
         breakSelectors
           .map((sel) => {
             const el = containerElement.querySelector(
-              sel
+              sel,
             ) as HTMLElement | null;
             if (!el) return null;
             const r = el.getBoundingClientRect();
             const offsetDomPx = r.bottom - containerRect.top; // offset relativo ao topo do container
             return Math.min(
               imgPxH,
-              Math.max(0, Math.round(offsetDomPx * pxPerDomPx))
+              Math.max(0, Math.round(offsetDomPx * pxPerDomPx)),
             );
           })
-          .filter((v): v is number => typeof v === "number")
-      )
+          .filter((v): v is number => typeof v === "number"),
+      ),
     ).sort((a, b) => a - b);
 
     const pageWmm = pdf.internal.pageSize.getWidth();
