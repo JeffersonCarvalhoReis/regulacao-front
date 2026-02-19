@@ -27,12 +27,14 @@
           <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
             <v-text-field
               v-model="form.establishment.name"
+              readonly
               class="col-span-4"
               density="compact"
               label="Nome do Estabelecimento de Saúde"
               variant="outlined"
             />
             <v-text-field
+              readonly
               v-model="form.establishment.cnes"
               density="compact"
               label="CNES"
@@ -45,6 +47,7 @@
           <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
             <v-text-field
               v-model="form.professional.cns"
+              readonly
               class="col-span-2"
               density="compact"
               label="CNS"
@@ -52,6 +55,7 @@
             />
             <v-text-field
               v-model="form.professional.name"
+              readonly
               class="col-span-3"
               density="compact"
               label="Nome do Profissional"
@@ -59,6 +63,7 @@
             />
             <v-text-field
               v-model="form.professional.cbo"
+              readonly
               class="col-span-3"
               density="compact"
               label="CBO"
@@ -66,6 +71,7 @@
             />
             <v-text-field
               v-model="form.professional.competence"
+              readonly
               class="col-span-2"
               density="compact"
               label="Mês/Ano"
@@ -78,6 +84,7 @@
           <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
             <v-text-field
               v-model="form.patient.cns"
+              readonly
               class="col-span-3"
               density="compact"
               label="Cartão Nacional de Saúde (CNS)"
@@ -86,6 +93,7 @@
             />
             <v-text-field
               v-model="form.patient.name"
+              readonly
               class="col-span-3"
               density="compact"
               label="Nome do Paciente"
@@ -94,6 +102,7 @@
             />
             <v-text-field
               v-model="form.patient.gender"
+              readonly
               density="compact"
               label="Gênero"
               maxlength="100"
@@ -101,6 +110,7 @@
             />
             <v-text-field
               v-model="form.patient.birth_date"
+              readonly
               density="compact"
               label="Data de Nascimento"
               maxlength="100"
@@ -108,6 +118,7 @@
             />
             <v-text-field
               v-model="form.patient.nacionality"
+              readonly
               density="compact"
               label="Nacionalidade"
               maxlength="100"
@@ -115,6 +126,7 @@
             />
             <v-text-field
               v-model="form.patient.race"
+              readonly
               density="compact"
               label="Raça/Cor"
               maxlength="100"
@@ -122,6 +134,7 @@
             />
             <v-text-field
               v-model="form.patient.cep"
+              readonly
               density="compact"
               label="CEP"
               maxlength="100"
@@ -129,6 +142,7 @@
             />
             <v-text-field
               v-model="form.patient.ibge_code"
+              readonly
               density="compact"
               label="Cód. IBGE Município"
               maxlength="100"
@@ -136,6 +150,7 @@
             />
             <v-text-field
               v-model="form.patient.street"
+              readonly
               class="col-span-3"
               density="compact"
               label="Endereço"
@@ -144,6 +159,7 @@
             />
             <v-text-field
               v-model="form.patient.neighborhood"
+              readonly
               class="col-span-2"
               density="compact"
               label="Bairro"
@@ -152,6 +168,7 @@
             />
             <v-text-field
               v-model="form.patient.phone"
+              readonly
               density="compact"
               label="Telefone de Contato"
               maxlength="100"
@@ -243,6 +260,7 @@
             <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
               <v-text-field
                 v-model="comp.cns"
+                readonly
                 class="col-span-3"
                 density="compact"
                 label="Cartão Nacional de Saúde (CNS)"
@@ -251,6 +269,7 @@
               />
               <v-text-field
                 v-model="comp.name"
+                readonly
                 class="col-span-3"
                 density="compact"
                 label="Nome do Paciente"
@@ -259,6 +278,7 @@
               />
               <v-text-field
                 v-model="comp.gender"
+                readonly
                 density="compact"
                 label="Gênero"
                 maxlength="100"
@@ -266,6 +286,7 @@
               />
               <v-text-field
                 v-model="comp.birth_date"
+                readonly
                 density="compact"
                 label="Data de Nascimento"
                 maxlength="100"
@@ -273,6 +294,7 @@
               />
               <v-text-field
                 v-model="form.patient.nacionality"
+                readonly
                 density="compact"
                 label="Nacionalidade"
                 maxlength="100"
@@ -280,6 +302,7 @@
               />
               <v-text-field
                 v-model="comp.race"
+                readonly
                 density="compact"
                 label="Raça/Cor"
                 maxlength="100"
@@ -287,6 +310,7 @@
               />
               <v-text-field
                 v-model="form.patient.cep"
+                readonly
                 density="compact"
                 label="CEP"
                 maxlength="100"
@@ -294,6 +318,7 @@
               />
               <v-text-field
                 v-model="form.patient.ibge_code"
+                readonly
                 density="compact"
                 label="Cód. IBGE Município"
                 maxlength="100"
@@ -301,6 +326,7 @@
               />
               <v-text-field
                 v-model="comp.street"
+                readonly
                 class="col-span-3"
                 density="compact"
                 label="Endereço"
@@ -309,6 +335,7 @@
               />
               <v-text-field
                 v-model="comp.neighborhood"
+                readonly
                 class="col-span-2"
                 density="compact"
                 label="Bairro"
@@ -317,6 +344,7 @@
               />
               <v-text-field
                 v-model="comp.phone"
+                readonly
                 density="compact"
                 label="Telefone de Contato"
                 maxlength="100"
@@ -328,7 +356,7 @@
             </div>
             <div
               v-for="(proc, procIndex) in comp.procedures"
-              :key="'comp-proc-' + compIndex + '-' + procIndex"
+              :key="'comp-proc-' + index + '-' + procIndex"
             >
               <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
                 <v-text-field
@@ -340,7 +368,7 @@
                   @blur="
                     handleFieldBlur(
                       proc,
-                      compIndex === 0 ? companionBpaId : extraCompanionBpaId,
+                      index === 0 ? companionBpaId : extraCompanionBpaId,
                     )
                   "
                 />
@@ -354,7 +382,7 @@
                   @blur="
                     handleFieldBlur(
                       proc,
-                      compIndex === 0 ? companionBpaId : extraCompanionBpaId,
+                      index === 0 ? companionBpaId : extraCompanionBpaId,
                     )
                   "
                 />
@@ -370,7 +398,7 @@
                   @blur="
                     handleFieldBlur(
                       proc,
-                      compIndex === 0 ? companionBpaId : extraCompanionBpaId,
+                      index === 0 ? companionBpaId : extraCompanionBpaId,
                     )
                   "
                 />
@@ -387,7 +415,7 @@
                     @blur="
                       handleFieldBlur(
                         proc,
-                        compIndex === 0 ? companionBpaId : extraCompanionBpaId,
+                        index === 0 ? companionBpaId : extraCompanionBpaId,
                       )
                     "
                   />
@@ -401,9 +429,7 @@
                         color="red-darken-2"
                         @click="
                           removeProcedure(
-                            compIndex === 0
-                              ? companionBpaId
-                              : extraCompanionBpaId,
+                            index === 0 ? companionBpaId : extraCompanionBpaId,
                             procIndex,
                             comp.procedures,
                           )
@@ -468,6 +494,7 @@ const procedures = ref([]);
 const patientBpaId = ref(null);
 const companionBpaId = ref(null);
 const extraCompanionBpaId = ref(null);
+const originalProcedures = ref(new Map());
 
 const times = 1;
 const pages = 1;
@@ -544,14 +571,35 @@ watch(data, (value) => {
   form.professional.cbo = bpa.professional?.cbo ?? "";
   form.professional.competence = formatCompetence(bpa.competence);
   procedures.value =
-    bpa.procedures.map((proc) => ({
-      id: proc.id,
-      date: formatDate(proc.date),
-      procedure_name: proc.procedure.name,
-      procedure_code: proc.procedure.code,
-      quantity: proc.quantity,
-    })) || [];
+    bpa.procedures.map((proc) => {
+      const formatted = {
+        id: proc.id,
+        date: formatDate(proc.date),
+        procedure_name: proc.procedure.name,
+        procedure_code: proc.procedure.code,
+        quantity: proc.quantity,
+      };
+      const key = `${bpa.id}-${proc.id}`;
+      originalProcedures.value.set(key, { ...formatted });
+
+      return formatted;
+    }) || [];
 });
+
+function hasChanged(proc, bpaId) {
+  if (!proc.id) return true;
+
+  const key = `${bpaId}-${proc.id}`;
+  const original = originalProcedures.value.get(key);
+  if (!original) return true;
+
+  return (
+    formatToApiDate(proc.date) !== formatToApiDate(original.date) ||
+    proc.procedure_name !== original.procedure_name ||
+    String(proc.procedure_code) !== String(original.procedure_code) ||
+    Number(proc.quantity) !== Number(original.quantity)
+  );
+}
 
 const formatGender = (gender) => {
   const mapping = {
@@ -571,8 +619,8 @@ function createEmptyProcedure() {
   };
 }
 
-function addProcedureToCompanion(compIndex) {
-  const companion = companions.value[compIndex];
+function addProcedureToCompanion(index) {
+  const companion = companions.value[index];
   if (!companion.procedures) {
     companion.procedures = [];
   }
@@ -606,26 +654,41 @@ function buildPayload(proc, bpaId) {
 async function saveProcedure(proc, bpaId) {
   const payload = buildPayload(proc, bpaId);
 
+  if (proc.id && !hasChanged(proc, bpaId)) {
+    return;
+  }
+
   if (proc.id) {
     await showFeedback(() => update(proc.id, payload));
+
+    const key = `${bpaId}-${proc.id}`;
+    originalProcedures.value.set(key, { ...proc });
   } else {
     const response = await showFeedback(() => create(payload));
     if (response?.id) {
       proc.id = response.id;
+
+      const key = `${bpaId}-${proc.id}`;
+      originalProcedures.value.set(key, { ...proc });
     }
   }
 }
 
 function handleFieldBlur(proc, bpaRef) {
+  const bpaId = unref(bpaRef);
+
+  if (!bpaId) return;
+
   if (
     proc.date &&
     proc.procedure_name &&
     proc.procedure_code &&
     proc.quantity
   ) {
-    saveProcedure(proc, bpaRef);
+    saveProcedure(proc, bpaId);
   }
 }
+
 async function removeProcedure(proc, index, list) {
   const confirm = await confirmModal(
     "Realmente deseja excluir esse procedimento?",
@@ -681,13 +744,20 @@ watch(dataCompanion, (value) => {
         props.modelValue.companion_neighborhood?.toUpperCase() ?? "",
       phone: props.modelValue.companion_phone ?? "",
       procedures:
-        value[0]?.procedures?.map((proc) => ({
-          id: proc.id,
-          date: formatDate(proc.date),
-          procedure_name: proc.procedure.name.toUpperCase(),
-          procedure_code: proc.procedure.code,
-          quantity: proc.quantity,
-        })) ?? [],
+        value[0]?.procedures?.map((proc) => {
+          const formatted = {
+            id: proc.id,
+            date: formatDate(proc.date),
+            procedure_name: proc.procedure.name.toUpperCase(),
+            procedure_code: proc.procedure.code,
+            quantity: proc.quantity,
+          };
+
+          const key = `${companionBpaId.value}-${proc.id}`;
+          originalProcedures.value.set(key, { ...formatted });
+
+          return formatted;
+        }) ?? [],
     },
   ];
 });
@@ -716,13 +786,20 @@ watch(dataExtraCompanion, (value) => {
       props.modelValue.extra_companions[0]?.companion.neighborhood.toUpperCase() ??
       "",
     phone: props.modelValue.extra_companions[0]?.companion.phone ?? "",
-    procedures: value[0].procedures.map((proc) => ({
-      id: proc.id,
-      date: formatDate(proc.date),
-      procedure_name: proc.procedure.name.toUpperCase(),
-      procedure_code: proc.procedure.code,
-      quantity: proc.quantity,
-    })),
+    procedures: value[0].procedures.map((proc) => {
+      const formatted = {
+        id: proc.id,
+        date: formatDate(proc.date),
+        procedure_name: proc.procedure.name.toUpperCase(),
+        procedure_code: proc.procedure.code,
+        quantity: proc.quantity,
+      };
+
+      const key = `${extraCompanionBpaId.value}-${proc.id}`;
+      originalProcedures.value.set(key, { ...formatted });
+
+      return formatted;
+    }),
   });
 });
 </script>
