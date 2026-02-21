@@ -233,9 +233,8 @@ const printSection = ref(null);
 const times = 1;
 const pages = 2;
 const topMargin = 10;
-const extraPageSize = 2000;
 
 const handleExportToPDF = () => {
-  exportToImagePDF(printSection.value, times, pages, topMargin, extraPageSize);
+  exportToImagePDF(printSection.value, times, pages, topMargin);
 };
 </script>
