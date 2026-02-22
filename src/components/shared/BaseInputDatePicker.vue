@@ -56,7 +56,7 @@
               v-bind="props"
               :class="[
                 hasTravel(item.isoDate)
-                  ? 'bg-ita-blue text-white font-bold'
+                  ? 'border-2  border-ita-blue font-bold'
                   : '',
               ]"
               variant="text"
