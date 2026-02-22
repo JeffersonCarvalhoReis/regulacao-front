@@ -48,7 +48,23 @@
           :min="min"
           rounded="lg"
           @update:model-value="handleDateUpdate"
-        />
+          :events="['2026-02-15']"
+          event-color="red"
+        >
+          <template #day="{ props, item }">
+            <v-btn
+              v-bind="props"
+              :class="[
+                hasTravel(item.isoDate)
+                  ? 'bg-ita-blue text-white font-bold'
+                  : '',
+              ]"
+              variant="text"
+            >
+              {{ item.localized }}
+            </v-btn>
+          </template>
+        </v-date-picker>
       </div>
     </div>
   </v-menu>
@@ -82,6 +98,7 @@ const componentProps = defineProps({
   },
   valueAsString: { type: Boolean, default: true }, // se true, emite "yyyy-MM-dd"
   min: { type: String },
+  travelDates: { type: Array as PropType<string[]>, default: () => [] },
 });
 
 const emit = defineEmits(["update:modelValue"] as const);
@@ -96,8 +113,11 @@ const dateInput = ref<string | null>(null);
  * Converte input (Date | "dd/MM/yyyy" | "yyyy-MM-dd") para Date no fuso local,
  * evitando new Date("yyyy-mm-dd") que pode ser interpretado como UTC.
  */
+function hasTravel(date: string) {
+  return componentProps.travelDates.includes(date);
+}
 function parseDbOrLocaleStringToDate(
-  s: string | Date | null | undefined
+  s: string | Date | null | undefined,
 ): Date | null {
   if (s === null || s === undefined) return null;
   if (s instanceof Date) return s;
@@ -174,7 +194,7 @@ watch(
     date.value = null;
     dateInput.value = null;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 /* handler do date-picker (quando o usuário escolhe direto no calendário) */
@@ -205,7 +225,7 @@ function applyDateMask(value: string) {
   if (numbers.length >= 5)
     return `${numbers.substring(0, 2)}/${numbers.substring(
       2,
-      4
+      4,
     )}/${numbers.substring(4)}`;
   if (numbers.length >= 3)
     return `${numbers.substring(0, 2)}/${numbers.substring(2)}`;
@@ -239,7 +259,7 @@ watch(
   (newPos) => {
     pos.value = { ...startPosition[newPos] };
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const dragging = ref(false);
@@ -252,7 +272,7 @@ const wrapperStyle = computed(
     top: `${pos.value.top}px`,
     zIndex: 3000,
     minWidth: "260px",
-  })
+  }),
 );
 
 // inicializa posição quando o menu abre para evitar "salto"

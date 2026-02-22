@@ -30,7 +30,6 @@
           <div>Quantidade de assentos ocupados: {{ occupiedSeats() }}</div>
         </InfoGroup>
       </BaseSection>
-
       <v-form class="grid grid-cols-2 gap-x-4">
         <PatientInput
           :key="autocompleteKey"
@@ -59,7 +58,7 @@
           v-model="companion_id"
           :error-messages="errors.companion_id"
           :is-editing="isEditing"
-          :model-value="props.modelValue.companion_id"
+          :model-value="props.modelValue.companion?.id"
           :is-clearable="true"
         />
 
@@ -341,20 +340,28 @@ watch(
   { immediate: true },
 );
 
+function validHospital(value) {
+  if (!value) return null;
+
+  const exists = hospitalData.value.some((hospital) => hospital.id === value);
+
+  return exists ? value : null;
+}
 onMounted(async () => {
   hospitalParams.value.per_page = -1;
   await nextTick();
+  await hospitalFetch();
 
   if (isEditing.value) {
     setValues({
       patient_id: props.modelValue.id,
       kinship: props.modelValue?.kinship,
-      companion_id: props.modelValue?.companion_id,
+      companion_id: props.modelValue?.companion?.id,
       notes: props.modelValue?.notes,
       appointment_date: props.modelValue?.appointment_date,
       appointment_time: props.modelValue?.appointment_time,
       is_priority: props.modelValue?.is_priority,
-      hospital_id: props.modelValue?.hospital_id,
+      hospital_id: validHospital(props.modelValue?.hospital_id),
       companions: props.modelValue?.extra_companions,
     });
   }

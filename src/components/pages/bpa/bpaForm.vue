@@ -79,7 +79,7 @@
             />
           </div>
           <div class="uppercase bg-blue-800 text-white text-center">
-            Identificação do Paciente
+            1 - Identificação do Paciente
           </div>
           <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
             <v-text-field
@@ -229,9 +229,7 @@
                         icon="mdi-delete-outline"
                         variant="text"
                         color="red-darken-2"
-                        @click="
-                          removeProcedure(proc, index, patientBpaId, procedures)
-                        "
+                        @click="removeProcedure(proc, index, procedures)"
                       />
                     </template>
                   </v-tooltip>
@@ -255,7 +253,7 @@
 
           <div v-for="(comp, index) in companions" :key="index">
             <div class="uppercase bg-blue-800 text-white text-center">
-              Identificação do Acompanhante
+              {{ index + 2 }} - Identificação do Acompanhante
             </div>
             <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
               <v-text-field
@@ -428,11 +426,7 @@
                         variant="text"
                         color="red-darken-2"
                         @click="
-                          removeProcedure(
-                            index === 0 ? companionBpaId : extraCompanionBpaId,
-                            procIndex,
-                            comp.procedures,
-                          )
+                          removeProcedure(proc, procIndex, comp.procedures)
                         "
                       />
                     </template>
@@ -459,7 +453,6 @@
     </div>
   </BaseCard>
 </template>
-
 <script setup>
 import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
 import { useBpaApi } from "@/composables/modules/useBpaModule";
@@ -470,9 +463,9 @@ const props = defineProps({
   travelId: { type: [String, Number], default: "" },
 });
 
+const emit = defineEmits(["close"]);
+
 const { refetch, data, setFilter } = useBpaApi();
-const { create, update, destroy } = useBpaProcedureApi();
-const { confirmModal, showFeedback } = useSweetAlertFeedback();
 const {
   refetch: fetchCompanion,
   data: dataCompanion,
@@ -484,8 +477,9 @@ const {
   setFilter: setFilterExtraCompanion,
 } = useBpaApi();
 
+const { create, update, destroy } = useBpaProcedureApi();
+const { confirmModal, showFeedback } = useSweetAlertFeedback();
 const { formatDate } = useFormatDate();
-
 const { exportToImagePDF, clickPrint } = useExportToPdf();
 
 const printSection = ref(null);
@@ -495,16 +489,6 @@ const patientBpaId = ref(null);
 const companionBpaId = ref(null);
 const extraCompanionBpaId = ref(null);
 const originalProcedures = ref(new Map());
-
-const times = 1;
-const pages = 1;
-const topMargin = 10;
-const pixelRatio = 2;
-
-const handleExportToPDF = () => {
-  exportToImagePDF(printSection.value, times, pages, topMargin, pixelRatio);
-};
-const emit = defineEmits(["close"]);
 
 const form = reactive({
   establishment: { name: "", cnes: "" },
@@ -522,14 +506,19 @@ const form = reactive({
     ibge_code: "",
     nacionality: "",
   },
-  procedures: {},
 });
+
+const times = 1;
+const pages = 1;
+const topMargin = 10;
+const pixelRatio = 2;
 
 onMounted(() => {
   setFilter("travel_id", props.travelId);
   setFilter("attendable_type", "patient");
   setFilter("attendable_id", props.modelValue.id);
   refetch();
+
   if (props.modelValue.companion_id) {
     setFilterCompanion("travel_id", props.travelId);
     setFilterCompanion("attendable_type", "companion");
@@ -548,49 +537,151 @@ onMounted(() => {
   }
 });
 
-function formatCompetence(value) {
-  if (!value || value.length !== 6) return "";
+watch(
+  () => props.modelValue,
+  (patient) => {
+    if (!patient) return;
 
-  const year = value.slice(0, 4);
-  const month = value.slice(4, 6);
-
-  return `${month}/${year}`;
-}
+    form.patient.cns = patient.cns ?? "";
+    form.patient.name = patient.name?.toUpperCase() ?? "";
+    form.patient.gender = formatGender(patient.gender);
+    form.patient.birth_date = formatDate(patient.birth_date) ?? "";
+    form.patient.race = patient.race?.toUpperCase() ?? "";
+    form.patient.street = patient.street?.toUpperCase() ?? "";
+    form.patient.neighborhood = patient.neighborhood?.toUpperCase() ?? "";
+    form.patient.phone = patient.phone ?? "";
+    form.patient.nacionality = import.meta.env.VITE_NACIONALITY ?? "";
+    form.patient.ibge_code = import.meta.env.VITE_IBGE_CODE ?? "";
+    form.patient.cep = import.meta.env.VITE_CEP ?? "";
+  },
+  { immediate: true },
+);
 
 watch(data, (value) => {
   if (!value?.length) return;
-  const bpa = value[0];
+  hydratePatientBpa(value[0]);
+});
 
-  patientBpaId.value = value[0].id;
+watch(dataCompanion, (value) => {
+  if (!value?.length) return;
+  hydrateCompanion(value[0]);
+});
 
-  form.establishment.name = bpa.health_unit?.name.toUpperCase() ?? "";
+watch(dataExtraCompanion, (value) => {
+  if (!value?.length) return;
+  hydrateExtraCompanion(value[0]);
+});
+async function reloadProcedures() {
+  await Promise.all([refetch(), fetchCompanion(), fetchExtraCompanion()]);
+}
+function formatCompetence(value) {
+  if (!value || value.length !== 6) return "";
+  return `${value.slice(4, 6)}/${value.slice(0, 4)}`;
+}
+
+function formatGender(gender) {
+  const mapping = {
+    M: "MASCULINO",
+    F: "FEMININO",
+    O: "OUTRO",
+  };
+  return mapping[gender] || gender?.toUpperCase();
+}
+
+function formatToApiDate(date) {
+  if (!date) return null;
+  const [day, month, year] = date.split("/");
+  if (!day || !month || !year) return null;
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+}
+
+function createEmptyProcedure(defaultDate = procedures.value[0].date) {
+  return {
+    date: defaultDate,
+    procedure_name: "",
+    procedure_code: "",
+    quantity: 1,
+  };
+}
+
+function hydratePatientBpa(bpa) {
+  patientBpaId.value = bpa.id;
+
+  form.establishment.name = bpa.health_unit?.name?.toUpperCase() ?? "";
   form.establishment.cnes = bpa.health_unit?.cnes ?? "";
 
   form.professional.cns = bpa.professional?.cns ?? "";
-  form.professional.name = bpa.professional?.name.toUpperCase() ?? "";
+  form.professional.name = bpa.professional?.name?.toUpperCase() ?? "";
   form.professional.cbo = bpa.professional?.cbo ?? "";
   form.professional.competence = formatCompetence(bpa.competence);
-  procedures.value =
-    bpa.procedures.map((proc) => {
-      const formatted = {
-        id: proc.id,
-        date: formatDate(proc.date),
-        procedure_name: proc.procedure.name,
-        procedure_code: proc.procedure.code,
-        quantity: proc.quantity,
-      };
-      const key = `${bpa.id}-${proc.id}`;
-      originalProcedures.value.set(key, { ...formatted });
 
-      return formatted;
-    }) || [];
-});
+  procedures.value =
+    bpa.procedures?.map((proc) => mapProcedure(proc, bpa.id)) ?? [];
+}
+
+function hydrateCompanion(bpa) {
+  companionBpaId.value = bpa.id;
+
+  companions.value = [
+    buildCompanionObject(props.modelValue, bpa, companionBpaId.value),
+  ];
+}
+
+function hydrateExtraCompanion(bpa) {
+  extraCompanionBpaId.value = bpa.id;
+  const extraCompanionValue = props.modelValue.extra_companions[0].companion;
+  const extraCompanion = {
+    companion_cns: extraCompanionValue.cns,
+    companion_name: extraCompanionValue.name,
+    companion_gender: extraCompanionValue.gender,
+    companion_birth_date: extraCompanionValue.birth_date,
+    companion_race: extraCompanionValue.race,
+    companion_street: extraCompanionValue.street,
+    companion_neighborhood: extraCompanionValue.neighborhood,
+    companion_phone: extraCompanionValue.phone,
+    procedures:
+      bpa.procedures?.map((proc) => mapProcedure(proc, extraCompanionBpaId)) ??
+      [],
+  };
+  companions.value.push(
+    buildCompanionObject(extraCompanion, bpa, extraCompanionBpaId.value),
+  );
+}
+
+function buildCompanionObject(source, bpa, bpaId) {
+  console.log(source);
+
+  return {
+    cns: source.companion_cns ?? "",
+    name: source.companion_name?.toUpperCase() ?? "",
+    gender: formatGender(source.companion_gender),
+    birth_date: formatDate(source.companion_birth_date) ?? "",
+    race: source.companion_race?.toUpperCase() ?? "",
+    street: source.companion_street?.toUpperCase() ?? "",
+    neighborhood: source.companion_neighborhood?.toUpperCase() ?? "",
+    phone: source.companion_phone ?? "",
+    procedures: bpa.procedures?.map((proc) => mapProcedure(proc, bpaId)) ?? [],
+  };
+}
+
+function mapProcedure(proc, bpaId) {
+  const formatted = {
+    id: proc.id,
+    date: formatDate(proc.date),
+    procedure_name: proc.procedure.name?.toUpperCase(),
+    procedure_code: proc.procedure.code,
+    quantity: proc.quantity,
+  };
+
+  originalProcedures.value.set(`${bpaId}-${proc.id}`, { ...formatted });
+
+  return formatted;
+}
 
 function hasChanged(proc, bpaId) {
   if (!proc.id) return true;
 
-  const key = `${bpaId}-${proc.id}`;
-  const original = originalProcedures.value.get(key);
+  const original = originalProcedures.value.get(`${bpaId}-${proc.id}`);
   if (!original) return true;
 
   return (
@@ -599,46 +690,6 @@ function hasChanged(proc, bpaId) {
     String(proc.procedure_code) !== String(original.procedure_code) ||
     Number(proc.quantity) !== Number(original.quantity)
   );
-}
-
-const formatGender = (gender) => {
-  const mapping = {
-    M: "MASCULINO",
-    F: "FEMININO",
-    O: "OUTRO",
-  };
-
-  return mapping[gender] || gender.toUpperCase();
-};
-function createEmptyProcedure() {
-  return {
-    date: formatDate(data.value[0].procedures[0]?.date) || "",
-    name: "",
-    code: "",
-    quantity: "",
-  };
-}
-
-function addProcedureToCompanion(index) {
-  const companion = companions.value[index];
-  if (!companion.procedures) {
-    companion.procedures = [];
-  }
-  companion.procedures.push(createEmptyProcedure());
-}
-
-function addProcedure() {
-  procedures.value.push(createEmptyProcedure());
-}
-
-function formatToApiDate(date) {
-  if (!date) return null;
-
-  const [day, month, year] = date.split("/");
-
-  if (!day || !month || !year) return null;
-
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
 function buildPayload(proc, bpaId) {
@@ -652,31 +703,24 @@ function buildPayload(proc, bpaId) {
 }
 
 async function saveProcedure(proc, bpaId) {
-  const payload = buildPayload(proc, bpaId);
+  if (proc.id && !hasChanged(proc, bpaId)) return;
 
-  if (proc.id && !hasChanged(proc, bpaId)) {
-    return;
-  }
+  const payload = buildPayload(proc, bpaId);
 
   if (proc.id) {
     await showFeedback(() => update(proc.id, payload));
-
-    const key = `${bpaId}-${proc.id}`;
-    originalProcedures.value.set(key, { ...proc });
+    await reloadProcedures();
   } else {
     const response = await showFeedback(() => create(payload));
-    if (response?.id) {
-      proc.id = response.id;
-
-      const key = `${bpaId}-${proc.id}`;
-      originalProcedures.value.set(key, { ...proc });
-    }
+    if (response?.id) proc.id = response.id;
+    await reloadProcedures();
   }
+
+  originalProcedures.value.set(`${bpaId}-${proc.id}`, { ...proc });
 }
 
 function handleFieldBlur(proc, bpaRef) {
   const bpaId = unref(bpaRef);
-
   if (!bpaId) return;
 
   if (
@@ -690,118 +734,32 @@ function handleFieldBlur(proc, bpaRef) {
 }
 
 async function removeProcedure(proc, index, list) {
+  if (!proc.id) {
+    list.splice(index, 1);
+    return;
+  }
   const confirm = await confirmModal(
     "Realmente deseja excluir esse procedimento?",
     "Atenção",
   );
 
   if (!confirm) return;
-
-  if (!proc.id)
-    return await Promise.all(fetchCompanion(), refetch(), fetchExtraCompanion);
-
-  if (proc) {
+  if (proc.id) {
     await showFeedback(() => destroy(proc));
   }
-  await refetch();
+
   list.splice(index, 1);
+  await reloadProcedures();
+}
+function addProcedure() {
+  procedures.value.push(createEmptyProcedure());
 }
 
-watch(
-  () => props.modelValue,
-  (patient) => {
-    if (!patient) return;
+function addProcedureToCompanion(index) {
+  companions.value[index]?.procedures.push(createEmptyProcedure());
+}
 
-    form.patient.cns = patient.cns ?? "";
-    form.patient.name = patient.name.toUpperCase() ?? "";
-    form.patient.gender = formatGender(patient.gender);
-    form.patient.birth_date = formatDate(patient.birth_date) ?? "";
-    form.patient.race = patient.race.toUpperCase() ?? "";
-    form.patient.street = patient.street.toUpperCase() ?? "";
-    form.patient.neighborhood = patient.neighborhood.toUpperCase() ?? "";
-    form.patient.phone = patient.phone ?? "";
-    form.patient.nacionality = import.meta.env.VITE_NACIONALITY ?? "";
-    form.patient.ibge_code = import.meta.env.VITE_IBGE_CODE ?? "";
-    form.patient.cep = import.meta.env.VITE_CEP ?? "";
-  },
-  { immediate: true },
-);
-
-watch(dataCompanion, (value) => {
-  if (!value?.length) return;
-
-  companionBpaId.value = value[0].id;
-
-  companions.value = [
-    {
-      cns: props.modelValue.companion_cns ?? "",
-      name: props.modelValue.companion_name?.toUpperCase() ?? "",
-      gender: formatGender(props.modelValue.companion_gender),
-      birth_date: formatDate(props.modelValue.companion_birth_date) ?? "",
-      race: props.modelValue.companion_race?.toUpperCase() ?? "",
-      street: props.modelValue.companion_street?.toUpperCase() ?? "",
-      neighborhood:
-        props.modelValue.companion_neighborhood?.toUpperCase() ?? "",
-      phone: props.modelValue.companion_phone ?? "",
-      procedures:
-        value[0]?.procedures?.map((proc) => {
-          const formatted = {
-            id: proc.id,
-            date: formatDate(proc.date),
-            procedure_name: proc.procedure.name.toUpperCase(),
-            procedure_code: proc.procedure.code,
-            quantity: proc.quantity,
-          };
-
-          const key = `${companionBpaId.value}-${proc.id}`;
-          originalProcedures.value.set(key, { ...formatted });
-
-          return formatted;
-        }) ?? [],
-    },
-  ];
-});
-
-watch(dataExtraCompanion, (value) => {
-  if (!value?.length) return;
-
-  extraCompanionBpaId.value = value[0].id;
-
-  companions.value.push({
-    cns: props.modelValue.extra_companions[0]?.companion.cns ?? "",
-    name:
-      props.modelValue.extra_companions[0]?.companion.name.toUpperCase() ?? "",
-    gender: formatGender(
-      props.modelValue.extra_companions[0]?.companion.gender,
-    ),
-    birth_date:
-      formatDate(props.modelValue.extra_companions[0]?.companion.birth_date) ??
-      "",
-    race:
-      props.modelValue.extra_companions[0]?.companion.race.toUpperCase() ?? "",
-    street:
-      props.modelValue.extra_companions[0]?.companion.street.toUpperCase() ??
-      "",
-    neighborhood:
-      props.modelValue.extra_companions[0]?.companion.neighborhood.toUpperCase() ??
-      "",
-    phone: props.modelValue.extra_companions[0]?.companion.phone ?? "",
-    procedures: value[0].procedures.map((proc) => {
-      const formatted = {
-        id: proc.id,
-        date: formatDate(proc.date),
-        procedure_name: proc.procedure.name.toUpperCase(),
-        procedure_code: proc.procedure.code,
-        quantity: proc.quantity,
-      };
-
-      const key = `${extraCompanionBpaId.value}-${proc.id}`;
-      originalProcedures.value.set(key, { ...formatted });
-
-      return formatted;
-    }),
-  });
-});
+function handleExportToPDF() {
+  exportToImagePDF(printSection.value, times, pages, topMargin, pixelRatio);
+}
 </script>
-
-<style scoped></style>

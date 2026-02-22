@@ -71,8 +71,8 @@
         <div>
           <div>
             {{
-              item.companion_name
-                ? `${item.companion_name + (item.kinship ? " - " + item.kinship : "")}`
+              item.companion
+                ? `${item.companion.name + (item.kinship ? " - " + item.kinship : "")}`
                 : "Sem Acompanhante"
             }}
           </div>

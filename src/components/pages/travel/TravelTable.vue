@@ -1,6 +1,6 @@
 <template>
   <div>
-    <travel-search @search-travel="search">
+    <travel-search @search-travel="search" ref="travelSearchRef">
       <slot />
     </travel-search>
     <div class="text-left mt-4">
@@ -97,6 +97,7 @@ const tooltipTextDelete =
   "Não é possível excluir viagem enquanto houver passageiros.";
 const dialogAddPassenger = ref(false);
 const dialogNewCommand = ref(false);
+const travelSearchRef = ref(null);
 const textAddPassenger = "Adicionar passageiros";
 const iconAddPassenger = "mdi-account-multiple-plus";
 
@@ -108,6 +109,10 @@ const handleEdit = (travel) => {
   selectedTravel.value = travel;
   editTravel.value = true;
 };
+const refreshAll = async () => {
+  await refetch();
+  await travelSearchRef.value?.refreshTravelDates();
+};
 
 const handleAddPassenger = async (travel) => {
   dialogAddPassenger.value = true;
@@ -117,19 +122,19 @@ const handleAddPassenger = async (travel) => {
 const refreshPassengers = async (travelId) => {
   setInclude("companion_patient_travel", "companion_patient_travel_multi");
   const travelData = await getById(travelId);
-  refetch();
+  refreshAll();
   selectedTravel.value = travelData;
 };
 
 const submit = async (travel) => {
   await showFeedback(() => update(travel.id, travel));
-  refetch();
+  refreshAll();
   editTravel.value = false;
 };
 
 const submitPassenger = async (passenger) => {
   await showFeedback(() => addPassenger(selectedTravel.value.id, passenger));
-  refetch();
+  refreshAll();
   dialogAddPassenger.value = false;
 };
 
@@ -140,14 +145,14 @@ const handleDelete = async (travel) => {
   );
   if (confirm) {
     await showFeedback(() => destroy(travel));
-    refetch();
+    refreshAll();
   }
 };
 
 const search = debounce(async (v) => {
   setFilter("", v);
   await nextTick();
-  refetch();
+  refreshAll();
 }, 500);
 
 const viewTravel = async (travel) => {
@@ -161,7 +166,7 @@ watch(
   async (newOptions) => {
     await nextTick();
     setTableOptions(newOptions);
-    refetch();
+    refreshAll();
   },
   { deep: true },
 );
