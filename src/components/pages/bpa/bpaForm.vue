@@ -519,10 +519,10 @@ onMounted(() => {
   setFilter("attendable_id", props.modelValue.id);
   refetch();
 
-  if (props.modelValue.companion_id) {
+  if (props.modelValue.companion?.id) {
     setFilterCompanion("travel_id", props.travelId);
     setFilterCompanion("attendable_type", "companion");
-    setFilterCompanion("attendable_id", props.modelValue.companion_id);
+    setFilterCompanion("attendable_id", props.modelValue.companion?.id);
     fetchCompanion();
   }
 
@@ -572,6 +572,7 @@ watch(dataExtraCompanion, (value) => {
   hydrateExtraCompanion(value[0]);
 });
 async function reloadProcedures() {
+  companions.value = [];
   await Promise.all([refetch(), fetchCompanion(), fetchExtraCompanion()]);
 }
 function formatCompetence(value) {
@@ -622,44 +623,52 @@ function hydratePatientBpa(bpa) {
 function hydrateCompanion(bpa) {
   companionBpaId.value = bpa.id;
 
-  companions.value = [
-    buildCompanionObject(props.modelValue, bpa, companionBpaId.value),
-  ];
-}
+  const companionObj = buildCompanionObject(
+    props.modelValue.companion,
+    bpa,
+    companionBpaId.value,
+  );
 
+  const existingIndex = companions.value.findIndex(
+    (c) => c.cns === companionObj.cns,
+  );
+
+  if (existingIndex !== -1) {
+    companions.value[existingIndex] = companionObj;
+  } else {
+    companions.value.push(companionObj);
+  }
+}
 function hydrateExtraCompanion(bpa) {
   extraCompanionBpaId.value = bpa.id;
-  const extraCompanionValue = props.modelValue.extra_companions[0].companion;
-  const extraCompanion = {
-    companion_cns: extraCompanionValue.cns,
-    companion_name: extraCompanionValue.name,
-    companion_gender: extraCompanionValue.gender,
-    companion_birth_date: extraCompanionValue.birth_date,
-    companion_race: extraCompanionValue.race,
-    companion_street: extraCompanionValue.street,
-    companion_neighborhood: extraCompanionValue.neighborhood,
-    companion_phone: extraCompanionValue.phone,
-    procedures:
-      bpa.procedures?.map((proc) => mapProcedure(proc, extraCompanionBpaId)) ??
-      [],
-  };
-  companions.value.push(
-    buildCompanionObject(extraCompanion, bpa, extraCompanionBpaId.value),
+
+  const extraObj = buildCompanionObject(
+    props.modelValue.extra_companions[0].companion,
+    bpa,
+    extraCompanionBpaId.value,
   );
+
+  const existingIndex = companions.value.findIndex(
+    (c) => c.cns === extraObj.cns,
+  );
+
+  if (existingIndex !== -1) {
+    companions.value[existingIndex] = extraObj;
+  } else {
+    companions.value.push(extraObj);
+  }
 }
 
 function buildCompanionObject(source, bpa, bpaId) {
-  console.log(source);
-
   return {
-    cns: source.companion_cns ?? "",
-    name: source.companion_name?.toUpperCase() ?? "",
-    gender: formatGender(source.companion_gender),
-    birth_date: formatDate(source.companion_birth_date) ?? "",
-    race: source.companion_race?.toUpperCase() ?? "",
-    street: source.companion_street?.toUpperCase() ?? "",
-    neighborhood: source.companion_neighborhood?.toUpperCase() ?? "",
-    phone: source.companion_phone ?? "",
+    cns: source.cns ?? "",
+    name: source.name?.toUpperCase() ?? "",
+    gender: formatGender(source.gender),
+    birth_date: formatDate(source.birth_date) ?? "",
+    race: source.race?.toUpperCase() ?? "",
+    street: source.street?.toUpperCase() ?? "",
+    neighborhood: source.neighborhood?.toUpperCase() ?? "",
+    phone: source.phone ?? "",
     procedures: bpa.procedures?.map((proc) => mapProcedure(proc, bpaId)) ?? [],
   };
 }
