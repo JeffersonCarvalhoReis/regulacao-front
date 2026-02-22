@@ -16,14 +16,22 @@
         <div ref="printSection" class="w-256 min-w-236">
           <div class="flex justify-center gap-4">
             <div class="max-w-46">
-              <img alt="logo prefeitura itaguaçu" src="/src/assets/images/logo-gestao.png">
+              <img
+                alt="logo prefeitura itaguaçu"
+                src="/src/assets/images/logo-gestao.png"
+              />
             </div>
             <div class="text-center font-bold">
-              <h1 class="text-xl uppercase">Prefeitura Municipal de Itaguaçu da Bahia</h1>
+              <h1 class="text-xl uppercase">
+                Prefeitura Municipal de Itaguaçu da Bahia
+              </h1>
               <h2 class="text-xl uppercase">Secretaria Municipal de Saúde</h2>
             </div>
             <div class="max-w-46">
-              <img alt="logo da secretaria de saúde" src="/src/assets//images/logo-saude.png">
+              <img
+                alt="logo da secretaria de saúde"
+                src="/src/assets//images/logo-saude.png"
+              />
             </div>
           </div>
           <div class="text-center mb-8">
@@ -31,27 +39,59 @@
           </div>
           <div class="flex flex-col gap-2">
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Paciente" :text-field="props.newCommand" :value="props.patientData?.name" />
+              <LabeledLine
+                label="Nome do Paciente"
+                :text-field="props.newCommand"
+                :value="props.patientData?.name"
+              />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Nome do Acompanhante" :text-field="props.newCommand" :value="companions" />
+              <LabeledLine
+                label="Nome do Acompanhante"
+                :text-field="props.newCommand"
+                :value="companions"
+              />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Endereço" :text-field="props.newCommand" :value="props.patientData?.street" />
+              <LabeledLine
+                label="Endereço"
+                :text-field="props.newCommand"
+                :value="props.patientData?.street"
+              />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Bairro" :text-field="props.newCommand" :value="props.patientData?.neighborhood" />
+              <LabeledLine
+                label="Bairro"
+                :text-field="props.newCommand"
+                :value="props.patientData?.neighborhood"
+              />
               <LabeledLine label="Cidade" value="Itaguaçu da Bahia" />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Hospital" :text-field="props.newCommand" :value="props.patientData?.hospital_name" />
+              <LabeledLine
+                label="Hospital"
+                :text-field="props.newCommand"
+                :value="props.patientData?.hospital_name"
+              />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="Motivo do Tratamento" :text-field="props.newCommand" :value="props.patientData?.notes" />
+              <LabeledLine
+                label="Motivo do Tratamento"
+                :text-field="props.newCommand"
+                :value="props.patientData?.notes"
+              />
             </LabeledLineGroup>
             <LabeledLineGroup>
-              <LabeledLine label="CPF" :text-field="props.newCommand" :value="props.patientData?.cpf" />
-              <LabeledLine label="SUS" :text-field="props.newCommand" :value="props.patientData?.cns" />
+              <LabeledLine
+                label="CPF"
+                :text-field="props.newCommand"
+                :value="props.patientData?.cpf"
+              />
+              <LabeledLine
+                label="SUS"
+                :text-field="props.newCommand"
+                :value="props.patientData?.cns"
+              />
             </LabeledLineGroup>
             <LabeledLineGroup>
               <LabeledLine label="Data da Entrada" :value="datePaceholder" />
@@ -63,13 +103,19 @@
             <LabeledLineGroup>
               <LabeledLine label="Ass. do Paciente" />
             </LabeledLineGroup>
-            <p>Obs.: A Prefeitura não se responsabiliza pela permanência de pessoas nessa pousada sem a devida autorização</p>
+            <p>
+              Obs.: A Prefeitura não se responsabiliza pela permanência de
+              pessoas nessa pousada sem a devida autorização
+            </p>
             <div class="grid grid-cols-2 gap-x-16 text-center mt-8">
               <div class="border-b border-gray-500 pl-1" />
               <LabeledLineGroup class="text-left">
                 <LabeledLine label="Data" :value="datePaceholder" />
               </LabeledLineGroup>
-              <span>Profissional Responsável <br> Secretaria Municipal de Saúde</span>
+              <span
+                >Profissional Responsável <br />
+                Secretaria Municipal de Saúde</span
+              >
             </div>
           </div>
         </div>
@@ -79,27 +125,28 @@
 </template>
 
 <script setup>
-  const props = defineProps({
-    patientData: { type: Object, default: () => {} },
-    newCommand: { type: Boolean, default: false },
-  })
-  const emit = defineEmits(['close']);
-  const companions = computed(() => {
-    return [
-      props.patientData?.companion_name,
-      ...(props.patientData?.extra_companions?.map(ec => ec.companion?.name) || []),
-    ]
-      .filter(Boolean) // remove null/undefined
-      .join(', ')
-  })
+const props = defineProps({
+  patientData: { type: Object, default: () => {} },
+  newCommand: { type: Boolean, default: false },
+});
+const emit = defineEmits(["close"]);
+const companions = computed(() => {
+  return [
+    props.patientData?.companion?.name,
+    ...(props.patientData?.extra_companions?.map((ec) => ec.companion?.name) ||
+      []),
+  ]
+    .filter(Boolean) // remove null/undefined
+    .join(", ");
+});
 
-  const { exportToImagePDF, clickPrint } = useExportToPdf();
+const { exportToImagePDF, clickPrint } = useExportToPdf();
 
-  const printSection = ref(null);
-  const datePaceholder = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
+const printSection = ref(null);
+const datePaceholder =
+  "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0/\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
 
-  const handleExportToPDF = () => {
-    exportToImagePDF(printSection.value, 2);
-  }
-
+const handleExportToPDF = () => {
+  exportToImagePDF(printSection.value, 2);
+};
 </script>
