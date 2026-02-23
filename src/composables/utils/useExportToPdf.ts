@@ -206,23 +206,21 @@ export function useExportToPdf() {
     const containerDomH = containerRect.height || 1;
     const pxPerDomPx = imgPxH / containerDomH; // converte DOM px -> px da imagem
 
-    // converte seletores em offsets na imagem (em px), usando bottom do elemento como ponto de quebra
     const breakOffsetsPx = Array.from(
       new Set(
-        breakSelectors
-          .map((sel) => {
-            const el = containerElement.querySelector(
-              sel,
-            ) as HTMLElement | null;
-            if (!el) return null;
+        breakSelectors.flatMap((sel) => {
+          const elements = containerElement.querySelectorAll(sel);
+
+          return Array.from(elements).map((el) => {
             const r = el.getBoundingClientRect();
-            const offsetDomPx = r.bottom - containerRect.top; // offset relativo ao topo do container
+            const offsetDomPx = r.bottom - containerRect.top;
+
             return Math.min(
               imgPxH,
               Math.max(0, Math.round(offsetDomPx * pxPerDomPx)),
             );
-          })
-          .filter((v): v is number => typeof v === "number"),
+          });
+        }),
       ),
     ).sort((a, b) => a - b);
 
@@ -233,7 +231,10 @@ export function useExportToPdf() {
     const maxWmm = pageWmm - sideMargin * 2;
     const maxHmm = pageHmm - topMargin - bottomMargin;
 
-    const defaultSliceHpx = Math.ceil(imgPxH / Math.max(1, pages));
+    const mmPerPx = maxWmm / imgPxW;
+    const pageHeightPx = maxHmm / mmPerPx;
+
+    const defaultSliceHpx = Math.floor(pageHeightPx);
 
     const slices: Array<{
       dataUrl: string;
@@ -254,8 +255,9 @@ export function useExportToPdf() {
 
       if (hPx <= 0) break;
 
-      const scaleMMperPx = Math.min(maxWmm / imgPxW, maxHmm / hPx);
-      const drawWmm = imgPxW * scaleMMperPx;
+      const scaleMMperPx = maxWmm / imgPxW;
+
+      const drawWmm = maxWmm;
       const drawHmm = hPx * scaleMMperPx;
 
       const canvas = document.createElement("canvas");

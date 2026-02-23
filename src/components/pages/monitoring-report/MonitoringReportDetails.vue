@@ -215,7 +215,7 @@
           <div class="col-span-2 h-14 border border-black"></div>
           <div class="col-span-4 h-14 border border-black"></div>
         </div>
-        <div class="text-center uppercase font-bold text-4xl">
+        <div class="text-center uppercase font-bold text-2xl">
           Prefeitura Municipal de Itaguaçu da Bahia/BA <br />
           Secretaria Municipal de Saúde
         </div>
