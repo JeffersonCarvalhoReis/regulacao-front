@@ -154,18 +154,22 @@ const tableRows = computed(() => {
     });
 
     // companion (se existir)
-    if (patient.companion_name) {
+    if (patient.companion) {
+      if (props.data.patients.some((p) => p.cpf == patient.companion.cpf)) {
+        return;
+      }
+
       rows.push({
         __row_key: `${patient.id}-companion`,
         type: "companion",
-        companion_name: patient.companion_name ?? null,
-        companion_phone: patient.companion_phone ?? null,
-        companion_cns: patient.companion_cns,
+        companion_name: patient.companion?.name ?? null,
+        companion_phone: patient.companion?.phone ?? null,
+        companion_cns: patient.companion?.cns,
         appointment_date: patient.appointment_date,
         appointment_time: patient.appointment_time,
         hospital_name: patient.hospital_name,
-        companion_street: patient.companion_street,
-        companion_neighborhood: patient.companion_neighborhood,
+        companion_street: patient.companion?.street,
+        companion_neighborhood: patient.companion?.neighborhood,
         __ts: makeTimestamp(patient.appointment_date, patient.appointment_time),
       });
     }
@@ -176,6 +180,15 @@ const tableRows = computed(() => {
       const comp = extra?.companion ?? {};
       const compId = comp?.id ?? `extra-${patient.id}-${idx}`;
 
+      if (
+        props.data.patients.some((p) => p.cpf == patient.companion?.cpf) ||
+        props.data.patients.some(
+          (p) =>
+            p.extra_companions?.[0]?.companion?.cpf == patient.companion?.cpf,
+        )
+      ) {
+        return;
+      }
       rows.push({
         __row_key: `${patient.id}-extra-${compId}`,
         type: "extra_companion",
