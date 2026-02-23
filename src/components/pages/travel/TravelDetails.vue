@@ -1,7 +1,7 @@
 <template>
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
-      <div class="flex gap-4 justify-end mb-2">
+      <div class="flex gap-4 justify-end mb-2 flex-wrap">
         <BaseButtonRegister
           button-icon="mdi-bus-stop"
           button-text="Controle de Embarque"
@@ -16,6 +16,11 @@
           button-icon="mdi-home"
           button-text="Controle de Diárias"
           @register="dialogPassengerDailyControl = true"
+        />
+        <BaseButtonRegister
+          button-icon="mdi-file-document-multiple"
+          button-text="Todos os BPA"
+          @register="handleOpenAllBPA"
         />
       </div>
       <BaseSection>
@@ -170,9 +175,10 @@
     />
   </v-dialog>
   <v-dialog v-model="dialogBPA" class="z-999">
-    <BpaForm
-      :model-value="selectedPassengers"
+    <BpaFormWrapper
+      :model-value="bpaValue"
       :travel-id="props.travelData.id"
+      :mode="bpaMode"
       @close="dialogBPA = false"
     />
   </v-dialog>
@@ -207,6 +213,8 @@ const dialogPassengerDailyControl = ref(false);
 const dialogChangeTravel = ref(false);
 const dialogCommand = ref(false);
 const dialogBPA = ref(false);
+const bpaMode = ref("single");
+const bpaValue = ref({});
 const changeTravelIcon = "mdi-swap-horizontal";
 const changeTravelClass = "text-ita-yellow bg-white/0 border-0 ml-1 h-full";
 const changeTravelText = "Trocar Data da Viagem";
@@ -252,7 +260,13 @@ const handleOpenCommand = (v) => {
 
 const handleOpenBPA = (v) => {
   dialogBPA.value = true;
-  selectedPassengers.value = v;
+  bpaValue.value = v;
+  bpaMode.value = "single";
+};
+const handleOpenAllBPA = () => {
+  dialogBPA.value = true;
+  bpaValue.value = props.travelData.patients;
+  bpaMode.value = "multiple";
 };
 
 const updatePassengers = async (values) => {

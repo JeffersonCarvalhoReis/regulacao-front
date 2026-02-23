@@ -1,457 +1,442 @@
 <template>
-  <BaseCard
-    class="max-w-[1050px] min-w-[1050px]"
-    title="Gerar BPA"
-    @close="emit('close')"
-  >
-    <div class="flex justify-end gap-4 m-4">
-      <v-btn
-        color="success"
-        :loading="clickPrint"
-        prepend-icon="mdi-printer"
-        @click="handleExportToPDF"
-      >
-        Imprimir
-        <v-tooltip activator="parent">Imprimir</v-tooltip>
-      </v-btn>
+  <div class="a4-page">
+    <div>
+      <img src="@/assets/images/bpa-header.png" alt="Cabeçalho do BPA" />
     </div>
-    <div class="p-5">
-      <div ref="printSection" class="text-blue-900">
-        <div>
-          <img src="@/assets/images/bpa-header.png" alt="Cabeçalho do BPA" />
-        </div>
-        <div class="border-2 mt-1">
-          <div class="uppercase bg-blue-800 text-white text-center">
-            Identificação do estabelecimento de saúde
-          </div>
-          <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
-            <v-text-field
-              v-model="form.establishment.name"
-              readonly
-              class="col-span-4"
-              density="compact"
-              label="Nome do Estabelecimento de Saúde"
-              variant="outlined"
-            />
-            <v-text-field
-              readonly
-              v-model="form.establishment.cnes"
-              density="compact"
-              label="CNES"
-              variant="outlined"
-            />
-          </div>
-          <div class="uppercase bg-blue-800 text-white text-center">
-            Identificação do Profissional
-          </div>
-          <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
-            <v-text-field
-              v-model="form.professional.cns"
-              readonly
-              class="col-span-2"
-              density="compact"
-              label="CNS"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.professional.name"
-              readonly
-              class="col-span-3"
-              density="compact"
-              label="Nome do Profissional"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.professional.cbo"
-              readonly
-              class="col-span-3"
-              density="compact"
-              label="CBO"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.professional.competence"
-              readonly
-              class="col-span-2"
-              density="compact"
-              label="Mês/Ano"
-              variant="outlined"
-            />
-          </div>
-          <div class="uppercase bg-blue-800 text-white text-center">
-            1 - Identificação do Paciente
-          </div>
-          <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
-            <v-text-field
-              v-model="form.patient.cns"
-              readonly
-              class="col-span-3"
-              density="compact"
-              label="Cartão Nacional de Saúde (CNS)"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.name"
-              readonly
-              class="col-span-3"
-              density="compact"
-              label="Nome do Paciente"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.gender"
-              readonly
-              density="compact"
-              label="Gênero"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.birth_date"
-              readonly
-              density="compact"
-              label="Data de Nascimento"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.nacionality"
-              readonly
-              density="compact"
-              label="Nacionalidade"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.race"
-              readonly
-              density="compact"
-              label="Raça/Cor"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.cep"
-              readonly
-              density="compact"
-              label="CEP"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.ibge_code"
-              readonly
-              density="compact"
-              label="Cód. IBGE Município"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.street"
-              readonly
-              class="col-span-3"
-              density="compact"
-              label="Endereço"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.neighborhood"
-              readonly
-              class="col-span-2"
-              density="compact"
-              label="Bairro"
-              maxlength="100"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="form.patient.phone"
-              readonly
-              density="compact"
-              label="Telefone de Contato"
-              maxlength="100"
-              variant="outlined"
-            />
-          </div>
-          <div class="uppercase bg-blue-800 text-white text-center mb-4">
-            Procedimento Realizado
-          </div>
+    <div class="border-2 mt-1">
+      <div class="uppercase bg-blue-800 text-white text-center">
+        Identificação do estabelecimento de saúde
+      </div>
+      <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
+        <v-text-field
+          v-model="form.establishment.name"
+          readonly
+          class="col-span-4"
+          density="compact"
+          label="Nome do Estabelecimento de Saúde"
+          variant="outlined"
+        />
+        <v-text-field
+          readonly
+          v-model="form.establishment.cnes"
+          density="compact"
+          label="CNES"
+          variant="outlined"
+        />
+      </div>
+      <div class="uppercase bg-blue-800 text-white text-center">
+        Identificação do Profissional
+      </div>
+      <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
+        <v-text-field
+          v-model="form.professional.cns"
+          readonly
+          class="col-span-2"
+          density="compact"
+          label="CNS"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.professional.name"
+          readonly
+          class="col-span-3"
+          density="compact"
+          label="Nome do Profissional"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.professional.cbo"
+          readonly
+          class="col-span-3"
+          density="compact"
+          label="CBO"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.professional.competence"
+          readonly
+          class="col-span-2"
+          density="compact"
+          label="Mês/Ano"
+          variant="outlined"
+        />
+      </div>
+      <div class="uppercase bg-blue-800 text-white text-center">
+        1 - Identificação do Paciente
+      </div>
+      <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
+        <v-text-field
+          v-model="form.patient.cns"
+          readonly
+          class="col-span-3"
+          density="compact"
+          label="Cartão Nacional de Saúde (CNS)"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.name"
+          readonly
+          class="col-span-3"
+          density="compact"
+          label="Nome do Paciente"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.gender"
+          readonly
+          density="compact"
+          label="Gênero"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.birth_date"
+          readonly
+          density="compact"
+          label="Data de Nascimento"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.nacionality"
+          readonly
+          density="compact"
+          label="Nacionalidade"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.race"
+          readonly
+          density="compact"
+          label="Raça/Cor"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.cep"
+          readonly
+          density="compact"
+          label="CEP"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.ibge_code"
+          readonly
+          density="compact"
+          label="Cód. IBGE Município"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.street"
+          readonly
+          class="col-span-3"
+          density="compact"
+          label="Endereço"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.neighborhood"
+          readonly
+          class="col-span-2"
+          density="compact"
+          label="Bairro"
+          maxlength="100"
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="form.patient.phone"
+          readonly
+          density="compact"
+          label="Telefone de Contato"
+          maxlength="100"
+          variant="outlined"
+        />
+      </div>
+      <div class="uppercase bg-blue-800 text-white text-center mb-4">
+        Procedimento Realizado
+      </div>
 
-          <div v-for="(proc, index) in procedures" :key="'patient-' + index">
-            <div class="grid grid-cols-6 gap-x-2 mx-2">
+      <div v-for="(proc, index) in procedures" :key="'patient-' + index">
+        <div class="grid grid-cols-6 gap-x-2 mx-2">
+          <v-text-field
+            v-model="proc.date"
+            density="compact"
+            label="Data do Atendimento"
+            maxlength="100"
+            variant="outlined"
+            @blur="handleFieldBlur(proc, patientBpaId)"
+          />
+          <v-text-field
+            v-model="proc.procedure_name"
+            class="col-span-2"
+            density="compact"
+            label="Procedimento"
+            maxlength="100"
+            variant="outlined"
+            @blur="handleFieldBlur(proc, patientBpaId)"
+          />
+          <v-text-field
+            v-model="proc.procedure_code"
+            class="col-span-2"
+            density="compact"
+            label="Código do Procedimento"
+            maxlength="100"
+            variant="outlined"
+            type="number"
+            inputmode="numeric"
+            @blur="handleFieldBlur(proc, patientBpaId)"
+          />
+          <div>
+            <div class="flex flex-row justify-end">
               <v-text-field
-                v-model="proc.date"
+                v-model="proc.quantity"
                 density="compact"
-                label="Data do Atendimento"
-                maxlength="100"
-                variant="outlined"
-                @blur="handleFieldBlur(proc, patientBpaId)"
-              />
-              <v-text-field
-                v-model="proc.procedure_name"
-                class="col-span-2"
-                density="compact"
-                label="Procedimento"
-                maxlength="100"
-                variant="outlined"
-                @blur="handleFieldBlur(proc, patientBpaId)"
-              />
-              <v-text-field
-                v-model="proc.procedure_code"
-                class="col-span-2"
-                density="compact"
-                label="Código do Procedimento"
+                label="Qtde."
                 maxlength="100"
                 variant="outlined"
                 type="number"
                 inputmode="numeric"
                 @blur="handleFieldBlur(proc, patientBpaId)"
               />
-              <div>
-                <div class="flex flex-row justify-end">
-                  <v-text-field
-                    v-model="proc.quantity"
-                    density="compact"
-                    label="Qtde."
-                    maxlength="100"
-                    variant="outlined"
-                    type="number"
-                    inputmode="numeric"
-                    @blur="handleFieldBlur(proc, patientBpaId)"
+              <v-tooltip text="Remover procedimento">
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    v-if="index > 0"
+                    icon="mdi-delete-outline"
+                    variant="text"
+                    color="red-darken-2"
+                    @click="removeProcedure(proc, index, procedures)"
                   />
-                  <v-tooltip text="Remover procedimento">
-                    <template #activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        v-if="index > 0"
-                        icon="mdi-delete-outline"
-                        variant="text"
-                        color="red-darken-2"
-                        @click="removeProcedure(proc, index, procedures)"
-                      />
-                    </template>
-                  </v-tooltip>
+                </template>
+              </v-tooltip>
 
-                  <v-tooltip text="Adicionar novo procedimento">
-                    <template #activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        v-if="index === 0"
-                        icon="mdi-plus-box-outline"
-                        variant="text"
-                        color="blue-darken-3"
-                        @click="addProcedure"
-                      />
-                    </template>
-                  </v-tooltip>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-for="(comp, index) in companions" :key="index">
-            <div class="uppercase bg-blue-800 text-white text-center">
-              {{ index + 2 }} - Identificação do Acompanhante
-            </div>
-            <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
-              <v-text-field
-                v-model="comp.cns"
-                readonly
-                class="col-span-3"
-                density="compact"
-                label="Cartão Nacional de Saúde (CNS)"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.name"
-                readonly
-                class="col-span-3"
-                density="compact"
-                label="Nome do Paciente"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.gender"
-                readonly
-                density="compact"
-                label="Gênero"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.birth_date"
-                readonly
-                density="compact"
-                label="Data de Nascimento"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="form.patient.nacionality"
-                readonly
-                density="compact"
-                label="Nacionalidade"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.race"
-                readonly
-                density="compact"
-                label="Raça/Cor"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="form.patient.cep"
-                readonly
-                density="compact"
-                label="CEP"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="form.patient.ibge_code"
-                readonly
-                density="compact"
-                label="Cód. IBGE Município"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.street"
-                readonly
-                class="col-span-3"
-                density="compact"
-                label="Endereço"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.neighborhood"
-                readonly
-                class="col-span-2"
-                density="compact"
-                label="Bairro"
-                maxlength="100"
-                variant="outlined"
-              />
-              <v-text-field
-                v-model="comp.phone"
-                readonly
-                density="compact"
-                label="Telefone de Contato"
-                maxlength="100"
-                variant="outlined"
-              />
-            </div>
-            <div class="uppercase bg-blue-800 text-white text-center">
-              Procedimento Realizado
-            </div>
-            <div
-              v-for="(proc, procIndex) in comp.procedures"
-              :key="'comp-proc-' + index + '-' + procIndex"
-            >
-              <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
-                <v-text-field
-                  v-model="proc.date"
-                  density="compact"
-                  label="Data do Atendimento"
-                  maxlength="100"
-                  variant="outlined"
-                  @blur="
-                    handleFieldBlur(
-                      proc,
-                      index === 0 ? companionBpaId : extraCompanionBpaId,
-                    )
-                  "
-                />
-                <v-text-field
-                  v-model="proc.procedure_name"
-                  class="col-span-2"
-                  density="compact"
-                  label="Procedimento"
-                  maxlength="100"
-                  variant="outlined"
-                  @blur="
-                    handleFieldBlur(
-                      proc,
-                      index === 0 ? companionBpaId : extraCompanionBpaId,
-                    )
-                  "
-                />
-                <v-text-field
-                  v-model="proc.procedure_code"
-                  class="col-span-2"
-                  density="compact"
-                  label="Código do Procedimento"
-                  maxlength="100"
-                  variant="outlined"
-                  type="number"
-                  inputmode="numeric"
-                  @blur="
-                    handleFieldBlur(
-                      proc,
-                      index === 0 ? companionBpaId : extraCompanionBpaId,
-                    )
-                  "
-                />
-
-                <div class="flex flex-row justify-end">
-                  <v-text-field
-                    v-model="proc.quantity"
-                    density="compact"
-                    label="Qtde."
-                    maxlength="100"
-                    variant="outlined"
-                    type="number"
-                    inputmode="numeric"
-                    @blur="
-                      handleFieldBlur(
-                        proc,
-                        index === 0 ? companionBpaId : extraCompanionBpaId,
-                      )
-                    "
+              <v-tooltip text="Adicionar novo procedimento">
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    v-if="index === 0"
+                    icon="mdi-plus-box-outline"
+                    variant="text"
+                    color="blue-darken-3"
+                    @click="addProcedure"
                   />
-                  <v-tooltip text="Remover procedimento">
-                    <template #activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        v-if="procIndex > 0"
-                        icon="mdi-delete-outline"
-                        variant="text"
-                        color="red-darken-2"
-                        @click="
-                          removeProcedure(proc, procIndex, comp.procedures)
-                        "
-                      />
-                    </template>
-                  </v-tooltip>
-
-                  <v-tooltip text="Adicionar novo procedimento">
-                    <template #activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        v-if="procIndex === 0"
-                        icon="mdi-plus-box-outline"
-                        variant="text"
-                        color="blue-darken-3"
-                        @click="addProcedureToCompanion(index)"
-                      />
-                    </template>
-                  </v-tooltip>
-                </div>
-              </div>
+                </template>
+              </v-tooltip>
             </div>
           </div>
         </div>
       </div>
+
+      <div v-for="(comp, index) in companions" :key="index">
+        <div v-if="index === 1" class="page-break" />
+
+        <div class="uppercase bg-blue-800 text-white text-center">
+          {{ index + 2 }} - Identificação do Acompanhante
+        </div>
+        <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
+          <v-text-field
+            v-model="comp.cns"
+            readonly
+            class="col-span-3"
+            density="compact"
+            label="Cartão Nacional de Saúde (CNS)"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.name"
+            readonly
+            class="col-span-3"
+            density="compact"
+            label="Nome do Paciente"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.gender"
+            readonly
+            density="compact"
+            label="Gênero"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.birth_date"
+            readonly
+            density="compact"
+            label="Data de Nascimento"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="form.patient.nacionality"
+            readonly
+            density="compact"
+            label="Nacionalidade"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.race"
+            readonly
+            density="compact"
+            label="Raça/Cor"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="form.patient.cep"
+            readonly
+            density="compact"
+            label="CEP"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="form.patient.ibge_code"
+            readonly
+            density="compact"
+            label="Cód. IBGE Município"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.street"
+            readonly
+            class="col-span-3"
+            density="compact"
+            label="Endereço"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.neighborhood"
+            readonly
+            class="col-span-2"
+            density="compact"
+            label="Bairro"
+            maxlength="100"
+            variant="outlined"
+          />
+          <v-text-field
+            v-model="comp.phone"
+            readonly
+            density="compact"
+            label="Telefone de Contato"
+            maxlength="100"
+            variant="outlined"
+          />
+        </div>
+        <div class="uppercase bg-blue-800 text-white text-center">
+          Procedimento Realizado
+        </div>
+        <div
+          v-for="(proc, procIndex) in comp.procedures"
+          :key="'comp-proc-' + index + '-' + procIndex"
+        >
+          <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
+            <v-text-field
+              v-model="proc.date"
+              density="compact"
+              label="Data do Atendimento"
+              maxlength="100"
+              variant="outlined"
+              @blur="
+                handleFieldBlur(
+                  proc,
+                  index === 0 ? companionBpaId : extraCompanionBpaId,
+                )
+              "
+            />
+            <v-text-field
+              v-model="proc.procedure_name"
+              class="col-span-2"
+              density="compact"
+              label="Procedimento"
+              maxlength="100"
+              variant="outlined"
+              @blur="
+                handleFieldBlur(
+                  proc,
+                  index === 0 ? companionBpaId : extraCompanionBpaId,
+                )
+              "
+            />
+            <v-text-field
+              v-model="proc.procedure_code"
+              class="col-span-2"
+              density="compact"
+              label="Código do Procedimento"
+              maxlength="100"
+              variant="outlined"
+              type="number"
+              inputmode="numeric"
+              @blur="
+                handleFieldBlur(
+                  proc,
+                  index === 0 ? companionBpaId : extraCompanionBpaId,
+                )
+              "
+            />
+
+            <div class="flex flex-row justify-end">
+              <v-text-field
+                v-model="proc.quantity"
+                density="compact"
+                label="Qtde."
+                maxlength="100"
+                variant="outlined"
+                type="number"
+                inputmode="numeric"
+                @blur="
+                  handleFieldBlur(
+                    proc,
+                    index === 0 ? companionBpaId : extraCompanionBpaId,
+                  )
+                "
+              />
+              <v-tooltip text="Remover procedimento">
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    v-if="procIndex > 0"
+                    icon="mdi-delete-outline"
+                    variant="text"
+                    color="red-darken-2"
+                    @click="removeProcedure(proc, procIndex, comp.procedures)"
+                  />
+                </template>
+              </v-tooltip>
+
+              <v-tooltip text="Adicionar novo procedimento">
+                <template #activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    v-if="procIndex === 0"
+                    icon="mdi-plus-box-outline"
+                    variant="text"
+                    color="blue-darken-3"
+                    @click="addProcedureToCompanion(index)"
+                  />
+                </template>
+              </v-tooltip>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="props.mode !== 'single'" class="page-number">
+        {{ currentPage }}
+      </div>
     </div>
-  </BaseCard>
+    <div class="page-break" />
+  </div>
 </template>
 <script setup>
 import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
@@ -461,9 +446,9 @@ import { useBpaProcedureApi } from "@/composables/modules/useBpaProcedureModule"
 const props = defineProps({
   modelValue: { type: Object, default: () => ({}) },
   travelId: { type: [String, Number], default: "" },
+  currentPage: { type: Number, default: 1 },
+  mode: { type: String, default: "single" },
 });
-
-const emit = defineEmits(["close"]);
 
 const { refetch, data, setFilter } = useBpaApi();
 const {
@@ -480,9 +465,7 @@ const {
 const { create, update, destroy } = useBpaProcedureApi();
 const { confirmModal, showFeedback } = useSweetAlertFeedback();
 const { formatDate } = useFormatDate();
-const { exportToImagePDF, clickPrint } = useExportToPdf();
 
-const printSection = ref(null);
 const companions = ref([]);
 const procedures = ref([]);
 const patientBpaId = ref(null);
@@ -507,11 +490,6 @@ const form = reactive({
     nacionality: "",
   },
 });
-
-const times = 1;
-const pages = 1;
-const topMargin = 10;
-const pixelRatio = 2;
 
 onMounted(() => {
   setFilter("travel_id", props.travelId);
@@ -767,8 +745,22 @@ function addProcedure() {
 function addProcedureToCompanion(index) {
   companions.value[index]?.procedures.push(createEmptyProcedure());
 }
-
-function handleExportToPDF() {
-  exportToImagePDF(printSection.value, times, pages, topMargin, pixelRatio);
-}
 </script>
+<style scoped>
+.a4-page {
+  min-height: auto;
+  width: 270mm;
+  position: relative;
+  margin-bottom: 20px;
+}
+.page-number {
+  position: absolute;
+  top: 1.8px;
+  right: 2px;
+  font-size: 16px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+  width: 24px;
+  text-align: center;
+}
+</style>

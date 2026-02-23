@@ -32,6 +32,8 @@ declare module 'vue' {
     BaseTable: typeof import('./src/components/shared/BaseTable.vue')['default']
     BpaDoctorTable: typeof import('./src/components/pages/bpa-setting/BpaDoctorTable.vue')['default']
     BpaForm: typeof import('./src/components/pages/bpa/bpaForm.vue')['default']
+    BpaFormWapper: typeof import('./src/components/pages/bpa/bpaFormWrapper.vue')['default']
+    BpaFormWrapper: typeof import('./src/components/pages/bpa/bpaFormWrapper.vue')['default']
     BpaSettingForm: typeof import('./src/components/pages/bpa-setting/BpaSettingForm.vue')['default']
     CityDetails: typeof import('./src/components/pages/city/CityDetails.vue')['default']
     CityForm: typeof import('./src/components/pages/city/CityForm.vue')['default']
