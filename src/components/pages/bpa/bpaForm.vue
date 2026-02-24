@@ -463,7 +463,8 @@ const {
 } = useBpaApi();
 
 const { create, update, destroy } = useBpaProcedureApi();
-const { confirmModal, showFeedback } = useSweetAlertFeedback();
+const { confirmModal, showFeedback, showFeedbackLoading } =
+  useSweetAlertFeedback();
 const { formatDate } = useFormatDate();
 
 const companions = ref([]);
@@ -491,17 +492,25 @@ const form = reactive({
   },
 });
 
-onMounted(() => {
+async function loadAll() {
+  await refetch();
+  if (props.modelValue.companion?.id) {
+    await fetchCompanion();
+  }
+
+  if (props.modelValue.extra_companions?.length) {
+    await fetchExtraCompanion();
+  }
+}
+onMounted(async () => {
   setFilter("travel_id", props.travelId);
   setFilter("attendable_type", "patient");
   setFilter("attendable_id", props.modelValue.id);
-  refetch();
 
   if (props.modelValue.companion?.id) {
     setFilterCompanion("travel_id", props.travelId);
     setFilterCompanion("attendable_type", "companion");
     setFilterCompanion("attendable_id", props.modelValue.companion?.id);
-    fetchCompanion();
   }
 
   if (props.modelValue.extra_companions?.length) {
@@ -511,8 +520,8 @@ onMounted(() => {
       "attendable_id",
       props.modelValue.extra_companions[0].companion.id,
     );
-    fetchExtraCompanion();
   }
+  await showFeedbackLoading(() => loadAll());
 });
 
 watch(

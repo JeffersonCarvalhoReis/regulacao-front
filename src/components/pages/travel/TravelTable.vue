@@ -87,7 +87,8 @@ const {
 } = useTravelApi();
 const { addPassenger } = useAddPassengerApi();
 const { formatDate } = useFormatDate();
-const { showFeedback, confirmModal } = useSweetAlertFeedback();
+const { showFeedback, confirmModal, showFeedbackLoading } =
+  useSweetAlertFeedback();
 
 const options = ref({});
 const viewTravelDetails = ref(false);
@@ -156,7 +157,7 @@ const search = debounce(async (v) => {
 }, 500);
 
 const viewTravel = async (travel) => {
-  const travelData = await getById(travel.id);
+  const travelData = await showFeedbackLoading(() => getById(travel.id));
   selectedTravel.value = travelData;
   viewTravelDetails.value = true;
 };
