@@ -1,9 +1,9 @@
-export function usePatientLabel () {
+export function usePatientLabel() {
   const { formatDate } = useFormatDate();
   const { calculateAge } = useCalculateAge();
 
-  const patientLabel = patient => {
-    if (!patient || !patient.name || !patient.birth_date) return '';
+  const patientLabel = (patient: any) => {
+    if (!patient || !patient.name || !patient.birth_date) return "";
 
     const date = formatDate(patient.birth_date);
     const age = calculateAge(patient.birth_date);
@@ -15,9 +15,9 @@ export function usePatientLabel () {
     }
 
     return `${patient.name} - DN: ${date} - ${age}`;
-  }
+  };
 
   return {
     patientLabel,
-  }
+  };
 }

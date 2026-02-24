@@ -61,6 +61,7 @@ const loadCompanion = async () => {
 };
 
 const onSearch = debounce(async (v) => {
+  if (companion_id.value) return;
   clearFilters();
   const name = v.split("-");
   setFilter("name", name[0]);
