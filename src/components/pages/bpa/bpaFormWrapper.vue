@@ -37,6 +37,8 @@
   </BaseCard>
 </template>
 <script setup>
+import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
+
 const props = defineProps({
   modelValue: { type: Object, default: () => ({}) },
   travelId: { type: [String, Number], default: "" },
@@ -46,6 +48,7 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 const { exportToImagePDF, clickPrint } = useExportToPdf();
+const { showFeedbackLoading } = useSweetAlertFeedback();
 
 const printSection = ref(null);
 
@@ -66,13 +69,15 @@ onMounted(() => {
   }
 });
 
-function handleExportToPDF() {
-  exportToImagePDF(
-    printSection.value,
-    times,
-    pages.value,
-    topMargin,
-    pixelRatio,
+async function handleExportToPDF() {
+  await showFeedbackLoading(() =>
+    exportToImagePDF(
+      printSection.value,
+      times,
+      pages.value,
+      topMargin,
+      pixelRatio,
+    ),
   );
 }
 </script>
