@@ -4,7 +4,7 @@
     title="Gerar BPA"
     @close="emit('close')"
   >
-    <div class="flex justify-end gap-4 m-4">
+    <div class="flex justify-end gap-4 m-4" v-if="props.mode === 'single'">
       <v-btn
         color="success"
         :loading="clickPrint"
