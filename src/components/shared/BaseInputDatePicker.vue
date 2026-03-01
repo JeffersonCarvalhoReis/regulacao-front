@@ -101,7 +101,7 @@ const componentProps = defineProps({
   travelDates: { type: Array as PropType<string[]>, default: () => [] },
 });
 
-const emit = defineEmits(["update:modelValue"] as const);
+const emit = defineEmits(["update:modelValue", "change"] as const);
 
 /* estado */
 const menu = ref(false);
@@ -216,6 +216,7 @@ const handleDateUpdate = (val: any) => {
   } else {
     emit("update:modelValue", dv);
   }
+  emit("change");
 };
 
 /* máscara simples para dd/MM/yyyy */

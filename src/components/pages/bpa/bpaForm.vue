@@ -164,33 +164,34 @@
 
       <div v-for="(proc, index) in procedures" :key="'patient-' + index">
         <div class="grid grid-cols-6 gap-x-2 mx-2">
-          <v-text-field
+          <base-input-date-picker
             v-model="proc.date"
-            density="compact"
             label="Data do Atendimento"
-            maxlength="100"
-            variant="outlined"
-            @blur="handleFieldBlur(proc, patientBpaId)"
+            position="top"
+            @change="handleFieldBlur(proc, patientBpaId)"
           />
-          <v-text-field
-            v-model="proc.procedure_name"
+
+          <v-autocomplete
+            v-model="proc.procedure_selected"
+            :items="proceduresPatient"
+            item-title="name"
+            return-object
             class="col-span-2"
             density="compact"
             label="Procedimento"
-            maxlength="100"
             variant="outlined"
-            @blur="handleFieldBlur(proc, patientBpaId)"
+            @update:modelValue="onProcedureSelected(proc, patientBpaId)"
           />
-          <v-text-field
-            v-model="proc.procedure_code"
+          <v-autocomplete
+            v-model="proc.procedure_selected"
+            :items="proceduresPatient"
+            item-title="code"
+            return-object
             class="col-span-2"
             density="compact"
             label="Código do Procedimento"
-            maxlength="100"
             variant="outlined"
-            type="number"
-            inputmode="numeric"
-            @blur="handleFieldBlur(proc, patientBpaId)"
+            @update:modelValue="onProcedureSelected(proc, patientBpaId)"
           />
           <div>
             <div class="flex flex-row justify-end">
@@ -342,44 +343,44 @@
           :key="'comp-proc-' + index + '-' + procIndex"
         >
           <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
-            <v-text-field
+            <base-input-date-picker
               v-model="proc.date"
-              density="compact"
               label="Data do Atendimento"
-              maxlength="100"
-              variant="outlined"
-              @blur="
+              position="top"
+              @change="
                 handleFieldBlur(
                   proc,
                   index === 0 ? companionBpaId : extraCompanionBpaId,
                 )
               "
             />
-            <v-text-field
-              v-model="proc.procedure_name"
+            <v-autocomplete
+              v-model="proc.procedure_selected"
+              :items="proceduresCompanion"
+              item-title="name"
+              return-object
               class="col-span-2"
               density="compact"
               label="Procedimento"
-              maxlength="100"
               variant="outlined"
-              @blur="
-                handleFieldBlur(
+              @update:modelValue="
+                onProcedureSelected(
                   proc,
                   index === 0 ? companionBpaId : extraCompanionBpaId,
                 )
               "
             />
-            <v-text-field
-              v-model="proc.procedure_code"
+            <v-autocomplete
+              v-model="proc.procedure_selected"
+              :items="proceduresCompanion"
+              item-title="code"
+              return-object
               class="col-span-2"
               density="compact"
               label="Código do Procedimento"
-              maxlength="100"
               variant="outlined"
-              type="number"
-              inputmode="numeric"
-              @blur="
-                handleFieldBlur(
+              @update:modelValue="
+                onProcedureSelected(
                   proc,
                   index === 0 ? companionBpaId : extraCompanionBpaId,
                 )
@@ -437,6 +438,15 @@
     </div>
     <div class="page-break" />
   </div>
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    timeout="2500"
+    location="bottom center"
+    class="mb-10"
+  >
+    {{ snackbar.message }}
+  </v-snackbar>
 </template>
 <script setup>
 import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
@@ -474,6 +484,12 @@ const companionBpaId = ref(null);
 const extraCompanionBpaId = ref(null);
 const originalProcedures = ref(new Map());
 
+const snackbar = reactive({
+  show: false,
+  message: "",
+  color: "success",
+});
+
 const form = reactive({
   establishment: { name: "", cnes: "" },
   professional: { cns: "", name: "", cbo: "", competence: "" },
@@ -492,6 +508,35 @@ const form = reactive({
   },
 });
 
+const proceduresPatient = [
+  {
+    name: "TRANSPORTE",
+    code: "0803010125",
+  },
+  {
+    name: "PERNOITE",
+    code: "0803010010",
+  },
+  {
+    name: "ALIMENTAÇÃO",
+    code: "0803010028",
+  },
+];
+const proceduresCompanion = [
+  {
+    name: "TRANSPORTE",
+    code: "0803010109",
+  },
+  {
+    name: "PERNOITE",
+    code: "0803010044",
+  },
+  {
+    name: "ALIMENTAÇÃO",
+    code: "0803010052",
+  },
+];
+
 async function loadAll() {
   await refetch();
   if (props.modelValue.companion?.id) {
@@ -501,6 +546,11 @@ async function loadAll() {
   if (props.modelValue.extra_companions?.length) {
     await fetchExtraCompanion();
   }
+}
+function showSnackbar(message, color = "success") {
+  snackbar.message = message;
+  snackbar.color = color;
+  snackbar.show = true;
 }
 onMounted(async () => {
   setFilter("travel_id", props.travelId);
@@ -576,19 +626,16 @@ function formatGender(gender) {
   return mapping[gender] || gender?.toUpperCase();
 }
 
-function formatToApiDate(date) {
-  if (!date) return null;
-  const [day, month, year] = date.split("/");
-  if (!day || !month || !year) return null;
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-}
-
-function createEmptyProcedure(defaultDate = procedures.value[0].date) {
+function createEmptyProcedure(defaultDate = procedures.value[0]?.date ?? null) {
   return {
+    id: null,
     date: defaultDate,
+    procedure_selected: null,
     procedure_name: "",
     procedure_code: "",
     quantity: 1,
+    _deleted: false,
+    _saving: false,
   };
 }
 
@@ -656,14 +703,20 @@ function buildCompanionObject(source, bpa, bpaId) {
     street: source.street?.toUpperCase() ?? "",
     neighborhood: source.neighborhood?.toUpperCase() ?? "",
     phone: source.phone ?? "",
-    procedures: bpa.procedures?.map((proc) => mapProcedure(proc, bpaId)) ?? [],
+    procedures:
+      bpa.procedures?.map((proc) =>
+        mapProcedure(proc, bpaId, proceduresCompanion),
+      ) ?? [],
   };
 }
 
-function mapProcedure(proc, bpaId) {
+function mapProcedure(proc, bpaId, items = proceduresPatient) {
+  const selected = items.find((p) => p.code === proc.procedure.code);
+
   const formatted = {
     id: proc.id,
-    date: formatDate(proc.date),
+    date: proc.date,
+    procedure_selected: selected ?? null,
     procedure_name: proc.procedure.name?.toUpperCase(),
     procedure_code: proc.procedure.code,
     quantity: proc.quantity,
@@ -673,7 +726,6 @@ function mapProcedure(proc, bpaId) {
 
   return formatted;
 }
-
 function hasChanged(proc, bpaId) {
   if (!proc.id) return true;
 
@@ -681,71 +733,103 @@ function hasChanged(proc, bpaId) {
   if (!original) return true;
 
   return (
-    formatToApiDate(proc.date) !== formatToApiDate(original.date) ||
+    proc.date !== original.date ||
     proc.procedure_name !== original.procedure_name ||
     String(proc.procedure_code) !== String(original.procedure_code) ||
     Number(proc.quantity) !== Number(original.quantity)
   );
 }
 
+async function onProcedureSelected(proc, bpaRef) {
+  const bpaId = unref(bpaRef);
+  if (!bpaId || !proc.procedure_selected) return;
+
+  proc.procedure_name = proc.procedure_selected.name.toUpperCase();
+  proc.procedure_code = proc.procedure_selected.code;
+
+  if (proc.date && proc.quantity) {
+    await saveProcedure(proc, bpaId);
+  }
+}
+
 function buildPayload(proc, bpaId) {
   return {
     bpa_id: bpaId,
-    date: formatToApiDate(proc.date),
+    date: proc.date,
     procedure_name: proc.procedure_name,
     procedure_code: proc.procedure_code,
     quantity: Number(proc.quantity),
   };
 }
-
 async function saveProcedure(proc, bpaId) {
+  if (proc._deleted) return;
+
   if (proc.id && !hasChanged(proc, bpaId)) return;
+
+  proc._saving = true;
 
   const payload = buildPayload(proc, bpaId);
 
-  if (proc.id) {
-    await showFeedback(() => update(proc.id, payload));
-    await reloadProcedures();
-  } else {
-    const response = await showFeedback(() => create(payload));
-    if (response?.id) proc.id = response.id;
-    await reloadProcedures();
+  try {
+    if (proc.id) {
+      const response = await update(proc.id, payload);
+      showSnackbar(response.message);
+    } else {
+      const response = await create(payload);
+
+      if (proc._deleted && response?.id) {
+        await destroy(response.id);
+        return;
+      }
+
+      if (response?.data?.id) {
+        proc.id = response.data.id;
+      }
+      showSnackbar(response.message);
+    }
+
+    originalProcedures.value.set(`${bpaId}-${proc.id}`, { ...proc });
+  } catch (error) {
+    const backendMessage =
+      error?.response?.data?.message ||
+      Object.values(error?.response?.data?.errors ?? {})?.flat()?.[0] ||
+      "Erro inesperado.";
+
+    showSnackbar(backendMessage, "error");
+  } finally {
+    proc._saving = false;
   }
-
-  originalProcedures.value.set(`${bpaId}-${proc.id}`, { ...proc });
 }
-
 function handleFieldBlur(proc, bpaRef) {
   const bpaId = unref(bpaRef);
   if (!bpaId) return;
 
-  if (
-    proc.date &&
-    proc.procedure_name &&
-    proc.procedure_code &&
-    proc.quantity
-  ) {
+  if (proc.date && proc.procedure_selected && proc.quantity) {
     saveProcedure(proc, bpaId);
   }
 }
 
 async function removeProcedure(proc, index, list) {
+  proc._deleted = true;
+
   if (!proc.id) {
     list.splice(index, 1);
     return;
   }
+
   const confirm = await confirmModal(
     "Realmente deseja excluir esse procedimento?",
     "Atenção",
   );
 
-  if (!confirm) return;
-  if (proc.id) {
-    await showFeedback(() => destroy(proc));
+  if (!confirm) {
+    proc._deleted = false;
+    return;
   }
 
+  await showFeedback(() => destroy(proc));
+
   list.splice(index, 1);
-  await reloadProcedures();
 }
 function addProcedure() {
   procedures.value.push(createEmptyProcedure());
