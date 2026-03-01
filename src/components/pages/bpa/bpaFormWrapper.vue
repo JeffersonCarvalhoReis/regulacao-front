@@ -55,7 +55,7 @@ const printSection = ref(null);
 const times = 1;
 const pages = ref(1);
 const topMargin = 10;
-const pixelRatio = 2;
+const pixelRatio = 1.2;
 
 onMounted(() => {
   if (props.mode !== "single") {

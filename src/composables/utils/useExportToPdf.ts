@@ -139,28 +139,73 @@ export function useExportToPdf() {
     topMargin: number = 10,
     pixelRatio: number = 1,
   ) => {
-    const element = printSection;
     clickPrint.value = true;
+    // limite prático do pixelRatio para evitar uso excessivo de memória/CPU
+    const pr = Math.min(pixelRatio, 1.2);
 
     try {
-      const img: HTMLImageElement = await elementToPng(element, pixelRatio);
+      // tentativa de fluxo único (igual à função comentada): captura do elemento inteiro
+      const img: HTMLImageElement = await elementToPng(printSection, pr);
       const pdf: jsPDF = newPDF();
 
-      const page = pageAdjustment(
-        img,
-        pdf,
-        times,
-        pages,
-        printSection,
-        [".page-break"],
-        topMargin,
+      // se existir uma função `pageAdjustment` (importada/definida no escopo do projeto),
+      // usamos ela exatamente como na versão comentada — é a melhor opção para paginação correta.
+      const pa =
+        (globalThis as any).pageAdjustment ??
+        (typeof pageAdjustment !== "undefined"
+          ? (pageAdjustment as any)
+          : null);
+
+      if (pa && typeof pa === "function") {
+        const page = pa(
+          img,
+          pdf,
+          times,
+          pages,
+          printSection,
+          [".page-break"],
+          topMargin,
+        );
+        const blob = page.output("blob");
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, "_blank");
+        return;
+      }
+
+      // fallback eficiente: captura por .a4-page (evita criar imagens extras desnecessárias)
+      const pageElements =
+        printSection.querySelectorAll<HTMLElement>(".a4-page");
+      if (pageElements.length > 0) {
+        for (let i = 0; i < pageElements.length; i++) {
+          const pageElement = pageElements[i];
+          const pageImg = await elementToPng(pageElement, pr); // já retorna HTMLImageElement
+          if (i > 0) pdf.addPage();
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          pdf.addImage(pageImg.src, "PNG", 0, 0, pageWidth, pageHeight);
+        }
+        const blob = pdf.output("blob");
+        const blobUrl = URL.createObjectURL(blob);
+        window.open(blobUrl, "_blank");
+        return;
+      }
+
+      // último recurso: adicionar a imagem inteira ao PDF (mesmo que não haja .a4-page)
+      pdf.addImage(
+        img.src,
+        "PNG",
+        0,
+        0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight(),
       );
-      const blob = page.output("blob");
+      const blob = pdf.output("blob");
       const blobUrl = URL.createObjectURL(blob);
       window.open(blobUrl, "_blank");
     } catch (error) {
-      console.error("Erro ao exportar para PDF:", error);
+      console.error("Erro ao exportar PDF:", error);
     } finally {
+      // pequeno delay para evitar flicker na UI e garantir limpeza de estado
       setTimeout(() => {
         clickPrint.value = false;
       }, 500);
