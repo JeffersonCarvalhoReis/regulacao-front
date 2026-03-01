@@ -30,6 +30,7 @@ declare module 'vue' {
     BaseInputDatePicker: typeof import('./src/components/shared/BaseInputDatePicker.vue')['default']
     BaseSection: typeof import('./src/components/shared/BaseSection.vue')['default']
     BaseTable: typeof import('./src/components/shared/BaseTable.vue')['default']
+    BpaCompetence: typeof import('./src/components/pages/bpa/BpaCompetence.vue')['default']
     BpaDoctorTable: typeof import('./src/components/pages/bpa-setting/BpaDoctorTable.vue')['default']
     BpaForm: typeof import('./src/components/pages/bpa/bpaForm.vue')['default']
     BpaFormWapper: typeof import('./src/components/pages/bpa/bpaFormWrapper.vue')['default']

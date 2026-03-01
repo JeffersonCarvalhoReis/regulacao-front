@@ -3,11 +3,16 @@
     <travel-search @search-travel="search" ref="travelSearchRef">
       <slot />
     </travel-search>
-    <div class="text-left mt-4">
+    <div class="flex justify-between mt-4">
       <base-button-filter
         button-icon="mdi-text-box"
         button-text="Nova Comanda"
         @filters="dialogNewCommand = true"
+      />
+      <base-button-register
+        button-icon="mdi-file-document-multiple"
+        button-text="Exportar BPA"
+        @register="openBpaCompetence = true"
       />
     </div>
     <base-table
@@ -61,6 +66,9 @@
       @close="dialogNewCommand = false"
     />
   </v-dialog>
+  <v-dialog v-model="openBpaCompetence">
+    <bpa-competence @close="openBpaCompetence = false" />
+  </v-dialog>
 </template>
 
 <script setup>
@@ -73,6 +81,7 @@ const props = defineProps({
   edit: { type: Boolean, default: false },
   showDelete: { type: Boolean, default: false },
 });
+
 const {
   data,
   loadingList,
@@ -93,6 +102,7 @@ const { showFeedback, confirmModal, showFeedbackLoading } =
 const options = ref({});
 const viewTravelDetails = ref(false);
 const editTravel = ref(false);
+const openBpaCompetence = ref(false);
 const selectedTravel = ref({});
 const tooltipTextDelete =
   "Não é possível excluir viagem enquanto houver passageiros.";
