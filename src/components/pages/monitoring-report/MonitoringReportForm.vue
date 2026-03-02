@@ -12,8 +12,8 @@
               v-model="patient_id"
               :error-messages="errors.patient_id"
               :is-editing="isEditing"
-              :is-clearable="true"
-              :is-required="true"
+              is-clearable
+              is-required
             />
             <base-button-register
               button-icon="mdi-account-box-plus-outline"
@@ -30,7 +30,7 @@
               v-model="companion_id"
               :error-messages="errors.companion_id"
               :is-editing="isEditing"
-              :is-clearable="true"
+              is-clearable
             />
 
             <base-button-register

@@ -41,29 +41,14 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const patient_id = ref(props.modelValue);
-
-watch(patient_id, (value) => emit("update:modelValue", value));
-watch(
-  () => props.modelValue,
-  (value) => {
-    patient_id.value = value;
-  },
-);
+const patient_id = computed({
+  get: () => props.modelValue,
+  set: (value) => emit("update:modelValue", value),
+});
 
 const { data, refetch, setFilter, isLoading, clearFilters } = usePatientApi();
 
 const { patientLabel } = usePatientLabel();
-
-const loadPatient = async () => {
-  if (props.isEditing && props.modelValue) {
-    setFilter("id", props.modelValue);
-    await refetch();
-    await nextTick();
-  } else {
-    refetch();
-  }
-};
 
 const onSearch = debounce(async (v) => {
   if (patient_id.value) return;
@@ -74,8 +59,18 @@ const onSearch = debounce(async (v) => {
   refetch();
 }, 250);
 
+watch(
+  () => props.modelValue,
+  async (value) => {
+    if (props.isEditing && value) {
+      setFilter("id", value);
+      await refetch();
+    }
+  },
+);
 onMounted(async () => {
-  await nextTick();
-  await loadPatient();
+  if (!props.isEditing) {
+    await refetch();
+  }
 });
 </script>

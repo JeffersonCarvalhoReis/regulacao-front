@@ -36,29 +36,14 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const companion_id = ref(props.modelValue);
-
-watch(companion_id, (value) => emit("update:modelValue", value));
-watch(
-  () => props.modelValue,
-  (value) => {
-    companion_id.value = value;
-  },
-);
+const companion_id = computed({
+  get: () => props.modelValue,
+  set: (value) => emit("update:modelValue", value),
+});
 
 const { data, refetch, setFilter, isLoading, clearFilters } = useCompanionApi();
 
 const { patientLabel } = usePatientLabel();
-
-const loadCompanion = async () => {
-  if (props.isEditing && props.modelValue) {
-    setFilter("id", props.modelValue);
-    await refetch();
-    await nextTick();
-  } else {
-    refetch();
-  }
-};
 
 const onSearch = debounce(async (v) => {
   if (companion_id.value) return;
@@ -69,8 +54,19 @@ const onSearch = debounce(async (v) => {
   refetch();
 }, 250);
 
+watch(
+  () => props.modelValue,
+  async (value) => {
+    if (props.isEditing && value) {
+      setFilter("id", value);
+      await refetch();
+    }
+  },
+  { immediate: true },
+);
 onMounted(async () => {
-  await nextTick();
-  await loadCompanion();
+  if (!props.isEditing) {
+    await refetch();
+  }
 });
 </script>
