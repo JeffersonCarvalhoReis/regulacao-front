@@ -34,11 +34,10 @@
         <PatientInput
           :key="autocompleteKey"
           v-model="patient_id"
-          class="required"
+          is-required
           :error-messages="errors.patient_id"
           :is-editing="isEditing"
-          :model-value="props.modelValue?.id"
-          :is-clearable="true"
+          is-clearable
         />
         <v-autocomplete
           :key="autocompleteKey"
@@ -58,8 +57,7 @@
           v-model="companion_id"
           :error-messages="errors.companion_id"
           :is-editing="isEditing"
-          :model-value="props.modelValue.companion?.id"
-          :is-clearable="true"
+          is-clearable
         />
 
         <v-text-field
@@ -80,8 +78,7 @@
             v-model="companion.companion.id"
             :error-messages="errors[`companions.${index}.companion.id`]"
             :is-editing="isEditing"
-            :model-value="companion.companion.id"
-            :is-clearable="true"
+            is-clearable
           />
 
           <!-- wrapper flex: campo ocupa todo espaço, botão fica apenas com a largura do ícone -->
@@ -254,6 +251,7 @@ const { handleSubmit, errors, resetForm, setValues } = useForm({
   validationSchema: schema,
   initialValues: {
     patient_id: null,
+    companion_id: null,
     companions: [],
     appointment_date: null,
     appointment_time: "",

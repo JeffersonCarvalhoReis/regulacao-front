@@ -59,11 +59,11 @@
           <PatientInput
             v-model="patient_id"
             class="col-span-2"
-            :model-value="props.modelValue?.patient_id"
             :error-messages="errors.patient_id"
             :is-editing="isEditing"
             is-clearable
             is-required
+            @update:modelValue="updatePatient"
           />
 
           <base-input-date-picker
@@ -226,7 +226,6 @@ import { useProcedureApi } from "@/composables/modules/useProcedureModule";
 import { useRequestingUnitApi } from "@/composables/modules/useRequestingUnitModule";
 import { useSpecialistApi } from "@/composables/modules/useSpecialistModule";
 import { useMeStore } from "@/stores/me";
-import debounce from "lodash/debounce";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 
@@ -269,13 +268,7 @@ const dialogPatientForm = ref(false);
 const dialogProcedureForm = ref(false);
 const dialogSpecialistForm = ref(false);
 const dialogRequestingUnitForm = ref(false);
-const patient_age = computed(() => {
-  const ageLabel = calculateAge(
-    patientData.value.find((v) => v.id == patient_id.value)?.birth_date,
-  );
-  const match = ageLabel.match(/^(\d+)\s+ano/);
-  return match ? Number(match[1]) : 0;
-});
+
 const procedure_max_age = computed(
   () => procedureData.value.find((v) => v.id === procedure_id.value)?.max_age,
 );
@@ -334,15 +327,11 @@ const loadPatient = async () => {
     patientFetch();
   }
 };
-
-const onSearch = debounce(async (v) => {
-  clearFilters();
-  const name = v.split("-");
-  patientFilter("name", name[0]);
-  await nextTick();
-  patientFetch();
-}, 250);
-
+const updatePatient = async (id) => {
+  patientFilter("id", id);
+  patient_id.value = id;
+  await patientFetch();
+};
 const emit = defineEmits(["close", "save"]);
 
 const title = computed(() =>
@@ -383,26 +372,50 @@ const schema = yup.object({
           .test(
             "check_min_age",
             `Paciente não tem a idade mínima exigida para essa especialidade (${specialist_min_age.value} anos)`,
-            () => {
-              if (
-                patient_age.value != null &&
-                specialist_min_age.value != null
-              ) {
-                return patient_age.value >= specialist_min_age.value;
+            function (value) {
+              const { patient_id } = this.parent;
+
+              const patient = patientData.value.find(
+                (p) => p.id === patient_id,
+              );
+              const specialist = specialistData.value.find(
+                (s) => s.id === value,
+              );
+
+              if (!patient || !specialist) return true;
+
+              const age = calculateAge(patient.birth_date);
+              const years = Number(age.match(/^(\d+)/)?.[1] ?? 0);
+
+              if (specialist.min_age != null) {
+                return years >= specialist.min_age;
               }
+
               return true;
             },
           )
           .test(
             "check_max_age",
             `Paciente ultrapassou a idade máxima permitida para essa especialidade (${specialist_max_age.value} anos)`,
-            () => {
-              if (
-                patient_age.value != null &&
-                specialist_max_age.value != null
-              ) {
-                return patient_age.value <= specialist_max_age.value;
+            function (value) {
+              const { patient_id } = this.parent;
+
+              const patient = patientData.value.find(
+                (p) => p.id === patient_id,
+              );
+              const specialist = specialistData.value.find(
+                (s) => s.id === value,
+              );
+
+              if (!patient || !specialist) return true;
+
+              const age = calculateAge(patient.birth_date);
+              const years = Number(age.match(/^(\d+)/)?.[1] ?? 0);
+
+              if (specialist.max_age != null) {
+                return years <= specialist.max_age;
               }
+
               return true;
             },
           ),
@@ -419,26 +432,46 @@ const schema = yup.object({
           .test(
             "check_min_age",
             `Paciente não tem a idade mínima exigida para esse procedimento (${procedure_min_age.value} anos)`,
-            () => {
-              if (
-                patient_age.value != null &&
-                procedure_min_age.value != null
-              ) {
-                return patient_age.value >= procedure_min_age.value;
+            function (value) {
+              const { patient_id } = this.parent;
+
+              const patient = patientData.value.find(
+                (p) => p.id === patient_id,
+              );
+              const procedure = procedureData.value.find((s) => s.id === value);
+
+              if (!patient || !procedure) return true;
+
+              const age = calculateAge(patient.birth_date);
+              const years = Number(age.match(/^(\d+)/)?.[1] ?? 0);
+
+              if (procedure.min_age != null) {
+                return years >= procedure.min_age;
               }
+
               return true;
             },
           )
           .test(
             "check_max_age",
             `Paciente ultrapassou a idade máxima permitida para esse procedimento (${procedure_max_age.value} anos)`,
-            () => {
-              if (
-                patient_age.value != null &&
-                procedure_max_age.value != null
-              ) {
-                return patient_age.value <= procedure_max_age.value;
+            function (value) {
+              const { patient_id } = this.parent;
+
+              const patient = patientData.value.find(
+                (p) => p.id === patient_id,
+              );
+              const procedure = procedureData.value.find((s) => s.id === value);
+
+              if (!patient || !procedure) return true;
+
+              const age = calculateAge(patient.birth_date);
+              const years = Number(age.match(/^(\d+)/)?.[1] ?? 0);
+
+              if (procedure.max_age != null) {
+                return years <= procedure.max_age;
               }
+
               return true;
             },
           ),
@@ -448,11 +481,12 @@ const schema = yup.object({
 
 const today = new Date();
 
-const { handleSubmit, errors, resetForm } = useForm({
+const { handleSubmit, errors, resetForm, validateField } = useForm({
   validationSchema: schema,
   initialValues: {
     attachment: null,
     solicitation_date: today,
+    solicitation_type: null,
   },
 });
 
@@ -505,4 +539,14 @@ const submitNewRequestingUnit = async (val) => {
 const clear = () => {
   resetForm();
 };
+
+watch([patient_id, procedure_id, specialist_id, solicitation_type], () => {
+  if (solicitation_type.value === "consultation") {
+    validateField("specialist_id");
+  }
+
+  if (solicitation_type.value === "exam") {
+    validateField("procedure_id");
+  }
+});
 </script>
