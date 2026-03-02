@@ -56,18 +56,14 @@
         </div>
 
         <div class="grid grid-cols-3 gap-2">
-          <v-autocomplete
+          <PatientInput
             v-model="patient_id"
             class="col-span-2"
-            density="compact"
+            :model-value="props.modelValue?.patient_id"
             :error-messages="errors.patient_id"
-            :item-title="patientLabel"
-            item-value="id"
-            :items="patientData"
-            label="Paciente"
-            :loading="isLoading"
-            variant="outlined"
-            @update:search="onSearch"
+            :is-editing="isEditing"
+            is-clearable
+            is-required
           />
 
           <base-input-date-picker
@@ -229,7 +225,6 @@ import { usePatientApi } from "@/composables/modules/usePatientModule";
 import { useProcedureApi } from "@/composables/modules/useProcedureModule";
 import { useRequestingUnitApi } from "@/composables/modules/useRequestingUnitModule";
 import { useSpecialistApi } from "@/composables/modules/useSpecialistModule";
-import { usePatientLabel } from "@/composables/utils/usePatientLabel";
 import { useMeStore } from "@/stores/me";
 import debounce from "lodash/debounce";
 import { useField, useForm } from "vee-validate";
@@ -244,7 +239,6 @@ const {
   refetch: patientFetch,
   create: patientCreate,
   setFilter: patientFilter,
-  isLoading,
   clearFilters,
 } = usePatientApi();
 const {
@@ -267,7 +261,6 @@ const {
 } = useRequestingUnitApi();
 const { showFeedback, showFeedbackLoading } = useSweetAlertFeedback();
 const { calculateAge } = useCalculateAge();
-const { patientLabel } = usePatientLabel();
 
 const meStore = useMeStore();
 const role = meStore.role;
@@ -278,22 +271,22 @@ const dialogSpecialistForm = ref(false);
 const dialogRequestingUnitForm = ref(false);
 const patient_age = computed(() => {
   const ageLabel = calculateAge(
-    patientData.value.find((v) => v.id == patient_id.value)?.birth_date
+    patientData.value.find((v) => v.id == patient_id.value)?.birth_date,
   );
   const match = ageLabel.match(/^(\d+)\s+ano/);
   return match ? Number(match[1]) : 0;
 });
 const procedure_max_age = computed(
-  () => procedureData.value.find((v) => v.id === procedure_id.value)?.max_age
+  () => procedureData.value.find((v) => v.id === procedure_id.value)?.max_age,
 );
 const procedure_min_age = computed(
-  () => procedureData.value.find((v) => v.id === procedure_id.value)?.min_age
+  () => procedureData.value.find((v) => v.id === procedure_id.value)?.min_age,
 );
 const specialist_max_age = computed(
-  () => specialistData.value.find((v) => v.id === specialist_id.value)?.max_age
+  () => specialistData.value.find((v) => v.id === specialist_id.value)?.max_age,
 );
 const specialist_min_age = computed(
-  () => specialistData.value.find((v) => v.id === specialist_id.value)?.min_age
+  () => specialistData.value.find((v) => v.id === specialist_id.value)?.min_age,
 );
 
 const solicitationTypeOptions = [
@@ -330,15 +323,12 @@ onMounted(async () => {
     {
       loadingText: "Carregando Dados",
       erroTitle: "Falha ao Carregar dados",
-    }
+    },
   );
 });
 
 const loadPatient = async () => {
   if (isEditing.value) {
-    patientFilter("id", props.modelValue?.patient_id);
-    await patientFetch();
-    await nextTick();
     resetForm({ values: props.modelValue });
   } else {
     patientFetch();
@@ -356,7 +346,7 @@ const onSearch = debounce(async (v) => {
 const emit = defineEmits(["close", "save"]);
 
 const title = computed(() =>
-  isEditing.value ? "Editar Solicitação" : "Cadastrar Solicitação"
+  isEditing.value ? "Editar Solicitação" : "Cadastrar Solicitação",
 );
 
 const schema = yup.object({
@@ -401,7 +391,7 @@ const schema = yup.object({
                 return patient_age.value >= specialist_min_age.value;
               }
               return true;
-            }
+            },
           )
           .test(
             "check_max_age",
@@ -414,7 +404,7 @@ const schema = yup.object({
                 return patient_age.value <= specialist_max_age.value;
               }
               return true;
-            }
+            },
           ),
       otherwise: (schema) => schema.nullable(),
     }),
@@ -437,7 +427,7 @@ const schema = yup.object({
                 return patient_age.value >= procedure_min_age.value;
               }
               return true;
-            }
+            },
           )
           .test(
             "check_max_age",
@@ -450,7 +440,7 @@ const schema = yup.object({
                 return patient_age.value <= procedure_max_age.value;
               }
               return true;
-            }
+            },
           ),
       otherwise: (schema) => schema.nullable(),
     }),
@@ -487,28 +477,28 @@ const onSubmit = handleSubmit((values) => {
 const submitNewPatient = async (val) => {
   const success = await showFeedback(() => patientCreate(val));
   if (success) {
-    patientFetch(), (dialogPatientForm.value = false);
+    (patientFetch(), (dialogPatientForm.value = false));
   }
 };
 
 const submitNewSpecialist = async (val) => {
   const success = await showFeedback(() => specialistCreate(val));
   if (success) {
-    specialistFetch(), (dialogSpecialistForm.value = false);
+    (specialistFetch(), (dialogSpecialistForm.value = false));
   }
 };
 
 const submitNewProcedure = async (val) => {
   const success = await showFeedback(() => procedureCreate(val));
   if (success) {
-    procedureFetch(), (dialogProcedureForm.value = false);
+    (procedureFetch(), (dialogProcedureForm.value = false));
   }
 };
 
 const submitNewRequestingUnit = async (val) => {
   const success = await showFeedback(() => requestingUnitCreate(val));
   if (success) {
-    requestingUnitFetch(), (dialogRequestingUnitForm.value = false);
+    (requestingUnitFetch(), (dialogRequestingUnitForm.value = false));
   }
 };
 
