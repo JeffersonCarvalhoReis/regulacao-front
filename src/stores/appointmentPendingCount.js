@@ -1,20 +1,16 @@
-// Utilities
-import { defineStore } from 'pinia';
-import { api } from '@/config/axios';
+import { api } from "@/config/axios";
+import { defineStore } from "pinia";
 
-export const useAppointmentPendingStore = defineStore('appointmentPending', {
-
+export const useAppointmentPendingStore = defineStore("appointmentPending", {
   state: () => ({
-    pending: '',
+    pending: 0,
   }),
 
   actions: {
-    async appointmentPendingCount () {
-      const response = await api.get('/appointments-count');
+    async appointmentPendingCount() {
+      const response = await api.get("/appointments-count");
 
       this.pending = response.data.appointments_pending;
-
     },
   },
-
-})
+});

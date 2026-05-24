@@ -44,9 +44,9 @@
           <slot :item="item" name="item.action" />
         </template>
         <template v-else>
-          <v-btn-group divided variant="outlined">
+          <v-btn-group divided variant="outlined" class="flex justify-end">
             <div v-if="handleConditionalAction(item)">
-              <v-tooltip v-if="newAction" :text="textNewAction">
+              <v-tooltip v-if="canShowNewAction(item)" :text="textNewAction">
                 <template #activator="{ props }">
                   <v-btn
                     v-bind="props"
@@ -191,7 +191,10 @@ const props = defineProps({
   textDelete: { type: String, default: "Excluir" },
   iconEdit: { type: String, default: "mdi-pencil" },
   textEdit: { type: String, default: "Editar" },
-  newAction: { type: Boolean, default: false },
+  newAction: {
+    type: [Boolean, Function],
+    default: false,
+  },
   classNewAction: {
     type: String,
     default: "text-ita-green bg-white/0 border-0 ml-1 h-full",
@@ -224,6 +227,15 @@ const options = ref({
   page: 1,
   itemsPerPage: 10,
 });
+
+const canShowNewAction = (item) => {
+  if (typeof props.newAction === "function") {
+    return props.newAction(item);
+  }
+
+  return props.newAction;
+};
+
 const handleConditionalAction = (item) => {
   if (props.condiationalAction) {
     return item.status !== "scheduled";
@@ -299,7 +311,7 @@ watch(
 
     emit("update-options", filters.value);
   },
-  { deep: true }
+  { deep: true },
 );
 
 onMounted(() => {

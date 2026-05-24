@@ -24,10 +24,7 @@
           @click:append-inner="showPassword = !showPassword"
           @keydown.space.prevent
         />
-        <div
-          v-if="password?.length > 0 "
-          class="max-w-100 relative mt-2"
-        >
+        <div v-if="password?.length > 0" class="max-w-100 relative mt-2">
           <div
             class="mt-1 text-sm font-medium absolute bottom-2"
             :class="colorPasswordStrength"
@@ -42,7 +39,6 @@
             class="h-2 rounded mt-1 transition-all duration-300 absolute bottom-0 z-10"
             :class="[colorPasswordBar]"
           />
-
         </div>
         <v-text-field
           v-model="passwordConfirm"
@@ -79,7 +75,7 @@
           variant="outlined"
         />
         <v-autocomplete
-          v-if="role == 'provider_unit_manager'"
+          v-if="role == 'provider_unit_manager' || role == 'caps'"
           v-model="provider_unit_id"
           density="compact"
           :error-messages="errors.provider_unit_id"
@@ -92,7 +88,11 @@
       </v-form>
     </v-card-text>
     <v-card-actions class="flex justify-between mx-4 mb-4">
-      <base-button-clear v-if="!isEditing" button-text="Limpar Campos" @clear="clear" />
+      <base-button-clear
+        v-if="!isEditing"
+        button-text="Limpar Campos"
+        @clear="clear"
+      />
       <v-spacer />
       <base-button-register
         button-icon="mdi-content-save"
@@ -104,105 +104,105 @@
 </template>
 
 <script setup>
-  import { useRoles } from '@/composables/utils/useRoles';
-  import { usePasswordStrength } from '@/composables/utils/usePasswordStrength';
-  import { useProviderUnitApi } from '@/composables/modules/useProviderUnitModule';
-  import { useHealthUnitApi } from '@/composables/modules/useHealthUnitModule';
-  import { useField, useForm } from 'vee-validate'
-  import * as yup from 'yup'
+import { useHealthUnitApi } from "@/composables/modules/useHealthUnitModule";
+import { useProviderUnitApi } from "@/composables/modules/useProviderUnitModule";
+import { usePasswordStrength } from "@/composables/utils/usePasswordStrength";
+import { useRoles } from "@/composables/utils/useRoles";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 
-  const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-  });
+const props = defineProps({
+  modelValue: { type: Object, default: () => ({}) },
+});
 
-  const { data: providerUnitData, refetch: providerUnitFetch, params: providerUnitParams } = useProviderUnitApi();
-  const { data: healthUnitData , refetch: healthUnitFetch, params: healthUnitParams } = useHealthUnitApi();
+const {
+  data: providerUnitData,
+  refetch: providerUnitFetch,
+  params: providerUnitParams,
+} = useProviderUnitApi();
+const {
+  data: healthUnitData,
+  refetch: healthUnitFetch,
+  params: healthUnitParams,
+} = useHealthUnitApi();
 
-  const emit = defineEmits(['close', 'save']);
-  const showPassword = ref(false)
-  const title = computed(() =>
-    isEditing.value ? 'Editar Usuário' : 'Cadastrar Usuário'
-  );
+const emit = defineEmits(["close", "save"]);
+const showPassword = ref(false);
+const title = computed(() =>
+  isEditing.value ? "Editar Usuário" : "Cadastrar Usuário",
+);
 
-  const { roles } = useRoles();
-  const isEditing = computed(() => !!props.modelValue?.id);
-  const schema = computed(() =>
-    yup.object({
-      user: yup.string().required('Usuário é obrigatório'),
-      health_unit_id: yup.string().nullable(),
-      provider_unit_id: yup
-        .number()
-        .when('role', {
-          is: 'provider_unit_manager',
-          then: schema => schema.required('Unidade Prestadora é obrigatória'),
-          otherwise: schema => schema.nullable(),
-        }),
-
-      password: isEditing.value
-        ? yup
-          .string()
-          .min(8, 'A senha deve ter no mínimo 8 caracteres')
-          .matches(/[A-Za-z]/, 'A senha deve conter ao menos uma letra')
-          .matches(/[0-9]/, 'A senha deve conter ao menos um número')
-          .notRequired()
-        : yup
-          .string()
-          .required('Senha é obrigatória')
-          .min(8, 'A senha deve ter no mínimo 8 caracteres')
-          .matches(/[A-Za-z]/, 'A senha deve conter ao menos uma letra')
-          .matches(/[0-9]/, 'A senha deve conter ao menos um número'),
-
-      passwordConfirm: yup.string().when('password', ([password], schema) => {
-        if (!password) {
-          return schema.notRequired();
-        }
-
-        return schema
-          .required('Confirme a senha')
-          .oneOf([yup.ref('password')], 'As senhas não coincidem');
+const { roles } = useRoles();
+const isEditing = computed(() => !!props.modelValue?.id);
+const schema = computed(() =>
+  yup.object({
+    user: yup.string().required("Usuário é obrigatório"),
+    health_unit_id: yup.string().required("Unidade de Saúde é obrigatório"),
+    provider_unit_id: yup
+      .number()
+      .nullable()
+      .test("roleType", "Unidade Prestadora é obrigatória", (value) => {
+        if (role.value && !value)
+          return !["provider_unit_manager", "caps"].includes(role.value);
+        return true;
       }),
+    password: isEditing.value
+      ? yup
+          .string()
+          .min(8, "A senha deve ter no mínimo 8 caracteres")
+          .matches(/[A-Za-z]/, "A senha deve conter ao menos uma letra")
+          .matches(/[0-9]/, "A senha deve conter ao menos um número")
+          .notRequired()
+      : yup
+          .string()
+          .required("Senha é obrigatória")
+          .min(8, "A senha deve ter no mínimo 8 caracteres")
+          .matches(/[A-Za-z]/, "A senha deve conter ao menos uma letra")
+          .matches(/[0-9]/, "A senha deve conter ao menos um número"),
 
-      role: yup.string().required('Função é obrigatória'),
-    })
-  );
+    passwordConfirm: yup.string().when("password", ([password], schema) => {
+      if (!password) {
+        return schema.notRequired();
+      }
 
-  const { handleSubmit, errors, resetForm } = useForm({
-    validationSchema: schema,
-  });
+      return schema
+        .required("Confirme a senha")
+        .oneOf([yup.ref("password")], "As senhas não coincidem");
+    }),
 
-  const { value: user } = useField('user')
-  const { value: password } = useField('password')
-  const { value: passwordConfirm } = useField('passwordConfirm')
-  const { value: role } = useField('role')
-  const { value: provider_unit_id } = useField('provider_unit_id')
-  const { value: health_unit_id } = useField('health_unit_id')
+    role: yup.string().required("Função é obrigatória"),
+  }),
+);
 
-  const {
-    textPasswordStrength,
-    colorPasswordStrength,
-    colorPasswordBar,
-  } = usePasswordStrength(password)
+const { handleSubmit, errors, resetForm } = useForm({
+  validationSchema: schema,
+});
 
+const { value: user } = useField("user");
+const { value: password } = useField("password");
+const { value: passwordConfirm } = useField("passwordConfirm");
+const { value: role } = useField("role");
+const { value: provider_unit_id } = useField("provider_unit_id");
+const { value: health_unit_id } = useField("health_unit_id");
 
-  onMounted(async () => {
-    if (isEditing.value) {
-      resetForm({ values: props.modelValue })
-    }
-    providerUnitParams.value.per_page = -1;
-    healthUnitParams.value.per_page = -1;
-    await nextTick();
-    await Promise.all([
-      providerUnitFetch(),
-      healthUnitFetch(),
-    ])
-  });
+const { textPasswordStrength, colorPasswordStrength, colorPasswordBar } =
+  usePasswordStrength(password);
 
-  const onSubmit = handleSubmit(values => {
-    emit('save', values)
-  });
+onMounted(async () => {
+  if (isEditing.value) {
+    resetForm({ values: props.modelValue });
+  }
+  providerUnitParams.value.per_page = -1;
+  healthUnitParams.value.per_page = -1;
+  await nextTick();
+  await Promise.all([providerUnitFetch(), healthUnitFetch()]);
+});
 
-  const clear = () => {
-    resetForm()
-  };
+const onSubmit = handleSubmit((values) => {
+  emit("save", values);
+});
 
+const clear = () => {
+  resetForm();
+};
 </script>

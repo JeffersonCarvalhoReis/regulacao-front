@@ -52,7 +52,7 @@ export default [
     component: Appointments,
     meta: {
       requiresAuth: true,
-      roles: ["regulation_officer"],
+      roles: ["regulation_officer", "caps"],
     },
   },
   {
@@ -61,7 +61,7 @@ export default [
     component: AppointmentsManagement,
     meta: {
       requiresAuth: true,
-      roles: ["provider_unit_manager"],
+      roles: ["provider_unit_manager", "caps"],
     },
   },
   {
@@ -102,6 +102,7 @@ export default [
         "regulation_officer",
         "reception",
         "provider_unit_manager",
+        "caps",
       ],
     },
   },
@@ -164,7 +165,12 @@ export default [
     component: Solicitations,
     meta: {
       requiresAuth: true,
-      roles: ["regulation_officer", "reception", "provider_unit_manager"],
+      roles: [
+        "regulation_officer",
+        "reception",
+        "provider_unit_manager",
+        "caps",
+      ],
     },
   },
 

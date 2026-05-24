@@ -8,12 +8,8 @@
       class="bg-white border-t border-x border-gray-200"
       selected-class="text-blue-800 bg-blue-100"
     >
-      <v-tab class="font-bold px-10" value="consultation">
-        Consultas
-      </v-tab>
-      <v-tab class="font-bold  px-10" value="exam">
-        Exames
-      </v-tab>
+      <v-tab class="font-bold px-10" value="consultation"> Consultas </v-tab>
+      <v-tab class="font-bold px-10" value="exam"> Exames </v-tab>
     </v-tabs>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="consultation">
@@ -25,7 +21,7 @@
           :icon-new-action="appointmentIcon"
           :items="data"
           :loading="loadingList"
-          :new-action="appointmentPermission"
+          :new-action="canCreateAppointment"
           :show-delete="props.showDelete"
           :text-new-action="appointmentText"
           :tooltip-text-delete="tooltipTextDelete"
@@ -40,7 +36,7 @@
             {{ formatDate(item.solicitation_date) }}
           </template>
           <template #item.is_first_time="{ item }">
-            {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
+            {{ booleanToLabel(item.is_first_time, "Não", "Sim") }}
           </template>
           <template #item.is_urgent="{ item }">
             {{ booleanToLabel(item.is_urgent) }}
@@ -57,7 +53,7 @@
           :icon-new-action="appointmentIcon"
           :items="data"
           :loading="loadingList"
-          :new-action="appointmentPermission"
+          :new-action="canCreateAppointment"
           :show-delete="props.showDelete"
           :text-new-action="appointmentText"
           :tooltip-text-delete="tooltipTextDelete"
@@ -72,7 +68,7 @@
             {{ formatDate(item.solicitation_date) }}
           </template>
           <template #item.is_first_time="{ item }">
-            {{ booleanToLabel(item.is_first_time, 'Não', 'Sim') }}
+            {{ booleanToLabel(item.is_first_time, "Não", "Sim") }}
           </template>
           <template #item.is_urgent="{ item }">
             {{ booleanToLabel(item.is_urgent) }}
@@ -80,207 +76,236 @@
         </base-table>
       </v-tabs-window-item>
     </v-tabs-window>
-
-
   </div>
   <v-dialog v-model="viewSolicitationDetails">
-    <solicitation-details :solicitation-data="solicitationData" @close="viewSolicitationDetails = false" />
+    <solicitation-details
+      :solicitation-data="solicitationData"
+      @close="viewSolicitationDetails = false"
+    />
   </v-dialog>
 
-  <v-dialog
-    v-model="editSolicitation"
-    class="z-999"
-  >
-    <solicitation-form :model-value="selectedSolicitation" @close="editSolicitation = false" @save="submit" />
+  <v-dialog v-model="editSolicitation" class="z-999">
+    <solicitation-form
+      :model-value="selectedSolicitation"
+      @close="editSolicitation = false"
+      @save="submit"
+    />
   </v-dialog>
-  <v-dialog
-    v-model="dialogAppointment"
-    class="z-999"
-  >
-    <appointment-form :solicitation-data="selectedSolicitation" @close="dialogAppointment = false" @save="submitAppointment" />
+  <v-dialog v-model="dialogAppointment" class="z-999">
+    <appointment-form
+      :solicitation-data="selectedSolicitation"
+      @close="dialogAppointment = false"
+      @save="submitAppointment"
+    />
   </v-dialog>
-  <v-dialog
-    v-model="dialogAppointmentConfirmation"
-    class="z-985"
-  >
-    <appointment-confirmation :appointment-data="appointmentData" @close="dialogAppointmentConfirmation = false" />
+  <v-dialog v-model="dialogAppointmentConfirmation" class="z-985">
+    <appointment-confirmation
+      :appointment-data="appointmentData"
+      @close="dialogAppointmentConfirmation = false"
+    />
   </v-dialog>
 </template>
 
 <script setup>
-  import { useSolicitationApi } from '@/composables/modules/useSolicitationModule';
-  import { useAppointmentApi } from '@/composables/modules/useAppointmentModule';
-  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
-  import { useBooleanLabel } from '@/composables/utils/useBooleanLabel';
-  import { useMeStore } from '@/stores/me';
-  import debounce from 'lodash/debounce'
+import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
+import { useAppointmentApi } from "@/composables/modules/useAppointmentModule";
+import { useSolicitationApi } from "@/composables/modules/useSolicitationModule";
+import { useBooleanLabel } from "@/composables/utils/useBooleanLabel";
+import { useMeStore } from "@/stores/me";
+import debounce from "lodash/debounce";
 
-  const props = defineProps({
-    edit: { type: Boolean, default: true },
-    showDelete: { type: Boolean, default: true },
+const props = defineProps({
+  edit: { type: Boolean, default: true },
+  showDelete: { type: Boolean, default: true },
+});
+const {
+  data,
+  loadingList,
+  refetch,
+  setTableOptions,
+  meta,
+  setFilter,
+  destroy,
+  clearFilters,
+  updateWithAttachment,
+} = useSolicitationApi();
+const { create } = useAppointmentApi();
+const { showFeedback, confirmModal } = useSweetAlertFeedback();
+const { booleanToLabel } = useBooleanLabel();
+const { formatDate } = useFormatDate();
 
-  });
-  const { data, loadingList, refetch, setTableOptions, meta, setFilter, destroy, clearFilters, updateWithAttachment } = useSolicitationApi();
-  const { create } = useAppointmentApi();
-  const { showFeedback, confirmModal } = useSweetAlertFeedback();
-  const { booleanToLabel } = useBooleanLabel();
-  const { formatDate } = useFormatDate();
-
-  const meStore = useMeStore();
-  const role = meStore.role;
-  const appointmentPermission = ['regulation_officer', 'provider_unit_manager'].includes(role)
-  const options = ref({});
-  const viewSolicitationDetails = ref(false);
-  const editSolicitation = ref(false);
-  const dialogAppointment = ref(false);
-  const dialogAppointmentConfirmation = ref(false);
-  const appointmentData = ref(null);
-  const selectedSolicitation = ref({});
-  const solicitationData = ref({});
-  const tooltipTextDelete = 'Não é possível excluir uma solicitação já agendada.'
-  const tab = ref('consultation');
-  const appointmentIcon = computed(() => role == 'regulation_officer' ? 'mdi-calendar-check' : 'mdi-calendar-alert');
-  const appointmentText = computed(() => role == 'regulation_officer' ? 'Agendar Solicitação' : 'Solicitar Agendamento');
-  const appointmentClass = 'text-green-600 bg-white/0 border-0 ml-1 h-full';
-
-
-  const updateOptions = newOptions => {
-    options.value = { ...newOptions }
-  };
-
-  const openAppointment = solicitation => {
-    selectedSolicitation.value = solicitation
-    dialogAppointment.value = true
+const meStore = useMeStore();
+const role = meStore.role;
+const canCreateAppointment = (item) => {
+  // Roles que sempre podem
+  if (["regulation_officer", "provider_unit_manager"].includes(role)) {
+    return true;
   }
 
-  const clearFiltersTab = () => {
-    clearFilters();
-    setFilter('solicitation_type', tab.value)
-    setFilter('has_appointment', false)
+  // CAPS: somente consulta com psiquiatra
+  if (role === "caps") {
+    return (
+      item.solicitation_type === "consultation" &&
+      item.specialist?.toLowerCase().includes("psiquiatra")
+    );
   }
-  const handleDelete = async solicitation => {
-    const confirm = await confirmModal(`Tem certeza que deseja excluir a solicitação do paciente <strong>${solicitation.patient}</strong>?`, 'Atenção');
-    if(confirm) {
-      await showFeedback(() => destroy(solicitation)) ;
-      refetch()
-    }
-  };
 
-  const handleEdit = solicitation => {
-    selectedSolicitation.value = solicitation
-    editSolicitation.value = true
-  };
+  return false;
+};
 
-  const submit = async solicitation => {
-    await showFeedback(() => updateWithAttachment(solicitation.id, solicitation));
+const options = ref({});
+const viewSolicitationDetails = ref(false);
+const editSolicitation = ref(false);
+const dialogAppointment = ref(false);
+const dialogAppointmentConfirmation = ref(false);
+const appointmentData = ref(null);
+const selectedSolicitation = ref({});
+const solicitationData = ref({});
+const tooltipTextDelete = "Não é possível excluir uma solicitação já agendada.";
+const tab = ref("consultation");
+const appointmentIcon = computed(() =>
+  role == "regulation_officer" || role == "caps"
+    ? "mdi-calendar-check"
+    : "mdi-calendar-alert",
+);
+const appointmentText = computed(() =>
+  role == "regulation_officer" || role == "caps"
+    ? "Agendar Solicitação"
+    : "Solicitar Agendamento",
+);
+const appointmentClass = "text-green-600 bg-white/0 border-0 ml-1 h-full";
+
+const updateOptions = (newOptions) => {
+  options.value = { ...newOptions };
+};
+
+const openAppointment = (solicitation) => {
+  selectedSolicitation.value = solicitation;
+  dialogAppointment.value = true;
+};
+
+const clearFiltersTab = () => {
+  clearFilters();
+  setFilter("solicitation_type", tab.value);
+  setFilter("has_appointment", false);
+};
+const handleDelete = async (solicitation) => {
+  const confirm = await confirmModal(
+    `Tem certeza que deseja excluir a solicitação do paciente <strong>${solicitation.patient}</strong>?`,
+    "Atenção",
+  );
+  if (confirm) {
+    await showFeedback(() => destroy(solicitation));
     refetch();
-    editSolicitation.value = false
-  };
-  const submitAppointment = async appointment => {
-    const newAppointmentData = await showFeedback(() => create(appointment));
-    refetch();
-    dialogAppointment.value = false;
-    if(role == 'regulation_officer') {
-      appointmentData.value = newAppointmentData.data
-      dialogAppointmentConfirmation.value = true;
-    }
+  }
+};
 
-  };
+const handleEdit = (solicitation) => {
+  selectedSolicitation.value = solicitation;
+  editSolicitation.value = true;
+};
 
-  const search = debounce(async v => {
-    setFilter('search', v);
-    await nextTick()
-    refetch();
-  }, 500);
+const submit = async (solicitation) => {
+  await showFeedback(() => updateWithAttachment(solicitation.id, solicitation));
+  refetch();
+  editSolicitation.value = false;
+};
+const submitAppointment = async (appointment) => {
+  const newAppointmentData = await showFeedback(() => create(appointment));
+  refetch();
+  dialogAppointment.value = false;
+  if (role == "regulation_officer" || role == "caps") {
+    appointmentData.value = newAppointmentData.data;
+    dialogAppointmentConfirmation.value = true;
+  }
+};
 
-  const viewSolicitation = v => {
-    solicitationData.value = v;
-    viewSolicitationDetails.value = true;
-  };
+const search = debounce(async (v) => {
+  setFilter("search", v);
+  await nextTick();
+  refetch();
+}, 500);
 
-  const handleWatch = debounce(async () => {
-    setFilter('solicitation_type', tab.value)
-    setFilter('has_appointment', false)
-    await nextTick()
-    setTableOptions(options.value)
-    refetch()
-  }, 100)
+const viewSolicitation = (v) => {
+  solicitationData.value = v;
+  viewSolicitationDetails.value = true;
+};
 
-  watch(
-    [() => options.value, () => tab.value],
-    handleWatch,
-    { deep: true }
-  )
+const handleWatch = debounce(async () => {
+  setFilter("solicitation_type", tab.value);
+  setFilter("has_appointment", false);
+  await nextTick();
+  setTableOptions(options.value);
+  refetch();
+}, 100);
 
-  const headers = computed( () => {
-    const baseHeaders = [
-      {
-        title: 'Detalhes',
-        value: 'view',
-        align: 'center',
-        width: '20px',
-      },
-      {
-        title: 'Paciente',
-        key: 'patient',
-        sortable: true,
-        align: 'center',
+watch([() => options.value, () => tab.value], handleWatch, { deep: true });
 
-      },
-      {
-        title: 'Data da Solicitação',
-        key: 'solicitation_date',
-        sortable: true,
-        align: 'center',
-
-      },
-      {
-        title: 'Retorno',
-        key: 'is_first_time',
-        sortable: true,
-        align: 'center',
-
-      },
-      {
-        title: 'Urgência',
-        key: 'is_urgent',
-        sortable: true,
-        align: 'center',
-      },
-      {
-        title: 'Cadastrado por',
-        key: 'created_by',
-        sortable: true,
-        align: 'center',
-      },
-      {
-        title: 'Ações',
-        value: 'action',
-        align: 'center',
-        width: '100px',
-      },
-
-    ];
-    if(tab.value == 'exam') {
-      baseHeaders.splice(2, 0, {
-        title: 'Procedimento',
-        key: 'procedure',
-        sortable: true,
-        align: 'center',
-      });
-    } else if(tab.value == 'consultation') {
-      baseHeaders.splice(2, 0, {
-        title: 'Especialidade',
-        key: 'specialist',
-        sortable: true,
-        align: 'center',
-      });
-    }
-    return baseHeaders
-  });
-  defineExpose({
-    setFilter,
-    refetch,
-    clearFiltersTab,
-  });
+const headers = computed(() => {
+  const baseHeaders = [
+    {
+      title: "Detalhes",
+      value: "view",
+      align: "center",
+      width: "20px",
+    },
+    {
+      title: "Paciente",
+      key: "patient",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Data da Solicitação",
+      key: "solicitation_date",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Retorno",
+      key: "is_first_time",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Urgência",
+      key: "is_urgent",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Cadastrado por",
+      key: "created_by",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Ações",
+      value: "action",
+      align: "center",
+      width: "100px",
+    },
+  ];
+  if (tab.value == "exam") {
+    baseHeaders.splice(2, 0, {
+      title: "Procedimento",
+      key: "procedure",
+      sortable: true,
+      align: "center",
+    });
+  } else if (tab.value == "consultation") {
+    baseHeaders.splice(2, 0, {
+      title: "Especialidade",
+      key: "specialist",
+      sortable: true,
+      align: "center",
+    });
+  }
+  return baseHeaders;
+});
+defineExpose({
+  setFilter,
+  refetch,
+  clearFiltersTab,
+});
 </script>

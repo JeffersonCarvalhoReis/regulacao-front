@@ -8,8 +8,8 @@
         @register="handleExportToPdf"
       />
     </div>
-    <div ref="listRef" class="p-5 flex flex-col justify-between min-w-320">
-      <div class="min-h-[1700px]">
+    <div ref="listRef" class="p-5 flex flex-col justify-between min-w-7xl">
+      <div class="min-h-425">
         <div class="flex items-center w-full m-4 relative">
           <div class="absolute w-20">
             <img
@@ -71,8 +71,10 @@
       </div>
       <div class="flex flex-col justify-center items-center mt-10">
         <div class="text-center border-b-2 w-150" />
-        <div class="text-center uppercase">JANDANETA ALVES FERREIRA</div>
-        <div class="text-center uppercase">Coordenação</div>
+        <div class="text-center uppercase">{{ travelInfo.signature }}</div>
+        <div class="text-center uppercase">
+          {{ travelInfo.signatureSubtitle }}
+        </div>
       </div>
     </div>
   </BaseCard>
@@ -145,8 +147,8 @@ const travelInfo = {
   city: props.data.city,
   date: formatLongDate(props.data.date),
   title: "Controle de Diárias",
-  signature: "JANDANETA ALVES FERREIRA",
-  signatureSubtitle: "Coordenação",
+  signature: "DOMINGAS EVANGELISTA NUNES",
+  signatureSubtitle: "ASSISTENTE SOCIAL",
 };
 const fileInfo = {
   docX: 105,
