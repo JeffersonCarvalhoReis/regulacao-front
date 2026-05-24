@@ -1,9 +1,20 @@
 <!-- AppMenuItem.vue -->
 <template>
-  <v-list-item :active="active" active-class="bg-blue-100" :class="classes" :to="to">
+  <v-list-item
+    :active="active"
+    active-class="bg-blue-100"
+    :class="classes"
+    :to="to"
+  >
     <template #prepend>
-      <template v-if="title == 'Agendamentos' && appointmentPendingStore.pending > 0">
-        <v-badge color="error" :content="appointmentPendingStore.pending" location="top right">
+      <template
+        v-if="title == 'Agendamentos' && appointmentPendingStore.pending > 0"
+      >
+        <v-badge
+          color="error"
+          :content="appointmentPendingStore.pending"
+          location="top right"
+        >
           <v-icon :class="active ? 'text-ita-blue ' : ''">{{ icon }}</v-icon>
         </v-badge>
       </template>
@@ -16,18 +27,17 @@
 </template>
 
 <script setup>
-  import { useAppointmentPendingStore } from '@/stores/appointmentPendingCount';
-  defineProps({
-    to: Object,
-    active: Boolean,
-    icon: String,
-    title: String,
-    classes: {
-      type: String,
-      default: 'hover:bg-blue-100 hover:text-ita-blue text-slate-700',
-    },
-  });
+import { useAppointmentPendingStore } from "@/stores/appointmentPendingCount";
+defineProps({
+  to: Object,
+  active: Boolean,
+  icon: String,
+  title: String,
+  classes: {
+    type: String,
+    default: "hover:bg-blue-100 hover:text-ita-blue text-slate-700",
+  },
+});
 
-  const appointmentPendingStore = useAppointmentPendingStore();
-
+const appointmentPendingStore = useAppointmentPendingStore();
 </script>

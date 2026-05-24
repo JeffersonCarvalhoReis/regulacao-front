@@ -25,7 +25,9 @@
       />
 
       <v-list-subheader
-        v-if="['regulation_officer', 'provider_unit_manager'].includes(role)"
+        v-if="
+          ['regulation_officer', 'provider_unit_manager', 'caps'].includes(role)
+        "
         class="menu-subheader"
         >Demanda</v-list-subheader
       >
@@ -37,9 +39,12 @@
 
       <app-menu-item
         v-if="
-          ['reception', 'regulation_officer', 'provider_unit_manager'].includes(
-            role,
-          )
+          [
+            'reception',
+            'regulation_officer',
+            'provider_unit_manager',
+            'caps',
+          ].includes(role)
         "
         :active="$route.name === 'patients'"
         prepend-icon="mdi-card-account-details"
@@ -48,9 +53,12 @@
       />
       <app-menu-item
         v-if="
-          ['reception', 'regulation_officer', 'provider_unit_manager'].includes(
-            role,
-          )
+          [
+            'reception',
+            'regulation_officer',
+            'provider_unit_manager',
+            'caps',
+          ].includes(role)
         "
         :active="$route.name === 'solicitations'"
         prepend-icon="mdi-clipboard-list"
@@ -58,7 +66,7 @@
         :to="{ name: 'solicitations' }"
       />
       <app-menu-item
-        v-if="['regulation_officer'].includes(role)"
+        v-if="['regulation_officer', 'caps'].includes(role)"
         :active="$route.name === 'appointments'"
         prepend-icon="mdi-calendar-check"
         title="Agendamentos"
@@ -125,7 +133,7 @@
         title="Agentes C. de Saúde"
         :to="{ name: 'health-agents' }"
       />
-      <div v-if="['provider_unit_manager'].includes(role)">
+      <div v-if="['provider_unit_manager', 'caps'].includes(role)">
         <v-list-subheader class="menu-subheader">Gestão</v-list-subheader>
         <app-menu-item
           :active="$route.name === 'appointments-management'"
@@ -134,6 +142,7 @@
           :to="{ name: 'appointments-management' }"
         />
         <app-menu-item
+          v-if="['provider_unit_manager'].includes(role)"
           :active="$route.name === 'fibro-patients'"
           prepend-icon="mdi-card-account-details"
           title="Carteirinha Fibromialgia"

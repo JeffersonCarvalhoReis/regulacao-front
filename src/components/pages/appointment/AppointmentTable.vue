@@ -167,6 +167,7 @@
 import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
 import { useAppointmentExportApi } from "@/composables/modules/useAppointmentExportModule";
 import { useAppointmentApi } from "@/composables/modules/useAppointmentModule";
+import { useAppointmentPendingStore } from "@/stores/appointmentPendingCount";
 import { useMeStore } from "@/stores/me";
 import debounce from "lodash/debounce";
 
@@ -207,10 +208,11 @@ const iconDelete = "mdi-cancel";
 const tooltipTextDelete = "Não é possivel cancelar agendamentos já realizados";
 const appointmentConfirmationIcon = ref("mdi-receipt-text-outline");
 const appointmentConfirmationClass = ref(
-  "text-green-600 bg-white/0 border-0 ml-1 h-full"
+  "text-green-600 bg-white/0 border-0 ml-1 h-full",
 );
 const appointmentConfirmationText = ref("Visualizar Comprovante");
 const dialogAppointmentConfirmation = ref(false);
+const appointmentPendingStore = useAppointmentPendingStore();
 
 const updateOptions = (newOptions) => {
   options.value = { ...newOptions };
@@ -238,11 +240,12 @@ const confirmAppointment = async (appointment) => {
     "Confirmação",
     "question",
     "bg-green-500 text-white shadow-sm",
-    "bg-red-500 text-white shadow-sm"
+    "bg-red-500 text-white shadow-sm",
   );
   if (confirm) {
     appointment.status = "scheduled";
     await showFeedback(() => update(appointment.id, appointment));
+    await appointmentPendingStore.appointmentPendingCount();
     refetch();
   }
 };
@@ -254,10 +257,12 @@ const handleExportAppointments = async () => {
 const handleDelete = async (appointment) => {
   const confirm = await confirmModal(
     `Tem certeza que deseja cancelar o agendamento do paciente <strong>${appointment.patient}</strong>?`,
-    "Atenção"
+    "Atenção",
   );
   if (confirm) {
     await showFeedback(() => destroy(appointment));
+    await appointmentPendingStore.appointmentPendingCount();
+
     refetch();
   }
 };
