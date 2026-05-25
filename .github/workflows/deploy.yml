@@ -33,5 +33,4 @@ jobs:
 
                     # Suba o container do frontend
                     cd /regulacao/regulacao-back
-                    ./vendor/bin/sail -f docker-compose.yml -f docker-compose.prod.yml up -d
-                  EOF
+                    ./vendor/bin/sail -f docker-compose.yml -f docker-compose.prod.yml up -d --build                  EOF
