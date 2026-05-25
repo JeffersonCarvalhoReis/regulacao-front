@@ -58,12 +58,12 @@ export default defineConfig({
     },
     server: {
         host: "0.0.0.0",
-        port: 3000,
-        allowedHosts: ["regulacao.test", "frontend"],
+        port: 80,
+        allowedHosts: ["regulacao.localhost", "frontend"],
         hmr: {
-            host: "regulacao.test",
+            host: "regulacao.localhost",
             protocol: "ws",
-            port: 3000,
+            port: 80,
         },
     },
 

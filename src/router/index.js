@@ -1,10 +1,3 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
-
-// Composables
 import { useAuthStore } from "@/stores/authStore";
 import { useMeStore } from "@/stores/me";
 import { setupLayouts } from "virtual:generated-layouts";
@@ -22,12 +15,16 @@ router.beforeEach(async (to, from, next) => {
 
   await nextTick();
 
-  if (auth.hasSession && to.meta.login) {
+  if (auth.hasSession && !meStore.isLoggedIn) {
     try {
       await meStore.getMe();
     } catch {
-      await auth.logout();
-      return;
+      auth.hasSession = false;
+      meStore.reset();
+
+      await auth.logout(false);
+
+      return next({ name: "login" });
     }
   }
 
@@ -42,7 +39,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: "appointments-management" });
     if (meStore.role == "tfd") return next({ name: "patients" });
     if (meStore.role == "caps") return next({ name: "patients" });
-    return next({ name: "home" });
+    router.push({ path: "/" });
   }
 
   if (to.meta.roles && !to.meta.roles.includes(meStore.role)) {
@@ -52,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: "appointments-management" });
     if (meStore.role == "tfd") return next({ name: "patients" });
     if (meStore.role == "caps") return next({ name: "patients" });
-    return next({ name: "home" });
+    router.push({ path: "/" });
   }
 
   next();

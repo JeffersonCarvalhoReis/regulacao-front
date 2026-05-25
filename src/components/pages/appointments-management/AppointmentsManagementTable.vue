@@ -118,8 +118,8 @@ const { showFeedback, confirmModal, showFeedbackLoading } =
   useSweetAlertFeedback();
 const { formatDate } = useFormatDate();
 
-const providerUnit = computed(() => useMeStore().providerUnit);
-const getMe = useMeStore().getMe;
+const providerUnit = computed(() => useMeStore().providerUnitId);
+const meStore = useMeStore();
 const options = ref({});
 const viewAppointmentDetails = ref(false);
 const appointmentData = ref({});
@@ -130,12 +130,33 @@ const classConfirm = ref("text-green-600 bg-white/0 border-0 ml-1 h-full");
 const textDelete = "Paciente ausente";
 const iconCancel = "mdi-close-thick";
 const outpatientRecordClass = ref(
-  "text-green-600 bg-white/0 border-0 ml-1 h-full"
+  "text-green-600 bg-white/0 border-0 ml-1 h-full",
 );
 const outpatientRecordIcon = "mdi-clipboard-text-outline";
 const outpatientRecordText = "Ficha Ambulatorial";
 const dialogOutpatientRecord = ref(false);
 const selectedDate = ref(null);
+
+const filters = reactive({
+  provider_unit_id: providerUnit.value,
+  solicitation_type: "consultation",
+  search: null,
+  procedure_id: null,
+  specialist_id: null,
+  date: null,
+});
+
+const applyFilters = async () => {
+  Object.entries(filters).forEach(([key, value]) => {
+    setFilter(key, value);
+  });
+
+  await nextTick();
+
+  setTableOptions(options.value);
+
+  refetch();
+};
 
 const updateOptions = (newOptions) => {
   options.value = { ...newOptions };
@@ -165,7 +186,7 @@ const handleDelete = async (appointment) => {
   const confirm = await confirmModal(
     `Confirmar a ausência do paciente <strong>${appointment.patient}</strong>?`,
     "Atenção",
-    "question"
+    "question",
   );
   if (confirm) {
     appointment.status = "not-present";
@@ -178,7 +199,7 @@ const handleUndo = async (appointment) => {
   const confirm = await confirmModal(
     `Confirmar ação de voltar ao estado anterior do paciente <strong>${appointment.patient}</strong>?`,
     "Atenção",
-    "question"
+    "question",
   );
   if (confirm) {
     appointment.status = "scheduled";
@@ -193,7 +214,7 @@ const handleConfirm = async (appointment) => {
     "Atenção",
     "question",
     "bg-green-500 text-white shadow-sm",
-    "bg-red-500 text-white shadow-sm"
+    "bg-red-500 text-white shadow-sm",
   );
   if (confirm) {
     appointment.status = "realized";
@@ -209,53 +230,67 @@ const handleConfirm = async (appointment) => {
 };
 
 const search = debounce(async (v) => {
-  setFilter("search", v);
-  await nextTick();
-  refetch();
+  filters.search = v;
+
+  await applyFilters();
 }, 500);
 
 const searchProcedure = async (procedure) => {
-  setFilter("procedure_id", procedure);
-  await nextTick();
-  refetch();
+  filters.procedure_id = procedure;
+
+  await applyFilters();
 };
+
 const searchSpecialist = async (specialist) => {
-  setFilter("specialist_id", specialist);
-  await nextTick();
-  refetch();
+  filters.specialist_id = specialist;
+
+  await applyFilters();
 };
+
 const searchDate = async (date) => {
-  date.setHours(0, 0, 0, 0);
+  if (!date) return;
 
-  selectedDate.value = date;
+  const parsedDate = new Date(date);
 
-  setFilter("date", date);
-  await nextTick();
-  refetch();
+  parsedDate.setHours(0, 0, 0, 0);
+
+  selectedDate.value = parsedDate;
+
+  filters.date = parsedDate;
+
+  await applyFilters();
 };
+
 const viewAppointment = (v) => {
   appointmentData.value = v;
   viewAppointmentDetails.value = true;
 };
 
-const handleWatch = debounce(async () => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const date = selectedDate.value || today;
+watch(
+  [() => options.value, () => tab.value, () => providerUnit.value],
+  debounce(async () => {
+    if (!providerUnit.value) return;
 
-  setFilter("date", date);
-  setFilter("solicitation_type", tab.value);
-  await nextTick();
-  setTableOptions(options.value);
-  refetch();
-}, 100);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-const openOutpatientRecord = (v) => {
-  appointmentData.value = v;
-  dialogOutpatientRecord.value = true;
-};
+    const date = selectedDate.value || today;
 
-watch([() => options.value, () => tab.value], handleWatch, { deep: true });
+    setFilter("provider_unit_id", providerUnit.value);
+    setFilter("date", date);
+    setFilter("solicitation_type", tab.value);
+
+    await nextTick();
+
+    setTableOptions(options.value);
+
+    refetch();
+  }, 100),
+  {
+    deep: true,
+    immediate: true,
+  },
+);
 
 const headers = computed(() => {
   const baseHeaders = [

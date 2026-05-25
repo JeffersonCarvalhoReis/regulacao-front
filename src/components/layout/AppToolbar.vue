@@ -9,7 +9,7 @@
         <v-icon> mdi-menu</v-icon>
       </v-btn>
       <div
-        class="bg-blue-300 border-1 border- rounded-full flex items-center justify-center w-12 h-12 p-1 ml-4"
+        class="bg-blue-300 border border- rounded-full flex items-center justify-center w-12 h-12 p-1 ml-4"
       >
         <img
           alt="brasão da prefeitura de itaguaçu da bahia"

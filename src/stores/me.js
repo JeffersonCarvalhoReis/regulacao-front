@@ -9,16 +9,18 @@ export const useMeStore = defineStore(
     const health_unit = ref(null);
     const health_unit_cnes = ref(null);
     const providerUnit = ref(null);
+    const providerUnitId = ref(null);
     const isLoggedIn = computed(() => !!user.value);
 
     const getMe = async () => {
       try {
-        const response = await api.get("users/me");
+        const response = await api.get("/me");
         user.value = response.data.user;
         role.value = response.data.role;
         health_unit.value = response.data.health_unit;
         health_unit_cnes.value = response.data.health_unit_cnes;
         providerUnit.value = response.data.provider_unit;
+        providerUnitId.value = response.data.provider_unit_id;
         return response.data;
       } catch (err) {
         if (err.response?.status === 401) {
@@ -38,6 +40,7 @@ export const useMeStore = defineStore(
       health_unit,
       health_unit_cnes,
       providerUnit,
+      providerUnitId,
       getMe,
       reset,
     };
@@ -47,5 +50,5 @@ export const useMeStore = defineStore(
       storage: localStorage,
       pick: ["user", "role", "providerUnit"],
     },
-  }
+  },
 );

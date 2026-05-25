@@ -1,37 +1,37 @@
 name: Deploy do Front-end
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    deploy:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout do código
+              uses: actions/checkout@v4
 
-      - name: Criar pasta SSH
-        run: mkdir -p ~/.ssh
+            - name: Criar pasta SSH
+              run: mkdir -p ~/.ssh
 
-      - name: Adicionar chave privada
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+            - name: Adicionar chave privada
+              run: |
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
 
-      - name: Adicionar host conhecido
-        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+            - name: Adicionar host conhecido
+              run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy via SSH
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ${{ secrets.PROJECT_PATH }}
-            git reset --hard
-            git pull --rebase origin main
+            - name: Deploy via SSH
+              run: |
+                  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+                    cd ${{ secrets.PROJECT_PATH }}
+                    git reset --hard
+                    git pull --rebase origin main
 
-            # Suba o container do frontend
-            cd /regulacao/regulacao-back
-            docker compose up -d --build
-          EOF
+                    # Suba o container do frontend
+                    cd /regulacao/regulacao-back
+                    ./vendor/bin/sail -f docker-compose.yml -f docker-compose.prod.yml up -d
+                  EOF

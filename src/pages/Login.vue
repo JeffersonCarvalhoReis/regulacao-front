@@ -32,7 +32,7 @@
               <v-icon>mdi-clipboard-check-outline</v-icon> Sistema de Regulação
             </h1>
 
-            <div class="flex-grow items-center justify-center lg:mt-0 mb-20">
+            <div class="grow items-center justify-center lg:mt-0 mb-20">
               <v-card-title class="text-2xl text-center mb-4"
                 >Conecte-se</v-card-title
               >

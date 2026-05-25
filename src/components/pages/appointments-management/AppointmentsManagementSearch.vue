@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="border border-gray-200 shadow-sm mb-2"
-    flat
-  >
+  <v-card class="border border-gray-200 shadow-sm mb-2" flat>
     <v-card-text class="flex justify-between">
       <div class="flex flex-col w-full">
         <v-text-field
@@ -19,9 +16,7 @@
           <div class="flex basis-100">
             <v-btn flat icon @click="subDay">
               <v-icon>mdi-chevron-left</v-icon>
-              <v-tooltip activator="parent">
-                Voltar dia
-              </v-tooltip>
+              <v-tooltip activator="parent"> Voltar dia </v-tooltip>
             </v-btn>
             <base-input-date-picker
               v-model="appointmentDate"
@@ -32,9 +27,7 @@
             />
             <v-btn flat icon @click="addDay">
               <v-icon> mdi-chevron-right</v-icon>
-              <v-tooltip activator="parent">
-                Avançar dia
-              </v-tooltip>
+              <v-tooltip activator="parent"> Avançar dia </v-tooltip>
             </v-btn>
           </div>
 
@@ -68,66 +61,79 @@
 </template>
 
 <script setup>
-  import { useSpecialistApi } from '@/composables/modules/useSpecialistModule';
-  import { useProcedureApi } from '@/composables/modules/useProcedureModule';
-  import { addDays, subDays } from 'date-fns';
+import { useProcedureApi } from "@/composables/modules/useProcedureModule";
+import { useSpecialistApi } from "@/composables/modules/useSpecialistModule";
+import { addDays, subDays } from "date-fns";
 
-  const props = defineProps({
-    isExam: { type: Boolean, default: false },
-  })
+const props = defineProps({
+  isExam: { type: Boolean, default: false },
+});
 
-  const { data: specialistData, params: specialistParams, refetch: specialistFetch } = useSpecialistApi();
-  const { data: procedureData, params: procedureParams, refetch: procedureFetch } = useProcedureApi();
+const {
+  data: specialistData,
+  params: specialistParams,
+  refetch: specialistFetch,
+} = useSpecialistApi();
+const {
+  data: procedureData,
+  params: procedureParams,
+  refetch: procedureFetch,
+} = useProcedureApi();
 
-  const emit = defineEmits(['search-appointment', 'search-appointment-date', 'search-specialist', 'search-procedure'])
+const emit = defineEmits([
+  "search-appointment",
+  "search-appointment-date",
+  "search-specialist",
+  "search-procedure",
+]);
 
-  const searchAppointment = ref(null);
-  const appointmentDate = ref('');
-  const specialist = ref(null);
-  const procedure = ref(null);
-  const today = new Date();
-  const specialistSelectData = computed(() => [
-    { id: null, name: 'Todos' },
-    ...(specialistData.value || []),
-  ]);
+const searchAppointment = ref(null);
+const appointmentDate = ref("");
+const specialist = ref(null);
+const procedure = ref(null);
+const today = new Date();
+const specialistSelectData = computed(() => [
+  { id: null, name: "Todos" },
+  ...(specialistData.value || []),
+]);
 
-  const procedureSelectData = computed(() => [
-    { id: null, name: 'Todos' },
-    ...(procedureData.value || []),
-  ]);
-  const handleDateChange = v => {
-    emit('search-appointment-date', v)
-  }
+const procedureSelectData = computed(() => [
+  { id: null, name: "Todos" },
+  ...(procedureData.value || []),
+]);
 
-  const addDay = () => {
-    appointmentDate.value = addDays(appointmentDate.value, 1)
-  }
-  const subDay = () => {
-    appointmentDate.value = subDays(appointmentDate.value, 1)
-  }
+const handleDateChange = (v) => {
+  appointmentDate.value = v;
+  emit("search-appointment-date", v);
+};
 
-  watch(() => appointmentDate.value, newValue => {
-    emit('search-appointment-date', newValue)
-  })
+const addDay = () => {
+  appointmentDate.value = addDays(appointmentDate.value, 1);
+  emit("search-appointment-date", appointmentDate.value);
+};
 
-  onMounted( async () => {
-    appointmentDate.value = today;
-    specialistParams.value.per_page = -1;
-    procedureParams.value.per_page = -1;
-    await nextTick();
-    await Promise.all([
-      specialistFetch(),
-      procedureFetch(),
-    ]);
+const subDay = () => {
+  appointmentDate.value = subDays(appointmentDate.value, 1);
+  emit("search-appointment-date", appointmentDate.value);
+};
 
-    watch(() => props.isExam ,newValue => {
-      if(newValue){
-        specialist.value = null
+onMounted(async () => {
+  appointmentDate.value = today;
+  specialistParams.value.per_page = -1;
+  procedureParams.value.per_page = -1;
+  await nextTick();
+  await Promise.all([specialistFetch(), procedureFetch()]);
+
+  watch(
+    () => props.isExam,
+    (newValue) => {
+      if (newValue) {
+        specialist.value = null;
       } else {
-        procedure.value = null
+        procedure.value = null;
       }
-    }, { deep: true })
-
-  })
-
+    },
+    { deep: true },
+  );
+});
 </script>
