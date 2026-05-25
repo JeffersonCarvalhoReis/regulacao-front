@@ -28,10 +28,13 @@ jobs:
               run: |
                   ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
                     cd ${{ secrets.PROJECT_PATH }}
-                    git reset --hard
+
+                    git config --global --add safe.directory ${{ secrets.PROJECT_PATH }}
+
                     git pull --rebase origin main
 
-                    # Suba o container do frontend
-                    cd /regulacao/regulacao-back
-                    ./vendor/bin/sail -f docker-compose.yml -f docker-compose.prod.yml up -d --build frontend
+                    ./vendor/bin/sail \
+                      -f docker-compose.yml \
+                      -f docker-compose.prod.yml \
+                      up -d --build frontend
                   EOF
