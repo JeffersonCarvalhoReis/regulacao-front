@@ -31,7 +31,7 @@
     "tailwindcss": "^4.0.9",
     "vee-validate": "^4.15.0",
     "vue": "^3.5.28",
-    "vuetify": "^3.12.0",
+    "vuetify": "^4.1.1",
     "yup": "^1.6.1"
   },
   "devDependencies": {

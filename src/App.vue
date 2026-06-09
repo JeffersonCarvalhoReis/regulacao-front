@@ -1,7 +1,18 @@
 <template>
   <v-app theme="light">
     <router-view class="bg-gray-100" />
-    <v-snackbar v-model="alert" :color="color" :timeout="4000">
+    <v-snackbar
+      v-model="alert"
+      :color="color"
+      :timeout="4000"
+      timer-color="white"
+      timer
+      close-on-content-click
+      close-delay
+    >
+      <template #prepend>
+        <v-icon size="24" color="white">{{ icon }}</v-icon>
+      </template>
       {{ msg }}
     </v-snackbar>
   </v-app>
@@ -23,6 +34,7 @@ const countAppointment = appointmentPendingStore.appointmentPendingCount;
 const alert = ref(false);
 const msg = ref(null);
 const color = ref("success");
+const icon = ref("");
 
 watch(
   () => route.name,
@@ -43,6 +55,7 @@ onMounted(async () => {
     msg.value = `${event.provider_unit} enviou uma nova solicitação de agendamento`;
     color.value = "success";
     alert.value = true;
+    icon.value = "mdi-bell-ring";
   });
 
   echo
@@ -51,6 +64,7 @@ onMounted(async () => {
       msg.value = "Solicitação de agendamento aprovada";
       color.value = "success";
       alert.value = true;
+      icon.value = "mdi-check-circle";
     });
 
   echo
@@ -61,6 +75,7 @@ onMounted(async () => {
       msg.value = "Solicitação de agendamento recusada";
       color.value = "error";
       alert.value = true;
+      icon.value = "mdi-close-circle";
     });
 
   echo.private("appointments.regulation").listen(".pending", (event) => {

@@ -100,7 +100,7 @@
         <v-divider class="my-10" />
         <v-card class="border border-red-500 shadow-sm" flat>
           <v-card-title>
-            <h2 class="text-red-500">Excluir conta</h2>
+            <h2 class="text-red-500 text-2xl">Excluir conta</h2>
           </v-card-title>
           <v-card-actions class="flex justify-start m-6">
             <v-btn

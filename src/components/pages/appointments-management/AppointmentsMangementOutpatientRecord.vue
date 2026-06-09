@@ -23,10 +23,10 @@
             />
           </div>
           <div>
-            <h2 class="uppercase tracking-wide">
+            <h2 class="uppercase tracking-wide text-xl">
               <strong>Prefeitura Municipal de Itaguaçu da Bahia</strong>
             </h2>
-            <h3 class="uppercase tracking-wide">
+            <h3 class="uppercase tracking-wide text-lg">
               Secretaria Municipal de Saúde de Itaguaçu da Bahia
             </h3>
           </div>
