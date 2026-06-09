@@ -109,9 +109,12 @@
         </v-card>
       </div>
 
-      <div class="z-10 hidden lg:block mx-auto mb-15 max-w-2xl">
+      <div
+        class="z-10 hidden lg:flex lg:flex-col justify-center mx-auto mb-15 max-w-2xl"
+      >
         <img
           alt="logo da prefeitura"
+          class="w-full m-auto"
           src="/src/assets/images/logo-gestao.png"
         />
         <img
