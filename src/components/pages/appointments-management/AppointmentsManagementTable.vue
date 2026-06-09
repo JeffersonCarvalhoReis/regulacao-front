@@ -165,13 +165,17 @@ onMounted(async () => {
   const echo = window.Echo;
 
   echo
-    .private(`appointments.provider_unit.name.${meStore.providerUnit}`)
+    .private(
+      `appointments.provider_unit.name.${meStore.providerUnit.replace(" ", ".")}`,
+    )
     .listen(".updated", (event) => {
       refetch();
     });
 
   echo
-    .private(`appointments.provider_unit.name.${meStore.providerUnit}`)
+    .private(
+      `appointments.provider_unit.name.${meStore.providerUnit.replace(" ", ".")}`,
+    )
     .listen(".removed", () => {
       refetch();
     });

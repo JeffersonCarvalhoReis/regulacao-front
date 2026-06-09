@@ -46,7 +46,9 @@ onMounted(async () => {
   });
 
   echo
-    .private(`appointments.provider_unit.name.${meStore.providerUnit}`)
+    .private(
+      `appointments.provider_unit.name.${meStore.providerUnit.replace(" ", ".")}`,
+    )
     .listen(".updated", (event) => {
       msg.value = "Solicitação de agendamento aprovada";
       color.value = "success";
@@ -54,7 +56,9 @@ onMounted(async () => {
     });
 
   echo
-    .private(`appointments.provider_unit.user.${meStore.user}`)
+    .private(
+      `appointments.provider_unit.user.${meStore.user.replace(" ", ".")}`,
+    )
     .listen(".deleted", (event) => {
       msg.value = "Solicitação de agendamento recusada";
       color.value = "error";
