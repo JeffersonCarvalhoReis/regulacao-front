@@ -59,9 +59,9 @@ export default defineConfig({
     server: {
         host: "0.0.0.0",
         port: 80,
-        allowedHosts: ["regulacao.localhost", "frontend"],
+        allowedHosts: ["localhost", "frontend"],
         hmr: {
-            host: "regulacao.localhost",
+            host: "localhost",
             protocol: "ws",
             port: 80,
         },

@@ -161,19 +161,21 @@ const applyFilters = async () => {
 const updateOptions = (newOptions) => {
   options.value = { ...newOptions };
 };
-// onMounted(async () => {
-//   await getMe();
-//   window.Echo.channel('appointments')
-//     .listen('.updated', event => {
-//       if(providerUnit.value == event.provider_unit)
-//         refetch();
-//     });
-//   window.Echo.channel('appointments')
-//     .listen('.deleted', event => {
-//       if(providerUnit.value == event.provider_unit)
-//         refetch();
-//     });
-// });
+onMounted(async () => {
+  const echo = window.Echo;
+
+  echo
+    .private(`appointments.provider_unit.name.${meStore.providerUnit}`)
+    .listen(".updated", (event) => {
+      refetch();
+    });
+
+  echo
+    .private(`appointments.provider_unit.name.${meStore.providerUnit}`)
+    .listen(".removed", () => {
+      refetch();
+    });
+});
 
 const chooseAction = async (appointment) => {
   if (appointment.status == "scheduled") {

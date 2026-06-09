@@ -16,7 +16,7 @@ const route = useRoute();
 
 const role = useMeStore().role;
 const getMe = useMeStore().getMe;
-const providerUnit = computed(() => useMeStore().providerUnit);
+const meStore = useMeStore();
 const appointmentPendingStore = useAppointmentPendingStore();
 const countAppointment = appointmentPendingStore.appointmentPendingCount;
 
@@ -29,39 +29,40 @@ watch(
   async (newName) => {
     if (newName !== "login") {
       await getMe();
-      countAppointment();
+      if (role == "regulation_officer") {
+        countAppointment();
+      }
     }
-  }
+  },
 );
-// onMounted(async () => {
-//const echo = window.Echo;
-// echo.channel('appointments')
-//   .listen('.created', event => {
-//     if(role == 'regulation_officer') {
-//       msg.value = `${event.provider_unit} enviou uma nova solicitção de agendamento`
-//       color.value = 'success';
-//       alert.value = true
-//     }
-//   });
-// echo.channel('appointments')
-//   .listen('.updated', event => {
-//     if(providerUnit.value == event.provider_unit) {
-//       msg.value = `Solicitação de agendamento aprovada`
-//       color.value = 'success';
-//       alert.value = true
-//     }
-//   });
-// echo.channel('appointments')
-//   .listen('.deleted', event => {
-//     if(providerUnit.value == event.provider_unit) {
-//       msg.value = `Solicitação de agendamento recusada`
-//       color.value = 'error'
-//       alert.value = true
-//     }
-//   });
-// echo.channel('appointments')
-//   .listen('.pending', event => {
-//     appointmentPendingStore.pending = event.appointments_pending;
-//   });
-// });
+
+onMounted(async () => {
+  const echo = window.Echo;
+
+  echo.private("appointments.regulation").listen(".created", (event) => {
+    msg.value = `${event.provider_unit} enviou uma nova solicitação de agendamento`;
+    color.value = "success";
+    alert.value = true;
+  });
+
+  echo
+    .private(`appointments.provider_unit.name.${meStore.providerUnit}`)
+    .listen(".updated", (event) => {
+      msg.value = "Solicitação de agendamento aprovada";
+      color.value = "success";
+      alert.value = true;
+    });
+
+  echo
+    .private(`appointments.provider_unit.user.${meStore.user}`)
+    .listen(".deleted", (event) => {
+      msg.value = "Solicitação de agendamento recusada";
+      color.value = "error";
+      alert.value = true;
+    });
+
+  echo.private("appointments.regulation").listen(".pending", (event) => {
+    appointmentPendingStore.pending = event.appointments_pending;
+  });
+});
 </script>

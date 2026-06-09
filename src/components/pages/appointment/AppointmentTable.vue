@@ -217,14 +217,12 @@ const appointmentPendingStore = useAppointmentPendingStore();
 const updateOptions = (newOptions) => {
   options.value = { ...newOptions };
 };
-// onMounted(() => {
-//   window.Echo.channel('appointments')
-//     .listen('.created', event => {
-//       if(role == 'regulation_officer') {
-//         refetch()
-//       }
-//     });
-// });
+onMounted(() => {
+  window.Echo.private("appointments.regulation").listen(".created", (event) => {
+    refetch();
+  });
+});
+
 const clearFiltersTab = () => {
   clearFilters();
   clearFiltersExport();
@@ -244,6 +242,7 @@ const confirmAppointment = async (appointment) => {
   );
   if (confirm) {
     appointment.status = "scheduled";
+    appointment.status_requested = "approved";
     await showFeedback(() => update(appointment.id, appointment));
     await appointmentPendingStore.appointmentPendingCount();
     refetch();

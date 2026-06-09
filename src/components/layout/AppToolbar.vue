@@ -117,7 +117,7 @@ const pageTitle = computed(() => {
     "bpa-settings": "Definições do BPA",
   };
 
-  return titleMap[route.name] || "";
+  return titleMap[route?.name] || "";
 });
 
 const handleClick = () => {
