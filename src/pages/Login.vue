@@ -16,6 +16,7 @@
           <div class="w-full flex flex-col mt-20">
             <div class="w-65 flex flex-col lg:hidden items-center self-center">
               <img
+                class="w-65"
                 alt="Logo da prefeitura"
                 src="/src/assets/images/logo-gestao.png"
               />
