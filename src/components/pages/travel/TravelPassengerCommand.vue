@@ -13,7 +13,7 @@
         </v-btn>
       </div>
       <div class="flex justify-center">
-        <div ref="printSection" class="w-256 min-w-236">
+        <div ref="printSection" class="w-5xl min-w-236">
           <div class="flex justify-center gap-4">
             <div class="max-w-46">
               <img

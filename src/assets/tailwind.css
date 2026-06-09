@@ -1,5 +1,5 @@
-@import "tailwindcss" important;
-
+@import "tailwindcss/theme" important;
+@import "tailwindcss/utilities" important;
 * {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
