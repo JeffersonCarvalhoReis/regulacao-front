@@ -18,7 +18,7 @@
             <div class="col-span-5 flex items-center justify-center">
               <img
                 alt="Descrição"
-                class="h-full w-auto object-contain"
+                class="h-full w-full object-contain"
                 src="../../../assets/images/logo-gestao.png"
               />
             </div>

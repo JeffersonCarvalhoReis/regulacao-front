@@ -1,7 +1,11 @@
 <template>
   <div class="a4-page">
     <div>
-      <img src="@/assets/images/bpa-header.png" alt="Cabeçalho do BPA" />
+      <img
+        class="w-full"
+        src="@/assets/images/bpa-header.png"
+        alt="Cabeçalho do BPA"
+      />
     </div>
     <div class="border-2 mt-1">
       <div class="uppercase bg-blue-800 text-white text-center">

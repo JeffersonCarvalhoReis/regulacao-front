@@ -14,16 +14,17 @@
     <div class="m-auto">
       <div ref="printSection" class="w-4xl flex flex-col items-center">
         <div
-          class="p-3 mb-4 border w-full flex items-center justify-around gap-10 rounded-md"
+          class="p-3 mb-2 border w-full flex items-center justify-around gap-10 rounded-md"
         >
           <div class="basis-50">
             <img
+              class="w-50"
               alt="Logo da prefeitura de itaguaçu da bahia"
               src="@/assets/images/logo-gestao.png"
             />
           </div>
           <div>
-            <h2 class="uppercase tracking-wide text-xl">
+            <h2 class="uppercase tracking-wide text-lg">
               <strong>Prefeitura Municipal de Itaguaçu da Bahia</strong>
             </h2>
             <h3 class="uppercase tracking-wide text-lg">
@@ -37,7 +38,7 @@
         <div class="text-right w-full">
           Nº {{ appointmentData.order_of_attendance }}
         </div>
-        <div class="flex flex-col w-full gap-1 py-4">
+        <div class="flex flex-col w-full gap-1 pt-2 pb-4">
           <LabeledLineGroup>
             <LabeledLine label="Nome" :value="appointmentData.patient" />
             <LabeledLine
@@ -136,7 +137,7 @@
               Anamnese/Exame Físico/Sus. Diagnóstica
             </div>
           </div>
-          <div v-for="i in 34" :key="i" class="border-b border-gray-500 h-6" />
+          <div v-for="i in 32" :key="i" class="border-b border-gray-500 h-6" />
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@
         <div class="flex items-center w-full m-4 relative">
           <div class="absolute w-20">
             <img
+              class="w-full"
               alt="Logo da prefeitura de itaguaçu da bahia"
               src="@/assets/images/brasao.svg"
             />

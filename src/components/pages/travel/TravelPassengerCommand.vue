@@ -17,6 +17,7 @@
           <div class="flex justify-center gap-4">
             <div class="max-w-46">
               <img
+                class="w-full"
                 alt="logo prefeitura itaguaçu"
                 src="/src/assets/images/logo-gestao.png"
               />
@@ -29,6 +30,7 @@
             </div>
             <div class="max-w-46">
               <img
+                class="w-full"
                 alt="logo da secretaria de saúde"
                 src="/src/assets//images/logo-saude.png"
               />

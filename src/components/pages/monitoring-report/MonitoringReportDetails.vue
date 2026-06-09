@@ -18,7 +18,7 @@
             <div class="col-span-2 border-r-2 flex items-center justify-center">
               <img
                 alt="Descrição"
-                class="h-full w-auto object-contain"
+                class="h-full w-full object-contain"
                 src="../../../assets/images/sesab-sus.png"
               />
             </div>
@@ -40,7 +40,9 @@
           </div>
         </div>
         <div class="border-2 my-2 uppercase grid grid-cols-12 h-30">
-          <div class="col-span-4 border-r-2 p-2 break-words overflow-hidden">
+          <div
+            class="col-span-4 border-r-2 p-2 wrap-break-word overflow-hidden"
+          >
             Nome da Unidade <br />
             {{ props.monitoringReportData.unit_name }}
           </div>

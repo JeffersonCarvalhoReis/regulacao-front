@@ -9,10 +9,11 @@
       />
     </div>
     <div ref="listRef" class="p-5 flex flex-col justify-between min-w-350">
-      <div class="min-h-[1700px]">
+      <div class="min-h-425">
         <div class="flex items-center w-full m-4 relative">
           <div class="absolute w-20">
             <img
+              class="w-20"
               alt="Logo da prefeitura de itaguaçu da bahia"
               src="@/assets/images/brasao.svg"
             />

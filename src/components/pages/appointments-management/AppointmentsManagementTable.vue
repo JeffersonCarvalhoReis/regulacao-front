@@ -231,6 +231,11 @@ const handleConfirm = async (appointment) => {
   }
 };
 
+const openOutpatientRecord = (appointment) => {
+  appointmentData.value = appointment;
+  dialogOutpatientRecord.value = true;
+};
+
 const search = debounce(async (v) => {
   filters.search = v;
 
