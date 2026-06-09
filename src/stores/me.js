@@ -48,7 +48,7 @@ export const useMeStore = defineStore(
   {
     persist: {
       storage: localStorage,
-      pick: ["user", "role", "providerUnit"],
+      pick: ["user", "role", "providerUnit", "providerUnitId"],
     },
   },
 );

@@ -28,7 +28,6 @@ watch(
   () => route.name,
   async (newName) => {
     if (newName !== "login") {
-      await getMe();
       if (role == "regulation_officer") {
         countAppointment();
       }
@@ -36,7 +35,20 @@ watch(
   },
 );
 
-onMounted(async () => {
+
+watch(
+  () => route.name,
+  async (newName) => {
+    if (newName !== "login") {
+      await getMe(); // ← espera carregar os dados
+
+      setupEchoChannels(); // ← só então conecta nos canais
+    }
+  },
+  { immediate: true } // ← executa imediatamente no primeiro render
+);
+
+function setupEchoChannels() {
   const echo = window.Echo;
 
   echo.private("appointments.regulation").listen(".created", (event) => {
@@ -66,5 +78,5 @@ onMounted(async () => {
   echo.private("appointments.regulation").listen(".pending", (event) => {
     appointmentPendingStore.pending = event.appointments_pending;
   });
-});
+};
 </script>
