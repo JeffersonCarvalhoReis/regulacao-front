@@ -46,9 +46,7 @@ onMounted(async () => {
   });
 
   echo
-    .private(
-      `appointments.provider_unit.name.${meStore.providerUnit.replace(" ", ".")}`,
-    )
+    .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
     .listen(".updated", (event) => {
       msg.value = "Solicitação de agendamento aprovada";
       color.value = "success";
