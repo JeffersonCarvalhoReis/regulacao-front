@@ -39,7 +39,8 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: "appointments-management" });
     if (meStore.role == "tfd") return next({ name: "patients" });
     if (meStore.role == "caps") return next({ name: "patients" });
-    router.push({ path: "/" });
+    if (meStore.role == "regulation_officer") return next({ name: "home" });
+    router.back();
   }
 
   if (to.meta.roles && !to.meta.roles.includes(meStore.role)) {
@@ -49,7 +50,8 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: "appointments-management" });
     if (meStore.role == "tfd") return next({ name: "patients" });
     if (meStore.role == "caps") return next({ name: "patients" });
-    router.push({ path: "/" });
+    if (meStore.role == "regulation_officer") return next({ name: "home" });
+    router.back();
   }
 
   next();

@@ -21,19 +21,21 @@ export const useAuthStore = defineStore(
       meStore.role = response.data.role;
       hasSession.value = true;
       localStorage.setItem("hasSession", "true");
-
+      window.Echo.connect();
       router.push({ name: "home" });
     };
 
     const logout = async (redirect = true) => {
       try {
+        window.teardownEchoChannels?.();
+        window.Echo?.disconnect();
+
         hasSession.value = false;
         localStorage.setItem("hasSession", "false");
 
         meStore.reset();
 
         await api.post("/logout");
-
         if (redirect) {
           router.push({ name: "login" });
         }

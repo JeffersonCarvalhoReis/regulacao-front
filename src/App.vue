@@ -36,68 +36,77 @@ const msg = ref(null);
 const color = ref("success");
 const icon = ref("");
 
-watch(
-  () => route.name,
-  async (newName) => {
-    if (newName !== "login") {
-      if (role == "regulation_officer") {
-        countAppointment();
-      }
-    }
-  },
-);
+const activeChannels = ref([]);
 
-watch(
-  () => route.name,
-  async (newName) => {
-    if (newName && newName !== "login") {
-      await getMe(); // ← espera carregar os dados
-
-      setupEchoChannels(); // ← só então conecta nos canais
-    }
-  },
-  { immediate: true }, // ← executa imediatamente no primeiro render
-);
-onMounted(() => {
-  if (route.name && route.name !== "login") {
-    getMe().then(() => {
-      setupEchoChannels();
-    });
+function teardownEchoChannels() {
+  const echo = window.Echo;
+  if (!echo) {
+    activeChannels.value = [];
+    return;
   }
-});
+  window.Echo.connector.channels = {};
+
+  activeChannels.value = [];
+}
+
+// Exponha globalmente para o authStore chamar
+window.teardownEchoChannels = teardownEchoChannels;
+
 function setupEchoChannels() {
   const echo = window.Echo;
+  if (!echo || !meStore.role) return;
+
+  // Limpa canais anteriores antes de configurar novos
+  teardownEchoChannels();
 
   if (meStore.role === "regulation_officer") {
-    echo.private("appointments.regulation").listen(".created", (event) => {
+    const ch = "appointments.regulation";
+    activeChannels.value.push(ch);
+
+    echo.private(ch).listen(".created", (event) => {
       msg.value = `${event.provider_unit} enviou uma nova solicitação de agendamento`;
       color.value = "success";
       alert.value = true;
       icon.value = "mdi-bell-ring";
     });
-    echo.private("appointments.regulation").listen(".pending", (event) => {
+    echo.private(ch).listen(".pending", (event) => {
       appointmentPendingStore.pending = event.appointments_pending;
     });
   }
+
   if (meStore.role === "provider_unit_manager") {
-    echo
-      .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
-      .listen(".updated", (event) => {
-        msg.value = "Solicitação de agendamento aprovada";
-        color.value = "success";
-        alert.value = true;
-        icon.value = "mdi-check-circle";
-      });
-    echo
-      .private(
-        `appointments.provider_unit.user.${meStore.user.replaceAll(" ", ".")}`,
-      )
-      .listen(".deleted", (event) => {
-        msg.value = "Solicitação de agendamento recusada";
-        color.value = "error";
-        alert.value = true;
-        icon.value = "mdi-close-circle";
-      });
+    const ch1 = `appointments.provider_unit.id.${meStore.providerUnitId}`;
+    const ch2 = `appointments.provider_unit.user.${meStore.user.replaceAll(" ", ".")}`;
+    activeChannels.value.push(ch1, ch2);
+
+    echo.private(ch1).listen(".updated", () => {
+      msg.value = "Solicitação de agendamento aprovada";
+      color.value = "success";
+      alert.value = true;
+      icon.value = "mdi-check-circle";
+    });
+    echo.private(ch2).listen(".deleted", () => {
+      msg.value = "Solicitação de agendamento recusada";
+      color.value = "error";
+      alert.value = true;
+      icon.value = "mdi-close-circle";
+    });
   }
 }
+
+watch(
+  () => route.name,
+  async (newName) => {
+    if (newName && newName !== "login") {
+      setupEchoChannels();
+      if (meStore.role === "regulation_officer") {
+        countAppointment();
+      }
+    } else if (newName === "login") {
+      teardownEchoChannels();
+      window.Echo?.disconnect();
+    }
+  },
+  { immediate: true },
+);
 </script>
