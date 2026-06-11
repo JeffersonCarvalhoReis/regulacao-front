@@ -176,14 +176,21 @@ const appointmentText = computed(() =>
 const appointmentClass = "text-green-600 bg-white/0 border-0 ml-1 h-full";
 
 onMounted(() => {
-  window.Echo.private(
-    `appointments.provider_unit.user.${meStore.user.replace(" ", ".")}`,
-  ).listen(".deleted", (event) => {
-    refetch();
-  });
-  window.Echo.private("appointments.regulation").listen(".created", (event) => {
-    refetch();
-  });
+  if (meStore.role === "regulation_officer") {
+    window.Echo.private("appointments.regulation").listen(
+      ".created",
+      (event) => {
+        refetch();
+      },
+    );
+  }
+  if (meStore.role === "provider_unit_manager") {
+    window.Echo.private(
+      `appointments.provider_unit.user.${meStore.user.replace(" ", ".")}`,
+    ).listen(".deleted", (event) => {
+      refetch();
+    });
+  }
 });
 
 const updateOptions = (newOptions) => {

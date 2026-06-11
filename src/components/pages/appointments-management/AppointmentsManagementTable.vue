@@ -163,18 +163,19 @@ const updateOptions = (newOptions) => {
 };
 onMounted(async () => {
   const echo = window.Echo;
+  if (meStore.role === "provider_unit_manager") {
+    echo
+      .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
+      .listen(".updated", (event) => {
+        refetch();
+      });
 
-  echo
-    .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
-    .listen(".updated", (event) => {
-      refetch();
-    });
-
-  echo
-    .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
-    .listen(".removed", () => {
-      refetch();
-    });
+    echo
+      .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
+      .listen(".removed", () => {
+        refetch();
+      });
+  }
 });
 
 const chooseAction = async (appointment) => {

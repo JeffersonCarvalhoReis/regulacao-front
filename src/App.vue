@@ -98,6 +98,7 @@ watch(
   () => route.name,
   async (newName) => {
     if (newName && newName !== "login") {
+      await getMe();
       setupEchoChannels();
       if (meStore.role === "regulation_officer") {
         countAppointment();
