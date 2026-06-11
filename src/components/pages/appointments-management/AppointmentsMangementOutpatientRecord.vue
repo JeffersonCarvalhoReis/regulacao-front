@@ -14,6 +14,7 @@
     <div class="m-auto">
       <div ref="printSection" class="w-4xl flex flex-col items-center">
         <div
+          v-if="role !== 'caps'"
           class="p-3 mb-2 border w-full flex items-center justify-around gap-10 rounded-md"
         >
           <div class="basis-50">
@@ -31,6 +32,35 @@
               Secretaria Municipal de Saúde de Itaguaçu da Bahia
             </h3>
           </div>
+        </div>
+        <div
+          v-else
+          class="px-3 py-1 mb-2 border w-full flex items-center justify-around gap-2 rounded-md"
+        >
+          <div>
+            <div class="w-35">
+              <img
+                class="h-25"
+                alt="Logo da prefeitura de itaguaçu da bahia"
+                src="@/assets/images/logo-caps.png"
+              />
+            </div>
+          </div>
+
+          <div class="text-center">
+            <h2 class="uppercase tracking-wide text-lg m-1">
+              <strong>Prefeitura Municipal de Itaguaçu da Bahia</strong>
+            </h2>
+            <h3 class="uppercase tracking-wide text-lg m-1">
+              Secretaria Municipal de Saúde de Itaguaçu da Bahia
+            </h3>
+            <h3 class="uppercase tracking-wide m-0">Caps - Lar da esperança</h3>
+          </div>
+          <img
+            class="w-35"
+            alt="Logo da prefeitura de itaguaçu da bahia"
+            src="@/assets/images/logo-gestao.png"
+          />
         </div>
         <h1 class="uppercase font-extrabold text-xl tracking-wide">
           <strong>Ficha Ambulatorial</strong>
@@ -147,12 +177,14 @@
 <script setup>
 import { useCalculateAge } from "@/composables/utils/useCalculateAge";
 import { useExportToPdf } from "@/composables/utils/useExportToPdf";
+import { useMeStore } from "@/stores/me";
 
 defineProps({
   appointmentData: { type: Object, required: true },
 });
 
 const printSection = ref(null);
+const role = useMeStore().role;
 
 const { formatDate } = useFormatDate();
 const { calculateAge } = useCalculateAge();

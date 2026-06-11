@@ -21,7 +21,9 @@
       selected-class="text-blue-800 bg-blue-100"
     >
       <v-tab class="font-bold px-10" value="consultation"> Consultas </v-tab>
-      <v-tab class="font-bold px-10" value="exam"> Exames </v-tab>
+      <v-tab class="font-bold px-10" value="exam" v-if="role !== 'caps'">
+        Exames
+      </v-tab>
     </v-tabs>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="consultation">

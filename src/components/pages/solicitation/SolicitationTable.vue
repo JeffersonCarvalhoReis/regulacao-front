@@ -144,9 +144,17 @@ const canCreateAppointment = (item) => {
 
   // CAPS: somente consulta com psiquiatra
   if (role === "caps") {
+    const allowedSpecialists = [
+      "psiquiatra",
+      "clínico geral",
+      "psicóloga",
+      "assistente social",
+    ];
+
+    const specialist = item.specialist?.toLowerCase() ?? "";
     return (
       item.solicitation_type === "consultation" &&
-      item.specialist?.toLowerCase().includes("psiquiatra")
+      allowedSpecialists.some((allowed) => specialist.includes(allowed))
     );
   }
 
