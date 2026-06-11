@@ -47,51 +47,57 @@ watch(
   },
 );
 
-
 watch(
   () => route.name,
   async (newName) => {
-    if (newName !== "login") {
+    if (newName && newName !== "login") {
       await getMe(); // ← espera carregar os dados
 
       setupEchoChannels(); // ← só então conecta nos canais
     }
   },
-  { immediate: true } // ← executa imediatamente no primeiro render
+  { immediate: true }, // ← executa imediatamente no primeiro render
 );
-
+onMounted(() => {
+  if (route.name && route.name !== "login") {
+    getMe().then(() => {
+      setupEchoChannels();
+    });
+  }
+});
 function setupEchoChannels() {
   const echo = window.Echo;
 
-  echo.private("appointments.regulation").listen(".created", (event) => {
-    msg.value = `${event.provider_unit} enviou uma nova solicitação de agendamento`;
-    color.value = "success";
-    alert.value = true;
-    icon.value = "mdi-bell-ring";
-  });
-
-  echo
-    .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
-    .listen(".updated", (event) => {
-      msg.value = "Solicitação de agendamento aprovada";
+  if (meStore.role === "regulation_officer") {
+    echo.private("appointments.regulation").listen(".created", (event) => {
+      msg.value = `${event.provider_unit} enviou uma nova solicitação de agendamento`;
       color.value = "success";
       alert.value = true;
-      icon.value = "mdi-check-circle";
+      icon.value = "mdi-bell-ring";
     });
-
-  echo
-    .private(
-      `appointments.provider_unit.user.${meStore.user.replace(" ", ".")}`,
-    )
-    .listen(".deleted", (event) => {
-      msg.value = "Solicitação de agendamento recusada";
-      color.value = "error";
-      alert.value = true;
-      icon.value = "mdi-close-circle";
+    echo.private("appointments.regulation").listen(".pending", (event) => {
+      appointmentPendingStore.pending = event.appointments_pending;
     });
-
-  echo.private("appointments.regulation").listen(".pending", (event) => {
-    appointmentPendingStore.pending = event.appointments_pending;
-  });
-};
+  }
+  if (meStore.role === "provider_unit_manager") {
+    echo
+      .private(`appointments.provider_unit.id.${meStore.providerUnitId}`)
+      .listen(".updated", (event) => {
+        msg.value = "Solicitação de agendamento aprovada";
+        color.value = "success";
+        alert.value = true;
+        icon.value = "mdi-check-circle";
+      });
+    echo
+      .private(
+        `appointments.provider_unit.user.${meStore.user.replaceAll(" ", ".")}`,
+      )
+      .listen(".deleted", (event) => {
+        msg.value = "Solicitação de agendamento recusada";
+        color.value = "error";
+        alert.value = true;
+        icon.value = "mdi-close-circle";
+      });
+  }
+}
 </script>

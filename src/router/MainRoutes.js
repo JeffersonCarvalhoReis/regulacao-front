@@ -25,7 +25,6 @@ import Travels from "@/pages/Travels.vue";
 import Users from "@/pages/Users.vue";
 import Vehicles from "@/pages/Vehicles.vue";
 import MonitoringReport from "../pages/MonitoringReport.vue";
-// import { auth, redirectIfAuthenticated } from './guard'
 
 export default [
   {

@@ -29,24 +29,26 @@ export const getCSRFToken = () => {
 
 // Tempo de inatividade permitido
 const inactivityDelay = 2 * 60 * 60 * 1000;
-// const inactivityDelay = 4 * 1000;
+
+// const inactivityDelay = 2 * 1000;
+
 const { showInactivityAlert } = useSweetAlertFeedback();
 
 function desconectUser() {
   const mestore = useMeStore();
   const authStore = useAuthStore();
-  authStore.hasSession = false;
+  authStore.logout();
   mestore.reset();
   router.push({ name: "login" });
 }
 
 // Variável para armazenar o timeout
 let logoutTimeout = null;
-
 // Função para reiniciar o timeout
 function resetLogoutTimeout() {
   if (logoutTimeout) clearTimeout(logoutTimeout);
-  if (router.currentRoute.value.name !== "login") {
+  const routeName = router.currentRoute.value.name;
+  if (routeName && routeName !== "login") {
     logoutTimeout = setTimeout(() => {
       showInactivityAlert();
       desconectUser();
@@ -60,21 +62,33 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+let appInitialized = false;
+
+function initializeApp() {
+  setTimeout(() => {
+    appInitialized = true;
+  }, 500);
+}
+
 // Interceptor para respostas: reinicia o timeout a cada resposta recebida
 api.interceptors.response.use(
   (response) => {
     resetLogoutTimeout();
+    initializeApp();
     return response;
   },
   (error) => {
     resetLogoutTimeout();
     if (error.response && error.response.status === 401) {
       // Verifica se a rota atual não é 'login'
-      if (router.currentRoute.value.name !== "login") {
-        showInactivityAlert();
+      const routeName = router.currentRoute.value.name;
+      if (routeName && routeName !== "login") {
         desconectUser();
+        if (appInitialized) {
+          showInactivityAlert();
+        }
       }
     }
     return Promise.reject(error);
-  }
+  },
 );

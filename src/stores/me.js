@@ -31,6 +31,8 @@ export const useMeStore = defineStore(
     const reset = () => {
       user.value = null;
       role.value = null;
+      providerUnit.value = null;
+      providerUnitId.value = null;
     };
 
     return {
