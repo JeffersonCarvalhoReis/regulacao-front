@@ -23,6 +23,7 @@ declare module 'vue' {
     AppointmentsMangementOutpatientRecord: typeof import('./src/components/pages/appointments-management/AppointmentsMangementOutpatientRecord.vue')['default']
     AppointmentTable: typeof import('./src/components/pages/appointment/AppointmentTable.vue')['default']
     AppToolbar: typeof import('./src/components/layout/AppToolbar.vue')['default']
+    AttachmentButton: typeof import('./src/components/shared/AttachmentButton.vue')['default']
     BaseButtonClear: typeof import('./src/components/shared/BaseButtonClear.vue')['default']
     BaseButtonFilter: typeof import('./src/components/shared/BaseButtonFilter.vue')['default']
     BaseButtonRegister: typeof import('./src/components/shared/BaseButtonRegister.vue')['default']

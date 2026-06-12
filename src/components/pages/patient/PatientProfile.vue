@@ -36,6 +36,12 @@
           <div>ACS: {{ patientData.health_agent }}</div>
         </InfoGroup>
       </BaseSection>
+      <div class="my-4">
+        <AttachmentButton
+          v-if="role === 'caps'"
+          :attachment="patientData.attachment"
+        />
+      </div>
       <div v-if="!['tfd'].includes(role)">
         <h2 class="text-xl my-2">Histórico do Paciente</h2>
         <v-tabs

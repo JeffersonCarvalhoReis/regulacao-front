@@ -20,54 +20,56 @@
   >
     <patient-form @close="registerPatient = false" @save="submit" />
   </v-dialog>
-  <v-dialog
-    v-model="dialogFilter"
-    class="z-999"
-    transition="dialog-transition"
-  >
+  <v-dialog v-model="dialogFilter" class="z-999" transition="dialog-transition">
     <patient-filters @close="dialogFilter = false" @filters="submitFilters" />
   </v-dialog>
 </template>
 <script setup>
-  import { usePatientApi } from '@/composables/modules/usePatientModule';
-  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
+import { usePatientApi } from "@/composables/modules/usePatientModule";
+import { useMeStore } from "@/stores/me";
 
-  const { create } = usePatientApi();
-  const { showFeedback } = useSweetAlertFeedback();
+const { create, createWithAttachment } = usePatientApi();
+const { showFeedback } = useSweetAlertFeedback();
 
-  const patientTableRef = ref(null);
-  const registerPatient = ref(false)
-  const clear = () => {
-    patientTableRef.value?.clearFilters();
-    patientTableRef.value?.refetch();
-    badgeCounter.value = 0
+const patientTableRef = ref(null);
+const registerPatient = ref(false);
+const role = useMeStore().role;
+const clear = () => {
+  patientTableRef.value?.clearFilters();
+  patientTableRef.value?.refetch();
+  badgeCounter.value = 0;
+};
 
+const submit = async (val) => {
+  let success;
+  if (role === "caps") {
+    success = await showFeedback(() => createWithAttachment(val));
+  } else {
+    success = await showFeedback(() => create(val));
   }
+  if (success) {
+    patientTableRef.value?.refetch();
+    registerPatient.value = false;
+  }
+};
+//filters
+const dialogFilter = ref(false);
+const badgeCounter = ref(0);
 
-  const submit = async val => {
-    const success = await showFeedback(() => create(val));
-    if (success) {
-      patientTableRef.value?.refetch();
-      registerPatient.value = false;
+const countNotNullKeys = (obj) => {
+  return Object.values(obj).filter((value) => {
+    if (Array.isArray(value)) {
+      // Verifica se todo o array é nulo
+      return value.some((item) => item !== null);
     }
-  }
-  //filters
-  const dialogFilter = ref(false);
-  const badgeCounter = ref(0);
-
-  const countNotNullKeys = obj => {
-    return Object.values(obj).filter(value => {
-      if (Array.isArray(value)) {
-        // Verifica se todo o array é nulo
-        return value.some(item => item !== null);
-      }
-      return value !== null;
-    }).length;
-  };
-  const submitFilters = async val => {
-    patientTableRef.value?.setFilter('', val);
-    badgeCounter.value = countNotNullKeys(val);
-    patientTableRef.value?.refetch();
-    dialogFilter.value = false
-  }
+    return value !== null;
+  }).length;
+};
+const submitFilters = async (val) => {
+  patientTableRef.value?.setFilter("", val);
+  badgeCounter.value = countNotNullKeys(val);
+  patientTableRef.value?.refetch();
+  dialogFilter.value = false;
+};
 </script>

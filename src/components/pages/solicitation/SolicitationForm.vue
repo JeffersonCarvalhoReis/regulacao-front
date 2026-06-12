@@ -157,16 +157,60 @@
             variant="outlined"
           />
 
-          <v-file-input
-            v-model="attachment"
-            accept=".pdf,.jpg,.jpeg,.png"
-            density="compact"
-            :error-messages="errors.attachment"
-            label="Anexo"
-            prepend-icon
-            prepend-inner-icon="mdi-paperclip"
-            variant="outlined"
-          />
+          <div class="col-span-1">
+            <!-- Modo edição: mostra anexo atual + opção de substituir -->
+            <template
+              v-if="isEditing && existingAttachment && !replaceAttachment"
+            >
+              <div
+                class="flex items-center gap-2 border rounded px-3 py-2 text-sm"
+              >
+                <v-icon size="small">mdi-paperclip</v-icon>
+                <a
+                  :href="existingAttachment"
+                  target="_blank"
+                  class="truncate flex-1"
+                >
+                  {{ attachmentFileName }}
+                </a>
+                <v-btn
+                  class="text-red-500"
+                  density="compact"
+                  icon="mdi-close-circle"
+                  size="small"
+                  variant="text"
+                  @click="handleReplaceAttachment"
+                  v-tooltip="'Substituir anexo'"
+                >
+                </v-btn>
+              </div>
+            </template>
+
+            <!-- Novo upload (cadastro ou substituição) -->
+            <template v-else>
+              <v-file-input
+                v-model="attachment"
+                accept=".pdf,.jpg,.jpeg,.png"
+                density="compact"
+                :error-messages="errors.attachment"
+                label="Anexo"
+                prepend-icon
+                prepend-inner-icon="mdi-paperclip"
+                variant="outlined"
+              >
+                <template v-if="isEditing && replaceAttachment" #append-inner>
+                  <v-btn
+                    class="text-yellow-500"
+                    density="compact"
+                    icon="mdi-arrow-u-left-top"
+                    variant="text"
+                    @click="cancelReplaceAttachment"
+                    v-tooltip="'Cancelar substituição'"
+                  />
+                </template>
+              </v-file-input>
+            </template>
+          </div>
           <v-textarea
             v-model="reason"
             class="col-span-3 required"
@@ -238,7 +282,6 @@ const {
   refetch: patientFetch,
   create: patientCreate,
   setFilter: patientFilter,
-  clearFilters,
 } = usePatientApi();
 const {
   data: specialistData,
@@ -268,6 +311,7 @@ const dialogPatientForm = ref(false);
 const dialogProcedureForm = ref(false);
 const dialogSpecialistForm = ref(false);
 const dialogRequestingUnitForm = ref(false);
+const replaceAttachment = ref(false);
 
 const procedure_max_age = computed(
   () => procedureData.value.find((v) => v.id === procedure_id.value)?.max_age,
@@ -320,9 +364,29 @@ onMounted(async () => {
   );
 });
 
+const existingAttachment = computed(() =>
+  isEditing.value && typeof props.modelValue?.attachment === "string"
+    ? props.modelValue.attachment
+    : null,
+);
+
+const attachmentFileName = computed(() => {
+  if (!existingAttachment.value) return "";
+  return "Arquivo anexado";
+});
+
+const handleReplaceAttachment = () => {
+  replaceAttachment.value = true;
+};
+const cancelReplaceAttachment = () => {
+  replaceAttachment.value = false;
+  attachment.value = null;
+};
+
 const loadPatient = async () => {
   if (isEditing.value) {
-    resetForm({ values: props.modelValue });
+    const { attachment: _, ...rest } = props.modelValue;
+    resetForm({ values: { ...rest, attachment: null } });
   } else {
     patientFetch();
   }
@@ -505,6 +569,17 @@ const { value: cid } = useField("cid");
 const onSubmit = handleSubmit((values) => {
   if (values.solicitation_type == "consultation") delete values.procedure_id;
   if (values.solicitation_type == "exam") delete values.specialist_id;
+
+  if (isEditing.value) {
+    if (!replaceAttachment.value && !attachment.value) {
+      delete values.attachment;
+    }
+    if (replaceAttachment.value) {
+      delete values.attachment;
+      values.remove_attachment = true;
+    }
+  }
+
   emit("save", values);
 });
 

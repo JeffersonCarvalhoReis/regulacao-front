@@ -1,6 +1,6 @@
 <template>
   <div class="pb-8 pr-5">
-    <h2 class="text-xl font-bold mb-2">{{ title }}</h2>
+    <h2 class="text-lg font-bold mb-2">{{ title }}</h2>
     <slot />
   </div>
 </template>

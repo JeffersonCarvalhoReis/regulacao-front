@@ -129,7 +129,7 @@
 
           <v-text-field
             v-model="neighborhood"
-            class="col-span-2 required"
+            :class="role === 'caps' ? 'required' : 'required col-span-2'"
             density="compact"
             :error-messages="errors.neighborhood"
             label="Bairro"
@@ -146,6 +146,57 @@
             placeholder="Informações adicionais sobre o paciente"
             variant="outlined"
           />
+          <div v-if="role === 'caps'" class="col-span-1">
+            <template
+              v-if="isEditing && existingAttachment && !replaceAttachment"
+            >
+              <div
+                class="flex items-center gap-2 border rounded px-3 py-2 text-sm"
+              >
+                <v-icon size="small">mdi-paperclip</v-icon>
+                <a
+                  :href="existingAttachment"
+                  target="_blank"
+                  class="truncate flex-1"
+                >
+                  Arquivo anexado
+                </a>
+                <v-btn
+                  class="text-red-500"
+                  density="compact"
+                  icon="mdi-close-circle"
+                  size="small"
+                  variant="text"
+                  v-tooltip="'Substituir anexo'"
+                  @click="handleReplaceAttachment"
+                />
+              </div>
+            </template>
+
+            <template v-else>
+              <v-file-input
+                v-model="attachment"
+                accept=".pdf,.jpg,.jpeg,.png"
+                density="compact"
+                :error-messages="errors.attachment"
+                label="Anexo"
+                prepend-icon
+                prepend-inner-icon="mdi-paperclip"
+                variant="outlined"
+              >
+                <template v-if="isEditing && replaceAttachment" #append-inner>
+                  <v-btn
+                    class="text-yellow-500"
+                    density="compact"
+                    icon="mdi-arrow-u-left-top"
+                    variant="text"
+                    v-tooltip="'Cancelar substituição'"
+                    @click="cancelReplaceAttachment"
+                  />
+                </template>
+              </v-file-input>
+            </template>
+          </div>
           <div v-if="isEditing" class="flex gap-5">
             <v-checkbox
               v-model="is_deceased"
@@ -183,6 +234,7 @@
 
 <script setup>
 import { useHealthAgentApi } from "@/composables/modules/useHealthAgentModule";
+import { useMeStore } from "@/stores/me";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 
@@ -198,6 +250,8 @@ const { isValidCns } = useCnsValidator();
 const { isValidCpf } = useCpfValidator();
 const isEditing = computed(() => !!props.modelValue?.id);
 const position = ref("center-left");
+const role = useMeStore().role;
+const replaceAttachment = ref(false);
 
 onMounted(async () => {
   params.value.per_page = -1;
@@ -206,14 +260,15 @@ onMounted(async () => {
   await refetch();
 
   if (isEditing.value) {
-    resetForm({ values: props.modelValue });
+    const { attachment: _, ...rest } = props.modelValue;
+    resetForm({ values: { ...rest, attachment: null } });
   }
 });
 
 const emit = defineEmits(["close", "save"]);
 
 const title = computed(() =>
-  isEditing.value ? "Editar Paciente" : "Cadastrar Paciente"
+  isEditing.value ? "Editar Paciente" : "Cadastrar Paciente",
 );
 
 const genderOptions = [
@@ -244,6 +299,18 @@ const schema = yup.object({
   neighborhood: yup.string().required("Bairro é obrigatório"),
   observation: yup.string().nullable(),
   is_deceased: yup.boolean().nullable(),
+  attachment: yup
+    .mixed()
+    .nullable()
+    .test("fileSize", "O arquivo deve ter no máximo 10MB", (value) => {
+      if (!value) return true;
+      return value.size <= 10 * 1024 * 1024;
+    })
+    .test("fileType", "Tipo de arquivo inválido", (value) => {
+      if (!value) return true;
+      const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+      return allowedTypes.includes(value.type);
+    }),
   date_of_dead: yup.date().when("is_deceased", {
     is: true,
     then: (schema) => schema.required("Data do falecimento é obrigatória"),
@@ -268,9 +335,34 @@ const { value: street } = useField("street");
 const { value: neighborhood } = useField("neighborhood");
 const { value: observation } = useField("observation");
 const { value: is_deceased } = useField("is_deceased");
+const { value: attachment } = useField("attachment");
 const { value: date_of_dead } = useField("date_of_dead");
 
+const existingAttachment = computed(() =>
+  isEditing.value && typeof props.modelValue?.attachment === "string"
+    ? props.modelValue.attachment
+    : null,
+);
+
+const handleReplaceAttachment = () => {
+  replaceAttachment.value = true;
+};
+
+const cancelReplaceAttachment = () => {
+  replaceAttachment.value = false;
+  attachment.value = null;
+};
+
 const onSubmit = handleSubmit((values) => {
+  if (isEditing.value) {
+    if (!replaceAttachment.value && !attachment.value) {
+      delete values.attachment;
+    }
+    if (replaceAttachment.value) {
+      delete values.attachment;
+      values.remove_attachment = true;
+    }
+  }
   emit("save", values);
 });
 
@@ -284,6 +376,6 @@ watch(
     if (newValue && !props.modelValue.is_deceased) {
       date_of_dead.value = new Date();
     }
-  }
+  },
 );
 </script>
