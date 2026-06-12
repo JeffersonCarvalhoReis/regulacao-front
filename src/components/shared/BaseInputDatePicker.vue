@@ -30,7 +30,7 @@
       <v-icon
         ref="dragHandle"
         aria-label="Arrastar"
-        class="absolute top-0 right-[-24px] w-8 h-8 text-gray-500 flex items-center justify-center cursor-grab"
+        class="absolute top-0 -right-6 w-8 h-8 text-gray-500 flex items-center justify-center cursor-grab"
         @pointerdown.prevent="startDrag"
         @pointerup="endPointer"
         type="button"

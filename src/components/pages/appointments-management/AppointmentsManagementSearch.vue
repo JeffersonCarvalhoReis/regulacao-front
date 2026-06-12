@@ -22,7 +22,6 @@
               v-model="appointmentDate"
               class-date-picker="absolute translate-x-100 translate-y-10"
               label="Data"
-              readonly
               @update:model-value="handleDateChange"
             />
             <v-btn flat icon @click="addDay">

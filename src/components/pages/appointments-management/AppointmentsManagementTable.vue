@@ -264,13 +264,8 @@ const searchSpecialist = async (specialist) => {
 const searchDate = async (date) => {
   if (!date) return;
 
-  const parsedDate = new Date(date);
-
-  parsedDate.setHours(0, 0, 0, 0);
-
-  selectedDate.value = parsedDate;
-
-  filters.date = parsedDate;
+  selectedDate.value = date;
+  filters.date = date;
 
   await applyFilters();
 };
