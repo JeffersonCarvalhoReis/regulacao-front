@@ -15,8 +15,8 @@
                 index === currentSection
                   ? 'bg-blue-600 text-white hover:outline-2 outline-blue-500'
                   : index < currentSection
-                  ? 'bg-green-500 text-white hover:outline-2 outline-blue-500'
-                  : 'bg-gray-300 text-gray-600 hover:outline-2 outline-blue-500',
+                    ? 'bg-green-500 text-white hover:outline-2 outline-blue-500'
+                    : 'bg-gray-300 text-gray-600 hover:outline-2 outline-blue-500',
               ]"
               @click="currentSection = index"
             >
@@ -64,6 +64,7 @@
             </h2>
             <v-text-field
               v-model="hospital"
+              maxlength="50"
               density="compact"
               :error-messages="errors.hospital"
               label="Unidade"
@@ -103,6 +104,7 @@
                 :error-messages="errors.patient_cpf"
                 label="CPF"
                 variant="outlined"
+                maxlength="20"
               />
             </div>
 
@@ -114,6 +116,7 @@
                 label="Telefone"
                 prepend-inner-icon="mdi-phone"
                 variant="outlined"
+                maxlength="20"
               />
               <v-text-field
                 v-model="patient_birth_date"
@@ -145,6 +148,7 @@
                 disabled
                 label="CNS (Cartão SUS)"
                 variant="outlined"
+                maxlength="20"
               />
               <v-select
                 v-model="patient_race"
@@ -162,6 +166,7 @@
               disabled
               label="Nome da Mãe"
               variant="outlined"
+              maxlength="50"
             />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -171,6 +176,7 @@
                 disabled
                 label="Endereço (Rua e Número)"
                 variant="outlined"
+                maxlength="50"
               />
               <v-text-field
                 v-model="patient_neighborhood"
@@ -178,6 +184,7 @@
                 disabled
                 label="Bairro"
                 variant="outlined"
+                maxlength="50"
               />
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -188,6 +195,7 @@
                 density="compact"
                 label="Relação de Dependência"
                 variant="outlined"
+                maxlength="30"
               />
               <v-text-field
                 v-model="patient_profession"
@@ -196,6 +204,7 @@
                 density="compact"
                 label="Profissão"
                 variant="outlined"
+                maxlength="30"
               />
             </div>
           </div>
@@ -223,6 +232,7 @@
                 disabled
                 label="CPF"
                 variant="outlined"
+                maxlength="20"
               />
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -233,6 +243,7 @@
                 label="Telefone"
                 prepend-inner-icon="mdi-phone"
                 variant="outlined"
+                maxlength="20"
               />
               <v-text-field
                 v-model="companion_birth_date"
@@ -250,6 +261,7 @@
                 disabled
                 label="CNS"
                 variant="outlined"
+                maxlength="20"
               />
               <v-text-field
                 v-model="companion_mother_name"
@@ -257,6 +269,7 @@
                 disabled
                 label="Nome da Mãe"
                 variant="outlined"
+                maxlength="50"
               />
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -273,6 +286,7 @@
                 disabled
                 label="Bairro"
                 variant="outlined"
+                maxlength="50"
               />
             </div>
             <v-text-field
@@ -281,6 +295,7 @@
               :error-messages="errors.companion_relation_to_patient"
               density="compact"
               label="Relação com o Paciente"
+              maxlength="50"
               variant="outlined"
             />
           </div>
@@ -294,8 +309,8 @@
               density="compact"
               label="Histórico da Doença Atual"
               rows="5"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <v-textarea
@@ -305,8 +320,8 @@
               density="compact"
               label="Exame Físico"
               rows="4"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <v-text-field
@@ -336,8 +351,8 @@
               density="compact"
               label="Exame(s) Complementar(es) Realizado(s)"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <v-textarea
@@ -347,8 +362,8 @@
               density="compact"
               label="Tratamento(s) Realizado(s)"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="400"
+              maxlength="400"
               variant="outlined"
             />
             <v-textarea
@@ -358,8 +373,8 @@
               density="compact"
               label="Tratamento/Exame Indicado"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="400"
+              maxlength="400"
               variant="outlined"
             />
             <v-text-field
@@ -384,8 +399,8 @@
               density="compact"
               label="Justificar as Razões que Impossibilitam a Realização do Tratamento/Exame na Localidade"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <v-textarea
@@ -395,8 +410,8 @@
               density="compact"
               label="Justificar em Caso de Necessidade de Encaminhamento Urgente"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <v-textarea
@@ -406,8 +421,8 @@
               density="compact"
               label="Justificar em Caso de Necessidade de Acompanhamento"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
           </div>
@@ -431,8 +446,8 @@
               density="compact"
               label="Justificar"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <v-textarea
@@ -442,8 +457,8 @@
               density="compact"
               label="Outras Observações"
               rows="3"
-              counter="800"
-              maxlength="800"
+              counter="600"
+              maxlength="600"
               variant="outlined"
             />
             <base-input-date-picker
@@ -561,8 +576,8 @@ const title = computed(() =>
   props.isRenew
     ? "Renovar Laudo Médico"
     : isEditing.value
-    ? "Editar Laudo Médico"
-    : "Cadastrar Laudo Médico"
+      ? "Editar Laudo Médico"
+      : "Cadastrar Laudo Médico",
 );
 const date = new Date();
 date.setMonth(date.getMonth() - 6);
@@ -668,39 +683,39 @@ const { value: hospital } = useField<string | null>("hospital");
 const { value: patient_id } = useField<number | null>("patient_id");
 const { value: companion_id } = useField<number | null>("companion_id");
 const { value: history_of_present_illness } = useField<string | null>(
-  "history_of_present_illness"
+  "history_of_present_illness",
 );
 const { value: physical_exam } = useField<string | null>("physical_exam");
 const { value: probable_diagnosis } = useField<string | null>(
-  "probable_diagnosis"
+  "probable_diagnosis",
 );
 const { value: icd_code } = useField<string | null>("icd_code");
 const { value: complementary_exams } = useField<string | null>(
-  "complementary_exams"
+  "complementary_exams",
 );
 const { value: treatments_performed } = useField<string | null>(
-  "treatments_performed"
+  "treatments_performed",
 );
 const { value: indicated_treatments_or_exams } = useField<string | null>(
-  "indicated_treatments_or_exams"
+  "indicated_treatments_or_exams",
 );
 const { value: probable_treatment_duration } = useField<string | null>(
-  "probable_treatment_duration"
+  "probable_treatment_duration",
 );
 const { value: reason_cannot_perform_locally } = useField<string | null>(
-  "reason_cannot_perform_locally"
+  "reason_cannot_perform_locally",
 );
 const { value: reason_urgent_referral } = useField<string | null>(
-  "reason_urgent_referral"
+  "reason_urgent_referral",
 );
 const { value: reason_need_followup } = useField<string | null>(
-  "reason_need_followup"
+  "reason_need_followup",
 );
 const { value: recommended_transport } = useField<string | null>(
-  "recommended_transport"
+  "recommended_transport",
 );
 const { value: transport_justification } = useField<string | null>(
-  "transport_justification"
+  "transport_justification",
 );
 const { value: other_notes } = useField<string | null>("other_notes");
 const { value: report_date } = useField<string | null>("report_date");
@@ -708,40 +723,40 @@ const { value: report_date } = useField<string | null>("report_date");
 const { value: patient_cpf } = useField<string | null>("patient_cpf");
 const { value: patient_phone } = useField<string | null>("patient_phone");
 const { value: patient_birth_date } = useField<string | null>(
-  "patient_birth_date"
+  "patient_birth_date",
 );
 const { value: patient_gender } = useField<string | null>("patient_gender");
 const { value: patient_cns } = useField<string | null>("patient_cns");
 const { value: patient_race } = useField<string | null>("patient_race");
 const { value: patient_mother_name } = useField<string | null>(
-  "patient_mother_name"
+  "patient_mother_name",
 );
 const { value: patient_street } = useField<string | null>("patient_street");
 const { value: patient_neighborhood } = useField<string | null>(
-  "patient_neighborhood"
+  "patient_neighborhood",
 );
 const { value: patient_profession } = useField<string | null>(
-  "patient_profession"
+  "patient_profession",
 );
 const { value: patient_dependency_relation } = useField<string | null>(
-  "patient_dependency_relation"
+  "patient_dependency_relation",
 );
 
 const { value: companion_cpf } = useField<string | null>("companion_cpf");
 const { value: companion_phone } = useField<string | null>("companion_phone");
 const { value: companion_birth_date } = useField<string | null>(
-  "companion_birth_date"
+  "companion_birth_date",
 );
 const { value: companion_cns } = useField<string | null>("companion_cns");
 const { value: companion_mother_name } = useField<string | null>(
-  "companion_mother_name"
+  "companion_mother_name",
 );
 const { value: companion_street } = useField<string | null>("companion_street");
 const { value: companion_neighborhood } = useField<string | null>(
-  "companion_neighborhood"
+  "companion_neighborhood",
 );
 const { value: companion_relation_to_patient } = useField<string | null>(
-  "companion_relation_to_patient"
+  "companion_relation_to_patient",
 );
 
 /* -------------------------
@@ -879,7 +894,7 @@ watch(patient_id, async (newId) => {
     setFieldValue("patient_phone", patientObj.phone ?? "");
     setFieldValue(
       "patient_birth_date",
-      patientObj.birth_date ? patientObj.birth_date.split("T")[0] : ""
+      patientObj.birth_date ? patientObj.birth_date.split("T")[0] : "",
     );
     setFieldValue("patient_gender", patientObj.gender ?? "");
     setFieldValue("patient_race", patientObj.race ?? "");
@@ -914,7 +929,7 @@ watch(companion_id, async (newId) => {
     setFieldValue("companion_phone", c.phone ?? "");
     setFieldValue(
       "companion_birth_date",
-      c.birth_date ? c.birth_date.split("T")[0] : ""
+      c.birth_date ? c.birth_date.split("T")[0] : "",
     );
     setFieldValue("companion_cns", c.cns ?? "");
     setFieldValue("companion_mother_name", c.mother_name ?? "");
@@ -953,7 +968,7 @@ onMounted(async () => {
         recommended_transport: m.recommended_transport ?? "",
         transport_justification: m.transport_justification ?? "",
         other_notes: m.other_notes ?? "",
-        report_date: props.isRenew ? today : m.report_date ?? null,
+        report_date: props.isRenew ? today : (m.report_date ?? null),
 
         // campos do paciente
         patient_cpf: m.patient?.cpf ?? "",
@@ -987,7 +1002,7 @@ type Payload = Partial<Record<string, unknown>>;
 // altera buildPayload para aceitar opções
 const buildPayload = (
   vals: Record<string, any>,
-  opts: { includeEmpty?: boolean; emptyToNull?: boolean } = {}
+  opts: { includeEmpty?: boolean; emptyToNull?: boolean } = {},
 ): Payload => {
   const { includeEmpty = false, emptyToNull = false } = opts;
 
@@ -1065,14 +1080,14 @@ const onSubmit = handleSubmit(
       // foco no input com name igual ao campo
       await nextTick();
       const input = document.querySelector(
-        `[name="${firstField}"]`
+        `[name="${firstField}"]`,
       ) as HTMLElement | null;
       if (input && typeof (input as any).focus === "function")
         (input as any).focus();
 
       return; // interrompe envio
     }
-  }
+  },
 );
 
 const onSubmitClose = () => {

@@ -126,12 +126,12 @@
             <br />
             {{ medicalReportData.complementary_exams }}
           </div>
-          <div class="col-span-3 border-b border-black p-1 pb-5 h-50">
+          <div class="col-span-3 border-b border-black p-1 pb-5 h-40">
             <span class="uppercase">- Tratamento(s) realizado(s)</span>
             <br />
             {{ medicalReportData.treatments_performed }}
           </div>
-          <div class="col-span-3 border-b border-black p-1 pb-5 h-50">
+          <div class="col-span-3 border-b border-black p-1 pb-5 h-40">
             <span class="uppercase">- Tratamento/Exame indicado</span>
             <br />
             {{ medicalReportData.indicated_treatments_or_exams }}
