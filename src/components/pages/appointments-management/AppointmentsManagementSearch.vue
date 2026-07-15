@@ -20,6 +20,7 @@
             </v-btn>
             <base-input-date-picker
               v-model="appointmentDate"
+              :value-as-string="false"
               class-date-picker="absolute translate-x-100 translate-y-10"
               label="Data"
               @update:model-value="handleDateChange"
