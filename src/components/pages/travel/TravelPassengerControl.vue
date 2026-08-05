@@ -138,75 +138,110 @@ const props = defineProps({
 const { exportToPDF, clickPrint } = useExportToPdf();
 const { formatLongDate, formatDate } = useFormatDate();
 
-const listRef = ref(null);
-
 const tableRows = computed(() => {
   const rows = [];
+  const addedCompanions = new Set();
 
   (props.data?.patients || []).forEach((patient) => {
-    // patient row
+    // Paciente
     rows.push({
       __row_key: `${patient.id}-patient`,
       type: "patient",
       patient_id: patient.id,
       ...patient,
-      // cria um campo auxiliar com timestamp para ordenar
       __ts: makeTimestamp(patient.appointment_date, patient.appointment_time),
     });
 
-    // companion (se existir)
+    // Acompanhante principal
     if (patient.companion) {
-      if (props.data.patients.some((p) => p.cpf == patient.companion.cpf)) {
-        return;
-      }
-
-      rows.push({
-        __row_key: `${patient.id}-companion`,
-        type: "companion",
-        companion_name: patient.companion?.name ?? null,
-        companion_phone: patient.companion?.phone ?? null,
-        companion_cns: patient.companion?.cns,
-        appointment_date: patient.appointment_date,
-        appointment_time: patient.appointment_time,
-        hospital_name: patient.hospital_name,
-        companion_street: patient.companion?.street,
-        companion_neighborhood: patient.companion?.neighborhood,
-        __ts: makeTimestamp(patient.appointment_date, patient.appointment_time),
-      });
-    }
-
-    // extra companions
-    const extras = patient.extra_companions ?? [];
-    extras.forEach((extra, idx) => {
-      const comp = extra?.companion ?? {};
-      const compId = comp?.id ?? `extra-${patient.id}-${idx}`;
+      const cpf = patient.companion.cpf;
 
       if (
-        props.data.patients.some((p) => p.cpf == patient.companion?.cpf) ||
-        props.data.patients.some(
-          (p) =>
-            p.extra_companions?.[0]?.companion?.cpf == patient.companion?.cpf,
-        )
+        !props.data.patients.some((p) => p.cpf === cpf) &&
+        !addedCompanions.has(cpf)
       ) {
-        return;
+        addedCompanions.add(cpf);
+
+        rows.push({
+          __row_key: `${patient.id}-companion`,
+          type: "companion",
+          companion_name: patient.companion.name,
+          companion_phone: patient.companion.phone,
+          companion_cns: patient.companion.cns,
+          companion_street: patient.companion.street,
+          companion_neighborhood: patient.companion.neighborhood,
+          hospital_name: patient.hospital_name,
+          appointment_date: patient.appointment_date,
+          appointment_time: patient.appointment_time,
+          __ts: makeTimestamp(
+            patient.appointment_date,
+            patient.appointment_time,
+          ),
+        });
       }
-      rows.push({
-        __row_key: `${patient.id}-extra-${compId}`,
-        type: "extra_companion",
-        companion_name: comp?.name ?? null,
-        companion_phone: comp?.phone ?? null,
-        companion_cns: comp?.cns ?? null,
-        companion_street: comp?.street ?? null,
-        companion_neighborhood: comp?.neighborhood ?? null,
-        appointment_date: patient.appointment_date,
-        appointment_time: patient.appointment_time,
-        hospital_name: patient.hospital_name,
-        __ts: makeTimestamp(patient.appointment_date, patient.appointment_time),
-      });
+    }
+
+    // Acompanhantes extras
+    (patient.extra_companions ?? []).forEach((extra, idx) => {
+      const comp = extra.companion;
+
+      if (!comp) return;
+
+      if (
+        !props.data.patients.some((p) => p.cpf === comp.cpf) &&
+        !addedCompanions.has(comp.cpf)
+      ) {
+        addedCompanions.add(comp.cpf);
+
+        rows.push({
+          __row_key: `${patient.id}-extra-${comp.id ?? idx}`,
+          type: "extra_companion",
+          companion_name: comp.name,
+          companion_phone: comp.phone,
+          companion_cns: comp.cns,
+          companion_street: comp.street,
+          companion_neighborhood: comp.neighborhood,
+          hospital_name: patient.hospital_name,
+          appointment_date: patient.appointment_date,
+          appointment_time: patient.appointment_time,
+          __ts: makeTimestamp(
+            patient.appointment_date,
+            patient.appointment_time,
+          ),
+        });
+      }
     });
   });
 
-  // ordena por __ts (null/NaN vão para o final)
+  // Standalone companions
+  (props.data?.standalone_companions || []).forEach((companion) => {
+    if (
+      props.data.patients.some((p) => p.cpf === companion.companion_cpf) ||
+      addedCompanions.has(companion.companion_cpf)
+    ) {
+      return;
+    }
+
+    addedCompanions.add(companion.companion_cpf);
+
+    rows.push({
+      __row_key: `standalone-${companion.id}`,
+      type: "standalone_companion",
+      companion_name: companion.companion_name,
+      companion_phone: companion.companion_phone,
+      companion_cns: companion.companion_cns,
+      companion_street: companion.companion_street,
+      companion_neighborhood: companion.companion_neighborhood,
+      hospital_name: companion.hospital_name,
+      appointment_date: companion.appointment_date,
+      appointment_time: companion.appointment_time,
+      __ts: makeTimestamp(
+        companion.appointment_date,
+        companion.appointment_time,
+      ),
+    });
+  });
+
   rows.sort((a, b) => {
     const ta = Number.isFinite(a.__ts) ? a.__ts : Infinity;
     const tb = Number.isFinite(b.__ts) ? b.__ts : Infinity;
@@ -215,7 +250,6 @@ const tableRows = computed(() => {
 
   return rows;
 });
-
 function makeTimestamp(dateVal, timeVal) {
   if (!dateVal) return NaN;
 

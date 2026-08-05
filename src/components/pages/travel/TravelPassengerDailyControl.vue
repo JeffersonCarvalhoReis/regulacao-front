@@ -89,10 +89,9 @@ const props = defineProps({
 const { exportToPDF, clickPrint } = useExportToPdf();
 const { formatLongDate } = useFormatDate();
 
-const listRef = ref(null);
-
 const tableRows = computed(() => {
   const rows = [];
+  const addedCompanions = new Set();
 
   (props.data?.patients || []).forEach((patient) => {
     rows.push({
@@ -100,37 +99,61 @@ const tableRows = computed(() => {
       type: "patient",
       name: patient.name,
     });
-    if (patient.companion) {
-      if (props.data.patients.some((p) => p.cpf == patient.companion.cpf)) {
-        return;
-      }
 
-      rows.push({
-        __row_key: `${patient.id}-companion`,
-        type: "companion",
-        companion_name: patient.companion?.name,
-      });
+    // acompanhante principal
+    if (patient.companion) {
+      const cpf = patient.companion.cpf;
+
+      if (
+        !props.data.patients.some((p) => p.cpf === cpf) &&
+        !addedCompanions.has(cpf)
+      ) {
+        addedCompanions.add(cpf);
+
+        rows.push({
+          __row_key: `${patient.id}-companion`,
+          type: "companion",
+          companion_name: patient.companion.name,
+        });
+      }
     }
 
-    const extras = patient.extra_companions ?? [];
-    extras.forEach((extra, idx) => {
-      const comp = extra?.companion ?? {};
-      const compId = comp?.id ?? `extra-${patient.id}-${idx}`;
-      if (
-        props.data.patients.some((p) => p.cpf == patient.companion?.cpf) ||
-        props.data.patients.some(
-          (p) =>
-            p.extra_companions?.[0]?.companion?.cpf == patient.companion?.cpf,
-        )
-      ) {
-        return;
-      }
+    // acompanhantes extras
+    (patient.extra_companions ?? []).forEach((extra, idx) => {
+      const comp = extra.companion;
 
-      rows.push({
-        __row_key: `${patient.id}-extra-${compId}`,
-        type: "companion",
-        companion_name: comp?.name ?? null,
-      });
+      if (!comp) return;
+
+      if (
+        !props.data.patients.some((p) => p.cpf === comp.cpf) &&
+        !addedCompanions.has(comp.cpf)
+      ) {
+        addedCompanions.add(comp.cpf);
+
+        rows.push({
+          __row_key: `${patient.id}-extra-${comp.id ?? idx}`,
+          type: "companion",
+          companion_name: comp.name,
+        });
+      }
+    });
+  });
+
+  // acompanhantes avulsos
+  (props.data?.standalone_companions || []).forEach((comp) => {
+    if (
+      props.data.patients.some((p) => p.cpf === comp.companion_cpf) ||
+      addedCompanions.has(comp.companion_cpf)
+    ) {
+      return;
+    }
+
+    addedCompanions.add(comp.companion_cpf);
+
+    rows.push({
+      __row_key: `standalone-${comp.id}`,
+      type: "standalone_companion",
+      companion_name: comp.companion_name,
     });
   });
 

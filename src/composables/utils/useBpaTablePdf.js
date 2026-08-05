@@ -2,18 +2,6 @@ import { api } from "@/config/axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-/**
- * Monta os dados dos BPAs de uma viagem em formato de tabela, direto
- * da API, e permite exibir isso em tela e/ou abrir como PDF. Não
- * depende de renderizar o formulário completo nem de rasterizar nada
- * em imagem — por isso é leve mesmo com muitos pacientes/acompanhantes.
- *
- * A tabela é agrupada por pessoa (paciente/acompanhante): cada pessoa
- * ocupa um bloco com todos os seus dados de identificação (CNS, nome,
- * nascimento, sexo, raça/cor, endereço, telefone) e, dentro desse
- * bloco, uma linha para cada procedimento realizado — para não deixar
- * nenhum dado do BPA de fora.
- */
 export function useBpaTablePdf() {
   const isLoading = ref(false);
   const isGenerating = ref(false);
@@ -95,12 +83,14 @@ export function useBpaTablePdf() {
     };
   }
 
-  function normalizeList(patientOrPatients) {
-    return Array.isArray(patientOrPatients)
-      ? patientOrPatients
-      : [patientOrPatients];
+  function normalizeList(data) {
+    if (!data) return [];
+    return Array.isArray(data) ? data : [data];
   }
 
+  function isStandaloneCompanion(item) {
+    return Boolean(item?.companion_id && !item?.patient_id);
+  }
   /**
    * Busca e monta os dados (usado tanto para exibir a tabela em tela
    * quanto para gerar o PDF).
@@ -109,43 +99,124 @@ export function useBpaTablePdf() {
     isLoading.value = true;
 
     try {
-      const patients = normalizeList(patientOrPatients);
+      const items = normalizeList(patientOrPatients);
+
       const people = [];
       let establishment = null;
       let professional = null;
       let competence = "";
 
-      for (const patient of patients) {
-        const [bpa] = await fetchBpaRecords(travelId, "patient", patient.id);
+      for (const item of items) {
+        /*
+         * =====================================================
+         * ACOMPANHANTE AVULSO
+         * =====================================================
+         */
+        if (isStandaloneCompanion(item)) {
+          console.log(item);
+          const [bpa] = await fetchBpaRecords(
+            travelId,
+            "companion",
+            item.companion_id,
+          );
 
-        if (bpa) {
-          establishment ??= bpa.health_unit;
-          professional ??= bpa.professional;
-          competence ||= formatCompetence(bpa.competence);
+          if (bpa) {
+            establishment ??= bpa.health_unit;
+            professional ??= bpa.professional;
+            competence ||= formatCompetence(bpa.competence);
+          }
+
+          people.push(
+            buildPersonEntry({
+              type: "Acompanhante",
+              bpa,
+              person: {
+                cns: item.companion_cns,
+                name: item.companion_name,
+                gender: item.companion_gender,
+                birth_date: item.companion_birth_date,
+                race: item.companion_race,
+                street: item.companion_street,
+                neighborhood: item.companion_neighborhood,
+                phone: item.companion_phone,
+              },
+            }),
+          );
+
+          if (item.extra_companions?.length) {
+            for (const extra of item.extra_companions) {
+              const [extraBpa] = await fetchBpaRecords(
+                travelId,
+                "companion",
+                extra.companion.id,
+              );
+
+              people.push(
+                buildPersonEntry({
+                  type: "Acompanhante",
+                  person: extra.companion,
+                  bpa: extraBpa,
+                }),
+              );
+            }
+          }
+
+          continue;
+        }
+
+        /*
+         * =====================================================
+         * PACIENTE
+         * =====================================================
+         */
+        const [patientBpa] = await fetchBpaRecords(
+          travelId,
+          "patient",
+          item.id,
+        );
+
+        if (patientBpa) {
+          establishment ??= patientBpa.health_unit;
+          professional ??= patientBpa.professional;
+          competence ||= formatCompetence(patientBpa.competence);
         }
 
         people.push(
-          buildPersonEntry({ person: patient, type: "Paciente", bpa }),
+          buildPersonEntry({
+            type: "Paciente",
+            person: item,
+            bpa: patientBpa,
+          }),
         );
 
-        if (patient.companion?.id) {
+        /*
+         * =====================================================
+         * ACOMPANHANTE PRINCIPAL
+         * =====================================================
+         */
+        if (item.companion?.id) {
           const [companionBpa] = await fetchBpaRecords(
             travelId,
             "companion",
-            patient.companion.id,
+            item.companion.id,
           );
 
           people.push(
             buildPersonEntry({
-              person: patient.companion,
               type: "Acompanhante",
+              person: item.companion,
               bpa: companionBpa,
             }),
           );
         }
 
-        if (patient.extra_companions?.length) {
-          for (const extra of patient.extra_companions) {
+        /*
+         * =====================================================
+         * ACOMPANHANTES EXTRAS
+         * =====================================================
+         */
+        if (item.extra_companions?.length) {
+          for (const extra of item.extra_companions) {
             const [extraBpa] = await fetchBpaRecords(
               travelId,
               "companion",
@@ -154,8 +225,8 @@ export function useBpaTablePdf() {
 
             people.push(
               buildPersonEntry({
-                person: extra.companion,
                 type: "Acompanhante",
+                person: extra.companion,
                 bpa: extraBpa,
               }),
             );

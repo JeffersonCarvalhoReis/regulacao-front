@@ -66,7 +66,11 @@
         />
       </div>
       <div class="uppercase bg-blue-800 text-white text-center">
-        1 - Identificação do Paciente
+        {{
+          isStandaloneCompanion
+            ? "1 - Identificação do Acompanhante"
+            : "1 - Identificação do Paciente"
+        }}
       </div>
       <div class="grid grid-cols-6 gap-x-2 mx-2 mt-4">
         <v-text-field
@@ -177,7 +181,9 @@
 
           <v-autocomplete
             v-model="proc.procedure_selected"
-            :items="proceduresPatient"
+            :items="
+              isStandaloneCompanion ? proceduresCompanion : proceduresPatient
+            "
             item-title="name"
             return-object
             class="col-span-2"
@@ -188,7 +194,9 @@
           />
           <v-autocomplete
             v-model="proc.procedure_selected"
-            :items="proceduresPatient"
+            :items="
+              isStandaloneCompanion ? proceduresCompanion : proceduresPatient
+            "
             item-title="code"
             return-object
             class="col-span-2"
@@ -487,7 +495,9 @@ const patientBpaId = ref(null);
 const companionBpaId = ref(null);
 const extraCompanionBpaId = ref(null);
 const originalProcedures = ref(new Map());
-
+const isStandaloneCompanion = computed(
+  () => !props.modelValue.name && !!props.modelValue.companion_name,
+);
 const snackbar = reactive({
   show: false,
   message: "",
@@ -541,6 +551,22 @@ const proceduresCompanion = [
   },
 ];
 
+function hydrateStandaloneCompanion(bpa) {
+  companionBpaId.value = bpa.id;
+
+  form.establishment.name = bpa.health_unit?.name?.toUpperCase() ?? "";
+  form.establishment.cnes = bpa.health_unit?.cnes ?? "";
+
+  form.professional.cns = bpa.professional?.cns ?? "";
+  form.professional.name = bpa.professional?.name?.toUpperCase() ?? "";
+  form.professional.cbo = bpa.professional?.cbo ?? "";
+  form.professional.competence = formatCompetence(bpa.competence);
+
+  procedures.value =
+    bpa.procedures?.map((proc) =>
+      mapProcedure(proc, bpa.id, proceduresCompanion),
+    ) ?? [];
+}
 async function loadAll() {
   await refetch();
   if (props.modelValue.companion?.id) {
@@ -558,8 +584,16 @@ function showSnackbar(message, color = "success") {
 }
 onMounted(async () => {
   setFilter("travel_id", props.travelId);
-  setFilter("attendable_type", "patient");
-  setFilter("attendable_id", props.modelValue.id);
+
+  if (isStandaloneCompanion.value) {
+    setFilter("travel_id", props.travelId);
+    setFilter("attendable_type", "companion");
+    setFilter("attendable_id", props.modelValue.companion_id);
+  } else {
+    setFilter("travel_id", props.travelId);
+    setFilter("attendable_type", "patient");
+    setFilter("attendable_id", props.modelValue.id);
+  }
 
   if (props.modelValue.companion?.id) {
     setFilterCompanion("travel_id", props.travelId);
@@ -580,27 +614,44 @@ onMounted(async () => {
 
 watch(
   () => props.modelValue,
-  (patient) => {
-    if (!patient) return;
+  (value) => {
+    if (!value) return;
 
-    form.patient.cns = patient.cns ?? "";
-    form.patient.name = patient.name?.toUpperCase() ?? "";
-    form.patient.gender = formatGender(patient.gender);
-    form.patient.birth_date = formatDate(patient.birth_date) ?? "";
-    form.patient.race = patient.race?.toUpperCase() ?? "";
-    form.patient.street = patient.street?.toUpperCase() ?? "";
-    form.patient.neighborhood = patient.neighborhood?.toUpperCase() ?? "";
-    form.patient.phone = patient.phone ?? "";
+    const source = isStandaloneCompanion.value
+      ? {
+          cns: value.companion_cns,
+          name: value.companion_name,
+          gender: value.companion_gender,
+          birth_date: value.companion_birth_date,
+          race: value.companion_race,
+          street: value.companion_street,
+          neighborhood: value.companion_neighborhood,
+          phone: value.companion_phone,
+        }
+      : value;
+
+    form.patient.cns = source.cns ?? "";
+    form.patient.name = source.name?.toUpperCase() ?? "";
+    form.patient.gender = formatGender(source.gender);
+    form.patient.birth_date = formatDate(source.birth_date) ?? "";
+    form.patient.race = source.race?.toUpperCase() ?? "";
+    form.patient.street = source.street?.toUpperCase() ?? "";
+    form.patient.neighborhood = source.neighborhood?.toUpperCase() ?? "";
+    form.patient.phone = source.phone ?? "";
     form.patient.nacionality = import.meta.env.VITE_NACIONALITY ?? "";
     form.patient.ibge_code = import.meta.env.VITE_IBGE_CODE ?? "";
     form.patient.cep = import.meta.env.VITE_CEP ?? "";
   },
   { immediate: true },
 );
-
 watch(data, (value) => {
   if (!value?.length) return;
-  hydratePatientBpa(value[0]);
+
+  if (isStandaloneCompanion.value) {
+    hydrateStandaloneCompanion(value[0]);
+  } else {
+    hydratePatientBpa(value[0]);
+  }
 });
 
 watch(dataCompanion, (value) => {
@@ -655,7 +706,13 @@ function hydratePatientBpa(bpa) {
   form.professional.competence = formatCompetence(bpa.competence);
 
   procedures.value =
-    bpa.procedures?.map((proc) => mapProcedure(proc, bpa.id)) ?? [];
+    bpa.procedures?.map((proc) =>
+      mapProcedure(
+        proc,
+        bpa.id,
+        isStandaloneCompanion.value ? proceduresCompanion : proceduresPatient,
+      ),
+    ) ?? [];
 }
 
 function hydrateCompanion(bpa) {

@@ -2,6 +2,7 @@
   <v-autocomplete
     v-model="patient_id"
     density="compact"
+    :disabled="disabled"
     :error-messages="errorMessages"
     :item-title="patientLabel"
     item-value="id"
@@ -34,6 +35,10 @@ const props = defineProps({
     default: false,
   },
   isRequired: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
     type: Boolean,
     default: false,
   },

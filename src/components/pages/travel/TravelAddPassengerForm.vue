@@ -30,11 +30,21 @@
           <div>Quantidade de assentos ocupados: {{ occupiedSeats() }}</div>
         </InfoGroup>
       </BaseSection>
+      <v-alert
+        v-if="!isEditing"
+        class="mb-4"
+        density="compact"
+        type="info"
+        variant="tonal"
+      >
+        Deixe o campo "Paciente" em branco para cadastrar apenas
+        acompanhante(s), sem paciente vinculado.
+      </v-alert>
       <v-form class="grid grid-cols-2 gap-x-4">
         <PatientInput
           :key="autocompleteKey"
           v-model="patient_id"
-          is-required
+          :disabled="isEditing"
           :error-messages="errors.patient_id"
           :is-editing="isEditing"
           is-clearable
@@ -42,8 +52,9 @@
         <v-autocomplete
           :key="autocompleteKey"
           v-model="hospital_id"
-          class="required"
+          :class="{ required: !!patient_id }"
           density="compact"
+          :disabled="!patient_id"
           :error-messages="errors.hospital_id"
           item-title="name"
           item-value="id"
@@ -63,7 +74,7 @@
         <v-text-field
           v-model="kinship"
           density="compact"
-          :disabled="!companion_id"
+          :disabled="!companion_id || !patient_id"
           :error-messages="errors.kinship"
           label="Parentesco"
           variant="outlined"
@@ -89,7 +100,7 @@
                 v-model="companion.kinship"
                 class="w-full"
                 density="compact"
-                :disabled="!companion.companion.id"
+                :disabled="!companion.companion.id || !patient_id"
                 :error-messages="errors[`companions.${index}.kinship`]"
                 label="Parentesco"
                 variant="outlined"
@@ -111,7 +122,7 @@
         </div>
         <!-- Botão de adicionar -->
         <v-btn
-          v-if="companions.length < 1"
+          v-if="companions.length < 1 && patient_id"
           class="w-full justify-start items-center pl-2 text-ita-blue"
           prepend-icon="mdi-plus"
           variant="text"
@@ -119,19 +130,20 @@
         >
           Adicionar outro acompanhante
         </v-btn>
-        <v-spacer v-if="companions.length < 1" />
+        <v-spacer v-if="companions.length < 1 && patient_id" />
         <base-input-date-picker
           :position="position"
           v-model="appointment_date"
-          class-field="required"
+          :class-field="patient_id ? 'required' : ''"
           :error-messages="errors.appointment_date"
           label="Data da consulta"
-          W
+          :readonly="!patient_id"
         />
         <v-text-field
           v-model="appointment_time"
-          class="required"
+          :class="{ required: !!patient_id }"
           density="compact"
+          :disabled="!patient_id"
           :error-messages="errors.appointment_time"
           label="Horário da consulta"
           maxlength="5"
@@ -205,47 +217,95 @@ const { calculateAge, ageLabel } = useCalculateAge();
 const { onlyNumbers } = useOnlyNumbers();
 const isEditing = computed(() => !!props.modelValue?.id);
 
-const schema = yup.object({
-  patient_id: yup.string().required("Paciente é obrigatório"),
-  hospital_id: yup.string().required("Hospital é obrigatório"),
-  appointment_date: yup.date().required("Data do agendamento é obrigatório"),
-  appointment_time: yup
-    .string()
-    .required("Horário da consulta é obrigatório")
-    .test("dynamic-time-validation", "Horário inválido", (value) => {
-      if (!value) return false;
-      if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
+// Um registro editado veio de "standalone_companions" (acompanhante avulso,
+// sem paciente) quando a chave "patient_id" existe explicitamente no
+// objeto — o recurso do paciente (PatientResource) nunca traz essa chave.
+const isStandaloneEditing = computed(
+  () =>
+    isEditing.value &&
+    Object.prototype.hasOwnProperty.call(props.modelValue ?? {}, "patient_id"),
+);
 
-      const [h, m = ""] = value.split(":");
-
-      if (h.length > 0) {
-        const hour = parseInt(h);
-        if (isNaN(hour)) return false;
-        if (h.length === 1 && hour > 2) return false;
-        if (h.length === 2 && hour > 23) return false;
-      }
-
-      if (m.length > 0) {
-        const minute = parseInt(m);
-        if (isNaN(minute)) return false;
-        if (m.length === 1 && minute > 5) return false;
-        if (m.length === 2 && minute > 59) return false;
-      }
-
-      return true;
-    }),
-  companion_id: yup.string().nullable(),
-  kinship: yup.string().nullable(),
-  companions: yup.array().of(
-    yup.object({
-      companion: yup.object({
-        id: yup.string().nullable(),
+const schema = yup
+  .object({
+    patient_id: yup.string().nullable(),
+    hospital_id: yup
+      .string()
+      .nullable()
+      .when("patient_id", {
+        is: (val) => !!val,
+        then: (s) => s.required("Hospital é obrigatório"),
       }),
-      kinship: yup.string().nullable(),
-    }),
-  ),
-  notes: yup.string().nullable(),
-});
+    appointment_date: yup
+      .date()
+      .nullable()
+      .when("patient_id", {
+        is: (val) => !!val,
+        then: (s) => s.required("Data do agendamento é obrigatório"),
+      }),
+    appointment_time: yup
+      .string()
+      .nullable()
+      .when("patient_id", {
+        is: (val) => !!val,
+        then: (s) =>
+          s
+            .required("Horário da consulta é obrigatório")
+            .test("dynamic-time-validation", "Horário inválido", (value) => {
+              if (!value) return false;
+              if (!/^\d{0,2}:?\d{0,2}$/.test(value)) return false;
+
+              const [h, m = ""] = value.split(":");
+
+              if (h.length > 0) {
+                const hour = parseInt(h);
+                if (isNaN(hour)) return false;
+                if (h.length === 1 && hour > 2) return false;
+                if (h.length === 2 && hour > 23) return false;
+              }
+
+              if (m.length > 0) {
+                const minute = parseInt(m);
+                if (isNaN(minute)) return false;
+                if (m.length === 1 && minute > 5) return false;
+                if (m.length === 2 && minute > 59) return false;
+              }
+
+              return true;
+            }),
+      }),
+    companion_id: yup.string().nullable(),
+    kinship: yup.string().nullable(),
+    companions: yup.array().of(
+      yup.object({
+        companion: yup.object({
+          id: yup.string().nullable(),
+        }),
+        kinship: yup.string().nullable(),
+      }),
+    ),
+    notes: yup.string().nullable(),
+    pivot_id: yup.string().nullable(),
+  })
+  .test(
+    "patient-or-companion",
+    "Selecione um paciente ou informe ao menos um acompanhante",
+    function (values) {
+      if (values.patient_id) return true;
+      if (values.companion_id) return true;
+      if (
+        Array.isArray(values.companions) &&
+        values.companions.some((c) => c?.companion?.id)
+      ) {
+        return true;
+      }
+
+      return this.createError({
+        path: "companion_id",
+        message: "Selecione um paciente ou informe ao menos um acompanhante",
+      });
+    },
+  );
 
 const { handleSubmit, errors, resetForm, setValues } = useForm({
   validationSchema: schema,
@@ -258,6 +318,7 @@ const { handleSubmit, errors, resetForm, setValues } = useForm({
     is_priority: false,
     hospital_id: null,
     notes: "",
+    pivot_id: null,
   },
 });
 
@@ -270,6 +331,7 @@ const { value: notes } = useField("notes");
 const { value: companions } = useField("companions");
 const { value: companion_id } = useField("companion_id");
 const { value: kinship } = useField("kinship");
+const { value: pivot_id } = useField("pivot_id");
 
 const addCompanion = async () => {
   companions.value.push({ companion: { id: null }, kinship: "" });
@@ -350,26 +412,47 @@ onMounted(async () => {
   await nextTick();
   await hospitalFetch();
 
-  if (isEditing.value) {
+  if (!isEditing.value) return;
+
+  if (isStandaloneEditing.value) {
+    // Editando um acompanhante avulso (sem paciente vinculado).
     setValues({
-      patient_id: props.modelValue.id,
+      patient_id: null,
+      pivot_id: props.modelValue?.id,
       kinship: props.modelValue?.kinship,
-      companion_id: props.modelValue?.companion?.id,
+      companion_id: props.modelValue?.companion_id,
       notes: props.modelValue?.notes,
-      appointment_date: props.modelValue?.appointment_date,
-      appointment_time: props.modelValue?.appointment_time,
       is_priority: props.modelValue?.is_priority,
-      hospital_id: validHospital(props.modelValue?.hospital_id),
-      companions: props.modelValue?.extra_companions,
+      hospital_id: null,
+      appointment_date: null,
+      appointment_time: null,
+      companions: props.modelValue?.extra_companions ?? [],
     });
+    return;
   }
+
+  setValues({
+    patient_id: props.modelValue.id,
+    kinship: props.modelValue?.kinship,
+    companion_id: props.modelValue?.companion?.id,
+    notes: props.modelValue?.notes,
+    appointment_date: props.modelValue?.appointment_date,
+    appointment_time: props.modelValue?.appointment_time,
+    is_priority: props.modelValue?.is_priority,
+    hospital_id: validHospital(props.modelValue?.hospital_id),
+    companions: props.modelValue?.extra_companions,
+  });
 });
 
 onUnmounted(() => {
   clearFilters;
 });
 const onSubmit = handleSubmit((values) => {
-  const list = Array.isArray(values.companions) ? [...values.companions] : [];
+  const list = (
+    Array.isArray(values.companions) ? [...values.companions] : []
+  ).filter((c) => !!c?.companion?.id);
+  let companionsPayload = list;
+
   if (values.companion_id) {
     const first = {
       companion: { id: values.companion_id },
@@ -381,25 +464,24 @@ const onSubmit = handleSubmit((values) => {
     );
 
     filtered.unshift(first);
-
-    const payload = {
-      ...values,
-      companions: filtered,
-    };
-
-    delete payload.companion_id;
-    delete payload.kinship;
-
-    emit("save", payload);
-    return;
+    companionsPayload = filtered;
   }
 
+  const hasPatient = !!values.patient_id;
+
   const payload = {
-    ...values,
-    companions: list,
+    patient_id: values.patient_id || null,
+    hospital_id: hasPatient ? values.hospital_id : null,
+    appointment_date: hasPatient ? values.appointment_date : null,
+    appointment_time: hasPatient ? values.appointment_time : null,
+    is_priority: values.is_priority,
+    notes: values.notes,
+    companions: companionsPayload,
   };
-  delete payload.companion_id;
-  delete payload.kinship;
+
+  if (isStandaloneEditing.value) {
+    payload.pivot_id = values.pivot_id;
+  }
 
   emit("save", payload);
 });

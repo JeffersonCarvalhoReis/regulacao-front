@@ -127,6 +127,51 @@
         </v-tooltip>
       </template>
     </base-table>
+
+    <template v-if="props.travelData.standalone_companions?.length">
+      <h2 class="mx-5 text-xl capitalize">
+        acompanhantes sem paciente vinculado
+      </h2>
+      <base-table
+        class="rounted-t-none m-5"
+        :deletable="true"
+        :headers="standaloneHeaders"
+        :hide-default-footer="true"
+        :items="props.travelData.standalone_companions"
+        @delete-item="handleRemoveStandalone"
+        @edit-item="handleEditPassengers"
+      >
+        <template #item.companion_name="{ item }">
+          <div>
+            <div>
+              {{
+                `${item.companion_name}${item.kinship ? " - " + item.kinship : ""}`
+              }}
+            </div>
+            <div v-for="(extra, i) in item.extra_companions" :key="i">
+              {{
+                `${extra.companion?.name} ${extra.kinship ? " - " + extra.kinship : ""}`
+              }}
+            </div>
+          </div>
+        </template>
+        <template #item.bpa="{ item }">
+          <v-tooltip text="Ver BPA">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                class="text-ita-blue bg-white/0 border-0 ml-1 h-full"
+                icon
+                variant="outlined"
+                @click="handleOpenBPA(item)"
+              >
+                <v-icon>mdi-file-document-multiple</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </template>
+      </base-table>
+    </template>
   </base-card>
   <v-dialog v-model="dialogEditPassengers" class="z-999">
     <TravelAddPassengerForm
@@ -263,9 +308,15 @@ const handleOpenBPA = (v) => {
   bpaValue.value = v;
   bpaMode.value = "single";
 };
+
 const handleOpenAllBPA = () => {
   dialogBPA.value = true;
-  bpaValue.value = props.travelData.patients;
+
+  bpaValue.value = [
+    ...props.travelData.patients,
+    ...(props.travelData.standalone_companions ?? []),
+  ];
+
   bpaMode.value = "multiple";
 };
 
@@ -282,6 +333,20 @@ const handleRemovePassenger = async (values) => {
   };
   const confirm = await confirmModal(
     `Tem certeza que deseja excluir o paciente <strong>${values.name}</strong> dessa viagem??`,
+    "Atenção",
+  );
+  if (confirm) {
+    await showFeedback(() => removePassenger(props.travelData.id, data));
+    emit("refresh", props.travelData.id);
+  }
+};
+
+const handleRemoveStandalone = async (values) => {
+  const data = {
+    companion_id: values.companion_id,
+  };
+  const confirm = await confirmModal(
+    `Tem certeza que deseja excluir o acompanhante <strong>${values.companion_name}</strong> dessa viagem?`,
     "Atenção",
   );
   if (confirm) {
@@ -344,6 +409,28 @@ const headers = computed(() => {
 
   return baseHeaders;
 });
+
+const standaloneHeaders = computed(() => [
+  {
+    title: "Acompanhante",
+    key: "companion_name",
+    sortable: false,
+    align: "left",
+  },
+  {
+    title: "BPA",
+    key: "bpa",
+    width: "150px",
+    sortable: false,
+    align: "center",
+  },
+  {
+    title: "Ações",
+    value: "action",
+    width: "150px",
+    align: "center",
+  },
+]);
 </script>
 
 <style lang="scss" scoped></style>
