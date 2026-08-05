@@ -84,9 +84,6 @@ const { printContent } = usePrintIframe();
 const { downloadFile } = useDownloadFile();
 
 const handlePrint = () => {
-  console.log(attachmentRef);
-  console.log(attachmentRef.value);
-  console.log(attachmentRef.value?.contentWindow);
   printContent(attachmentRef);
 };
 

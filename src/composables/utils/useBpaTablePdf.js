@@ -113,7 +113,6 @@ export function useBpaTablePdf() {
          * =====================================================
          */
         if (isStandaloneCompanion(item)) {
-          console.log(item);
           const [bpa] = await fetchBpaRecords(
             travelId,
             "companion",
