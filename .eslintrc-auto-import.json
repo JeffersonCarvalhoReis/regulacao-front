@@ -78,6 +78,7 @@
     "useFormatDate": true,
     "useId": true,
     "useModel": true,
+    "useNativePrint": true,
     "useNormalizeFilter": true,
     "useOnlyNumbers": true,
     "usePasswordStrength": true,

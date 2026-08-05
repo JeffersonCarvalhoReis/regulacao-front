@@ -57,6 +57,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
   const useBooleanLabel: typeof import('./composables/utils/useBooleanLabel.js')['useBooleanLabel']
+  const useBpaTablePdf: typeof import('./composables/utils/useBpaTablePdf.js')['useBpaTablePdf']
   const useCalculateAge: typeof import('./composables/utils/useCalculateAge')['useCalculateAge']
   const useCnsValidator: typeof import('./composables/utils/useCnsValidator.js')['useCnsValidator']
   const useCpfValidator: typeof import('./composables/utils/useCpfValidator.js')['useCpfValidator']
@@ -69,6 +70,7 @@ declare global {
   const useFormatDate: typeof import('./composables/utils/useFormatDate.js')['useFormatDate']
   const useId: typeof import('vue')['useId']
   const useModel: typeof import('vue')['useModel']
+  const useNativePrint: typeof import('./composables/utils/useNativePrint')['useNativePrint']
   const useNormalizeFilter: typeof import('./composables/utils/useNormalizeFilter.js')['useNormalizeFilter']
   const useOnlyNumbers: typeof import('./composables/utils/useOnlyNumbers.js')['useOnlyNumbers']
   const usePasswordStrength: typeof import('./composables/utils/usePasswordStrength.js')['usePasswordStrength']
@@ -159,6 +161,7 @@ declare module 'vue' {
     readonly useFormatDate: UnwrapRef<typeof import('./composables/utils/useFormatDate.js')['useFormatDate']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useNativePrint: UnwrapRef<typeof import('./composables/utils/useNativePrint')['useNativePrint']>
     readonly useNormalizeFilter: UnwrapRef<typeof import('./composables/utils/useNormalizeFilter.js')['useNormalizeFilter']>
     readonly useOnlyNumbers: UnwrapRef<typeof import('./composables/utils/useOnlyNumbers.js')['useOnlyNumbers']>
     readonly usePasswordStrength: UnwrapRef<typeof import('./composables/utils/usePasswordStrength.js')['usePasswordStrength']>
