@@ -141,7 +141,12 @@ const outpatientRecordClass = ref(
 const outpatientRecordIcon = "mdi-clipboard-text-outline";
 const outpatientRecordText = "Ficha Ambulatorial";
 const dialogOutpatientRecord = ref(false);
-const selectedDate = ref(null);
+const getToday = () => {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+
+  return date.toISOString().split("T")[0];
+};
 
 const filters = reactive({
   provider_unit_id: providerUnit.value,
@@ -149,7 +154,7 @@ const filters = reactive({
   search: null,
   procedure_id: null,
   specialist_id: null,
-  date: null,
+  date: getToday(),
 });
 
 const applyFilters = async () => {
@@ -262,10 +267,7 @@ const searchSpecialist = async (specialist) => {
 };
 
 const searchDate = async (date) => {
-  if (!date) return;
-
-  selectedDate.value = date;
-  filters.date = date;
+  filters.date = date || null;
 
   await applyFilters();
 };
@@ -280,13 +282,8 @@ watch(
   debounce(async () => {
     if (!providerUnit.value) return;
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const date = selectedDate.value || today;
-
     setFilter("provider_unit_id", providerUnit.value);
-    setFilter("date", date);
+    setFilter("date", filters.date);
     setFilter("solicitation_type", tab.value);
 
     await nextTick();

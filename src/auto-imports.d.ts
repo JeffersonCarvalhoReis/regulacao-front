@@ -150,6 +150,7 @@ declare module 'vue' {
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useBooleanLabel: UnwrapRef<typeof import('./composables/utils/useBooleanLabel.js')['useBooleanLabel']>
+    readonly useBpaTablePdf: UnwrapRef<typeof import('./composables/utils/useBpaTablePdf.js')['useBpaTablePdf']>
     readonly useCalculateAge: UnwrapRef<typeof import('./composables/utils/useCalculateAge')['useCalculateAge']>
     readonly useCnsValidator: UnwrapRef<typeof import('./composables/utils/useCnsValidator.js')['useCnsValidator']>
     readonly useCpfValidator: UnwrapRef<typeof import('./composables/utils/useCpfValidator.js')['useCpfValidator']>

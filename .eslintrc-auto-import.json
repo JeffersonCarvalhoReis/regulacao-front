@@ -67,6 +67,7 @@
     "unref": true,
     "useAttrs": true,
     "useBooleanLabel": true,
+    "useBpaTablePdf": true,
     "useCalculateAge": true,
     "useCnsValidator": true,
     "useCpfValidator": true,
