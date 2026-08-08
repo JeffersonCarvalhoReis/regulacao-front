@@ -267,7 +267,9 @@ const searchSpecialist = async (specialist) => {
 };
 
 const searchDate = async (date) => {
-  filters.date = date || null;
+  if (date) {
+    filters.date = date;
+  }
 
   await applyFilters();
 };

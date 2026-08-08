@@ -102,26 +102,50 @@ const procedureSelectData = computed(() => [
   ...(procedureData.value || []),
 ]);
 
+const normalizeDate = (date) => {
+  if (!date) return null;
+
+  const normalized = new Date(date);
+  normalized.setHours(0, 0, 0, 0);
+
+  return normalized;
+};
+
 const handleDateChange = (v) => {
-  appointmentDate.value = v;
-  emit("search-appointment-date", v);
+  if (!v) return;
+  const normalizedDate = normalizeDate(v);
+
+  appointmentDate.value = normalizedDate;
+  emit("search-appointment-date", normalizedDate);
 };
 
 const addDay = () => {
-  appointmentDate.value = addDays(appointmentDate.value, 1);
-  emit("search-appointment-date", appointmentDate.value);
+  const nextDate = addDays(appointmentDate.value || normalizeDate(today), 1);
+  const normalizedDate = normalizeDate(nextDate);
+
+  appointmentDate.value = normalizedDate;
+  emit("search-appointment-date", normalizedDate);
 };
 
 const subDay = () => {
-  appointmentDate.value = subDays(appointmentDate.value, 1);
-  emit("search-appointment-date", appointmentDate.value);
+  const previousDate = subDays(
+    appointmentDate.value || normalizeDate(today),
+    1,
+  );
+  const normalizedDate = normalizeDate(previousDate);
+
+  appointmentDate.value = normalizedDate;
+  emit("search-appointment-date", normalizedDate);
 };
 
 onMounted(async () => {
-  appointmentDate.value = today;
+  appointmentDate.value = normalizeDate(today);
+
   specialistParams.value.per_page = -1;
   procedureParams.value.per_page = -1;
+
   await nextTick();
+
   await Promise.all([specialistFetch(), procedureFetch()]);
 
   watch(
