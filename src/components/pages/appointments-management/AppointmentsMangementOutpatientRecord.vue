@@ -158,6 +158,12 @@
               :value="formatDate(appointmentData.date)"
             />
           </LabeledLineGroup>
+          <LabeledLineGroup v-if="appointmentData.solicitation.reason">
+            <LabeledLine
+              label="Motivo"
+              :value="appointmentData.solicitation.reason"
+            />
+          </LabeledLineGroup>
         </div>
         <div class="border border-gray-500 p-0 w-full flex flex-col">
           <div

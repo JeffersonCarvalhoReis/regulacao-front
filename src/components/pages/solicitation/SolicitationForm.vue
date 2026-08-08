@@ -218,6 +218,8 @@
             :error-messages="errors.reason"
             label="Motivo"
             variant="outlined"
+            maxlength="600"
+            counter
           />
         </div>
       </v-form>
@@ -404,12 +406,12 @@ const title = computed(() =>
 
 const schema = yup.object({
   patient_id: yup.number().required("Paciente é obrigatório"),
-  cid: yup.string().nullable(),
+  cid: yup.string().trim().nullable(),
   solicitation_type: yup.string().required("Tipo de solicitação é obrigatório"),
   solicitation_date: yup.date().required("Data da solicitação é obrigatório"),
   is_first_time: yup.number().required("Obrigátorio identificar se é retorno"),
   is_urgent: yup.number().required("Obrigátorio identificar se é urgente"),
-  reason: yup.string().required("Motivo é obrigatório"),
+  reason: yup.string().trim().required("Motivo é obrigatório"),
   attachment: yup
     .mixed()
     .nullable()
@@ -567,6 +569,16 @@ const { value: attachment } = useField("attachment");
 const { value: cid } = useField("cid");
 
 const onSubmit = handleSubmit((values) => {
+  Object.keys(values).forEach((key) => {
+    if (typeof values[key] === "string") {
+      values[key] = values[key].trim();
+    }
+  });
+
+  if (!values.cid) {
+    delete values.cid;
+  }
+
   if (values.solicitation_type == "consultation") delete values.procedure_id;
   if (values.solicitation_type == "exam") delete values.specialist_id;
 
