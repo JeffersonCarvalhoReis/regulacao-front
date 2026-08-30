@@ -2,95 +2,139 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text class="flex flex-col gap-2">
       <BaseSection>
-        <InfoGroup title="Dados do paciente">
-          <div>Paciente: {{ props.solicitationData.patient }}</div>
-          <div>Mãe: {{ props.solicitationData.patient_mother_name }}</div>
-          <div>
-            Data de Nascimento:
-            {{ formatDate(props.solicitationData.patient_birth_date) }}
-          </div>
-          <div>
-            Idade: {{ calculateAge(props.solicitationData.patient_birth_date) }}
-          </div>
-          <div>CPF: {{ props.solicitationData.patient_cpf }}</div>
-          <div>SUS: {{ props.solicitationData.patient_cns }}</div>
-          <div>Telefone: {{ props.solicitationData.patient_phone }}</div>
-          <div>Unidade de Saúde: {{ props.solicitationData.health_unit }}</div>
-          <div>
-            Agente Comunitário de Saúde:
-            {{ props.solicitationData.health_agent }}
-          </div>
-        </InfoGroup>
-        <v-divider vertical />
-        <InfoGroup title="Dados da Solicitação">
-          <div v-if="isExam">Exame: {{ props.solicitationData.procedure }}</div>
-          <div v-if="!isExam">
-            Consulta com {{ props.solicitationData.specialist }}
-          </div>
-          <div v-if="props.solicitationData.cid" class="uppercase">
-            Cid: {{ props.solicitationData.cid }}
-          </div>
-          <div :class="{ 'text-red-500': isUrgent }">
-            Urgência: {{ isUrgentLabel }}
-          </div>
-          <div>Retorno: {{ isReturnLabel }}</div>
-          <div>
-            Data da Solicitação:
-            {{ formatDate(props.solicitationData.solicitation_date) }}
-          </div>
-          <div>
-            Unidade Solicitante: {{ props.solicitationData.requesting_unit }}
-          </div>
-          <div>Motivo: {{ props.solicitationData.reason }}</div>
-        </InfoGroup>
-        <v-divider vertical />
-        <InfoGroup title="Dados do Cadastro">
-          <div>Cadastrado por {{ props.solicitationData.created_by }}</div>
-          <div>
-            Data de Cadastrado
-            {{ formatDate(props.solicitationData.entry_date) }}
-          </div>
-        </InfoGroup>
+        <div class="flex gap-x-2">
+          <InfoGroup title="Dados do paciente" class="flex-1">
+            <div>Paciente: {{ localData.patient }}</div>
+            <div>Mãe: {{ localData.patient_mother_name }}</div>
+            <div>
+              Data de Nascimento:
+              {{ formatDate(localData.patient_birth_date) }}
+            </div>
+            <div>Idade: {{ calculateAge(localData.patient_birth_date) }}</div>
+            <div>CPF: {{ localData.patient_cpf }}</div>
+            <div>SUS: {{ localData.patient_cns }}</div>
+            <div>Telefone: {{ localData.patient_phone }}</div>
+            <div>Unidade de Saúde: {{ localData.health_unit }}</div>
+            <div>
+              Agente Comunitário de Saúde:
+              {{ localData.health_agent }}
+            </div>
+          </InfoGroup>
+          <v-divider vertical />
+          <InfoGroup title="Dados da Solicitação" class="flex-1">
+            <div v-if="isExam">Exame: {{ localData.procedure }}</div>
+            <div v-if="!isExam">Consulta com {{ localData.specialist }}</div>
+            <div v-if="localData.cid" class="uppercase">
+              Cid: {{ localData.cid }}
+            </div>
+            <div :class="{ 'text-red-500': isUrgent }">
+              Urgência: {{ isUrgentLabel }}
+            </div>
+            <div>Retorno: {{ isReturnLabel }}</div>
+            <div>
+              Data da Solicitação:
+              {{ formatDate(localData.solicitation_date) }}
+            </div>
+            <div>Unidade Solicitante: {{ localData.requesting_unit }}</div>
+            <div>Motivo: {{ localData.reason }}</div>
+            <SolicitationRiskClassificationAlert
+              v-if="isUrgent"
+              :risk-classification-data="localData.risk_classification"
+            />
+          </InfoGroup>
+          <v-divider vertical />
+          <InfoGroup title="Dados do Cadastro" class="flex-1">
+            <div>Cadastrado por {{ localData.created_by }}</div>
+            <div>
+              Data de Cadastrado
+              {{ formatDate(localData.entry_date) }}
+            </div>
+          </InfoGroup>
+        </div>
       </BaseSection>
-      <div class="flex justify-end">
+      <div
+        :class="`flex gap-2 ${doctorRole ? 'justify-between' : 'justify-end'}`"
+      >
+        <div v-if="doctorRole">
+          <base-button-register
+            v-if="isUrgent"
+            buttonText="Avaliar Urgência"
+            buttonIcon="mdi-clipboard-pulse"
+            @register="openRiskClassificationForm = true"
+          />
+          <v-btn
+            v-else
+            class="bg-gray-500 hover:cursor-not-allowed text-white"
+            prepend-icon="mdi-clipboard-pulse"
+          >
+            Avaliar Urgência
+            <v-tooltip activator="parent"
+              >Avaliação não disponível para solicitação não urgente</v-tooltip
+            >
+          </v-btn>
+        </div>
         <AttachmentButton :attachment="attachment" />
       </div>
     </v-card-text>
   </base-card>
+  <v-dialog v-model="openRiskClassificationForm">
+    <SolicitationRiskClassificationForm
+      :model-value="localData"
+      @close="openRiskClassificationForm = false"
+      @save="handleRiskClassificationSave"
+    />
+  </v-dialog>
 </template>
 
 <script setup>
+import SolicitationRiskClassificationForm from "@/components/pages/solicitation/SolicitationRiskClassificationForm.vue";
 import { useBooleanLabel } from "@/composables/utils/useBooleanLabel";
 import { useFormatDate } from "@/composables/utils/useFormatDate";
+import { useMeStore } from "@/stores/me";
 
 const props = defineProps({
   solicitationData: { type: Object, default: () => ({}) },
 });
 
-const emit = defineEmits(["close"]);
+const doctorRole = computed(() => ["regulation_doctor"].includes(role));
+const role = useMeStore().role;
+const openRiskClassificationForm = ref(false);
+
+const emit = defineEmits(["close", "update-solicitation"]);
 
 const { formatDate } = useFormatDate();
 const { booleanToLabel } = useBooleanLabel();
 const { calculateAge } = useCalculateAge();
 
-const isExam = computed(
-  () => props.solicitationData.solicitation_type === "exam",
+// Cópia local e reativa dos dados, para refletir alterações (ex.: classificação
+// de risco) imediatamente na tela, sem depender de recarregar a página.
+const localData = ref({ ...props.solicitationData });
+watch(
+  () => props.solicitationData,
+  (newValue) => {
+    localData.value = { ...newValue };
+  },
 );
-const isUrgentLabel = computed(() =>
-  booleanToLabel(props.solicitationData.is_urgent),
-);
-const isUrgent = computed(() => !!props.solicitationData.is_urgent);
+
+const handleRiskClassificationSave = (updatedSolicitation) => {
+  localData.value = { ...localData.value, ...updatedSolicitation };
+  emit("update-solicitation", localData.value);
+};
+
+const isExam = computed(() => localData.value.solicitation_type === "exam");
+const isUrgentLabel = computed(() => booleanToLabel(localData.value.is_urgent));
+const isUrgent = computed(() => !!localData.value.is_urgent);
 const isReturnLabel = computed(() =>
-  booleanToLabel(props.solicitationData.is_first_time, "Não", "Sim"),
+  booleanToLabel(localData.value.is_first_time, "Não", "Sim"),
 );
 const attachmentText = computed(() =>
-  props.solicitationData.attachment
+  localData.value.attachment
     ? "Clique para ver o arquivo anexado"
     : "Não há arquivo anexado nessa solicitação",
 );
 const title = computed(
   () =>
-    `Solicitação: ${props.solicitationData.procedure || props.solicitationData.specialist}`,
+    `Solicitação: ${localData.value.procedure || localData.value.specialist}`,
 );
-const attachment = computed(() => props.solicitationData.attachment);
+const attachment = computed(() => localData.value.attachment);
 </script>

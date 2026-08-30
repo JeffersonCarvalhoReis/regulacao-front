@@ -26,7 +26,12 @@
 
       <v-list-subheader
         v-if="
-          ['regulation_officer', 'provider_unit_manager', 'caps'].includes(role)
+          [
+            'regulation_officer',
+            'provider_unit_manager',
+            'caps',
+            'regulation_doctor',
+          ].includes(role)
         "
         class="menu-subheader"
         >Demanda</v-list-subheader
@@ -44,6 +49,7 @@
             'regulation_officer',
             'provider_unit_manager',
             'caps',
+            'regulation_doctor',
           ].includes(role)
         "
         :active="$route.name === 'patients'"
@@ -58,6 +64,7 @@
             'regulation_officer',
             'provider_unit_manager',
             'caps',
+            'regulation_doctor',
           ].includes(role)
         "
         :active="$route.name === 'solicitations'"

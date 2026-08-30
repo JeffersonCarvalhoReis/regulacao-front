@@ -3,9 +3,7 @@
     <v-card-text class="flex flex-col gap-2">
       <h2 class="font-bold text-lg">Dados do Patiente</h2>
       <div class="grid grid-cols-2 gap-2">
-        <PatientInput
-          v-model="filterForm.patient_id"
-        />
+        <PatientInput v-model="filterForm.patient_id" />
         <v-select
           v-model="filterForm.gender"
           density="compact"
@@ -32,8 +30,13 @@
           placeholder="CPF do paciente"
           variant="outlined"
           @keypress="onlyNumbers"
-          @paste="event => handlePaste(event, formatCpf, val => filterForm.cpf = val, { maxDigits: 14 })"
-          @update:model-value="val => filterForm.cpf = formatCpf(val)"
+          @paste="
+            (event) =>
+              handlePaste(event, formatCpf, (val) => (filterForm.cpf = val), {
+                maxDigits: 14,
+              })
+          "
+          @update:model-value="(val) => (filterForm.cpf = formatCpf(val))"
         />
       </div>
       <v-divider />
@@ -61,37 +64,43 @@
         </div>
       </div>
 
-
       <v-divider />
       <h2 class="font-bold text-lg">Dados da Solicitação</h2>
       <div class="grid grid-cols-2 gap-2">
-        <div class="col-span-2 grid grid-cols-4 gap-2">
-          <v-text-field
-            v-model="filterForm.cid"
-            class="col-span-2"
-            density="compact"
-            label="CID"
-            variant="outlined"
-          />
-          <v-select
-            v-model="filterForm.is_first_time"
-            density="compact"
-            item-title="label"
-            item-value="value"
-            :items="isFirstTimeOptions"
-            label="Retorno"
-            variant="outlined"
-          />
-          <v-select
-            v-model="filterForm.is_urgent"
-            density="compact"
-            item-title="label"
-            item-value="value"
-            :items="isUrgentOptions"
-            label="Urgente"
-            variant="outlined"
-          />
-        </div>
+        <v-text-field
+          v-model="filterForm.cid"
+          density="compact"
+          label="CID"
+          variant="outlined"
+        />
+        <v-select
+          v-model="filterForm.is_first_time"
+          density="compact"
+          item-title="label"
+          item-value="value"
+          :items="isFirstTimeOptions"
+          label="Retorno"
+          variant="outlined"
+        />
+        <v-select
+          v-model="filterForm.is_urgent"
+          density="compact"
+          item-title="label"
+          item-value="value"
+          :items="isUrgentOptions"
+          label="Urgente"
+          variant="outlined"
+        />
+        <v-select
+          v-model="filterForm.risk_classification"
+          :disabled="filterForm.is_urgent !== 1"
+          density="compact"
+          item-title="label"
+          item-value="value"
+          :items="riskClassificationOptions"
+          label="Classificação de Risco"
+          variant="outlined"
+        />
         <v-autocomplete
           v-model="filterForm.specialist_id"
           density="compact"
@@ -129,7 +138,6 @@
           variant="outlined"
         />
       </div>
-
     </v-card-text>
     <v-card-actions class="m-4">
       <v-btn
@@ -144,71 +152,98 @@
 </template>
 
 <script setup>
-  import { useProcedureApi } from '@/composables/modules/useProcedureModule';
-  import { useRequestingUnitApi } from '@/composables/modules/useRequestingUnitModule';
-  import { useSpecialistApi } from '@/composables/modules/useSpecialistModule';
-  import { useUserApi } from '@/composables/modules/useUserModule';
-  import PatientInput from '@/components/shared/PatientInput.vue';
+import PatientInput from "@/components/shared/PatientInput.vue";
+import { useProcedureApi } from "@/composables/modules/useProcedureModule";
+import { useRequestingUnitApi } from "@/composables/modules/useRequestingUnitModule";
+import { useSpecialistApi } from "@/composables/modules/useSpecialistModule";
+import { useUserApi } from "@/composables/modules/useUserModule";
 
-  const { formatCpf } = useFormatCpf();
-  const { onlyNumbers, handlePaste } = useOnlyNumbers();
+const { formatCpf } = useFormatCpf();
+const { onlyNumbers, handlePaste } = useOnlyNumbers();
 
-  const { data: procedureData, params: procedureParams, refetch: procedureRefetch } = useProcedureApi();
-  const { data: userData, params: userParams, refetch: userRefetch } = useUserApi();
-  const { data: requestingUnitData, params: requestingUnitParams, refetch: requestingUnitRefetch } = useRequestingUnitApi();
-  const { data: specialistData, params: specialistParams, refetch: specialistRefetch } = useSpecialistApi();
+const {
+  data: procedureData,
+  params: procedureParams,
+  refetch: procedureRefetch,
+} = useProcedureApi();
+const {
+  data: userData,
+  params: userParams,
+  refetch: userRefetch,
+} = useUserApi();
+const {
+  data: requestingUnitData,
+  params: requestingUnitParams,
+  refetch: requestingUnitRefetch,
+} = useRequestingUnitApi();
+const {
+  data: specialistData,
+  params: specialistParams,
+  refetch: specialistRefetch,
+} = useSpecialistApi();
 
-  const isFirstTimeOptions = [
-    { label: 'Sim', value: 0 },
-    { label: 'Não', value: 1 },
-  ];
-  const isUrgentOptions = [
-    { label: 'Sim', value: 1 },
-    { label: 'Não', value: 0 },
-  ];
+const isFirstTimeOptions = [
+  { label: "Sim", value: 0 },
+  { label: "Não", value: 1 },
+];
+const isUrgentOptions = [
+  { label: "Sim", value: 1 },
+  { label: "Não", value: 0 },
+];
+const riskClassificationOptions = [
+  { label: "Não Avaliado", value: "not_evaluated" },
+  { label: "Pouco Urgente", value: "green" },
+  { label: "Urgente", value: "yellow" },
+  { label: "Muito Urgente", value: "red" },
+];
+const emit = defineEmits(["filters"]);
 
-  const emit = defineEmits(['filters']);
+const handleClick = () => {
+  emit("filters", filterForm.value);
+};
+onMounted(async () => {
+  procedureParams.value.per_page = -1;
+  userParams.value.per_page = -1;
+  requestingUnitParams.value.per_page = -1;
+  specialistParams.value.per_page = -1;
+  await nextTick();
+  await Promise.all([
+    procedureRefetch(),
+    userRefetch(),
+    requestingUnitRefetch(),
+    specialistRefetch(),
+  ]);
+});
 
-  const handleClick = () => {
-    emit('filters', filterForm.value)
-  }
-  onMounted(async () => {
-    procedureParams.value.per_page = -1;
-    userParams.value.per_page = -1;
-    requestingUnitParams.value.per_page = -1;
-    specialistParams.value.per_page = -1;
-    await nextTick();
-    await Promise.all([
-      procedureRefetch(),
-      userRefetch(),
-      requestingUnitRefetch(),
-      specialistRefetch(),
-    ]);
+const dateInterval = ref(0);
+const title = "Busca Avançada de Pacientes";
+const filterForm = ref({
+  solicitation_date_between: [null, null],
+  risk_classification: null,
+});
 
-  });
-
-  const dateInterval = ref(0)
-  const title = 'Busca Avançada de Pacientes';
-  const filterForm = ref({
-    solicitation_date_between: [null, null],
-  });
-
-  const genderOptions = [
-    { label: 'Feminino', value: 'F' },
-    { label: 'Masculino', value: 'M' },
-    { label: 'Outro', value: 'O' },
-  ];
-  watch(() => dateInterval.value, newValue => {
-    if(newValue == 1) {
+const genderOptions = [
+  { label: "Feminino", value: "F" },
+  { label: "Masculino", value: "M" },
+  { label: "Outro", value: "O" },
+];
+watch(
+  () => dateInterval.value,
+  (newValue) => {
+    if (newValue == 1) {
       filterForm.value.solicitation_date_between = [null, null];
       delete filterForm.value.solicitation_date;
-    }
-    else {
+    } else {
       delete filterForm.value.solicitation_date_between;
     }
-  });
+  },
+);
+watch(
+  () => filterForm.value.is_urgent,
+  (value) => {
+    if (value !== 1) {
+      filterForm.value.risk_classification = null;
+    }
+  },
+);
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -7,17 +7,19 @@ export function useRoles() {
       provider_unit_manager: "Unidade Prestadora",
       tfd: "TFD",
       caps: "CAPS",
+      regulation_doctor: "Médico Regulador",
     };
     return mapRole[role] || "Usuário";
   };
 
   const roles = [
     { value: "admin", name: "Administrador" },
-    { value: "regulation_officer", name: "Regulador" },
-    { value: "reception", name: "Recepção" },
-    { value: "provider_unit_manager", name: "Usuário Unidade Prestadora" },
-    { value: "tfd", name: "TFD" },
     { value: "caps", name: "CAPS" },
+    { value: "regulation_doctor", name: "Médico Regulador" },
+    { value: "reception", name: "Recepção" },
+    { value: "regulation_officer", name: "Regulador" },
+    { value: "tfd", name: "TFD" },
+    { value: "provider_unit_manager", name: "Usuário Unidade Prestadora" },
   ];
 
   return {
