@@ -1,7 +1,10 @@
 <template>
   <patient-table ref="patientTableRef" :edit="true" :show-delete="true">
     <div class="flex gap-2">
-      <base-button-register @register="registerPatient = true" />
+      <base-button-register
+        v-if="!['regulation_doctor'].includes(role)"
+        @register="registerPatient = true"
+      />
       <v-badge v-if="badgeCounter > 0" color="error" :content="badgeCounter">
         <base-button-filter @filters="dialogFilter = true" />
       </v-badge>

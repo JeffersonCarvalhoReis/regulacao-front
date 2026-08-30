@@ -35,6 +35,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.login && meStore.isLoggedIn) {
     if (meStore.role == "admin") return next({ name: "users" });
     if (meStore.role == "reception") return next({ name: "patients" });
+    if (meStore.role == "regulation_doctor") return next({ name: "patients" });
     if (meStore.role == "provider_unit_manager")
       return next({ name: "appointments-management" });
     if (meStore.role == "tfd") return next({ name: "patients" });
@@ -46,6 +47,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.roles && !to.meta.roles.includes(meStore.role)) {
     if (meStore.role == "admin") return next({ name: "users" });
     if (meStore.role == "reception") return next({ name: "patients" });
+    if (meStore.role == "regulation_doctor") return next({ name: "patients" });
     if (meStore.role == "provider_unit_manager")
       return next({ name: "appointments-management" });
     if (meStore.role == "tfd") return next({ name: "patients" });

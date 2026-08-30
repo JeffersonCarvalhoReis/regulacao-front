@@ -81,6 +81,7 @@
     <solicitation-details
       :solicitation-data="solicitationData"
       @close="viewSolicitationDetails = false"
+      @update-solicitation="handleUpdateSolicitation"
     />
   </v-dialog>
 
@@ -194,7 +195,7 @@ onMounted(() => {
   }
   if (meStore.role === "provider_unit_manager") {
     window.Echo.private(
-      `appointments.provider_unit.user.${meStore.user.replace(" ", ".")}`,
+      `appointments.provider_unit.user.${meStore.user.replace(/\s+/g, ".")}`,
     ).listen(".deleted", (event) => {
       refetch();
     });
@@ -257,6 +258,11 @@ const viewSolicitation = (v) => {
   viewSolicitationDetails.value = true;
 };
 
+const handleUpdateSolicitation = async (updatedSolicitation) => {
+  solicitationData.value = updatedSolicitation;
+  await refetch();
+};
+
 const handleWatch = debounce(async () => {
   setFilter("solicitation_type", tab.value);
   setFilter("has_appointment", false);
@@ -305,13 +311,16 @@ const headers = computed(() => {
       sortable: true,
       align: "center",
     },
-    {
+  ];
+
+  if (!["regulation_doctor"].includes(role)) {
+    baseHeaders.push({
       title: "Ações",
       value: "action",
       align: "center",
       width: "100px",
-    },
-  ];
+    });
+  }
   if (tab.value == "exam") {
     baseHeaders.splice(2, 0, {
       title: "Procedimento",

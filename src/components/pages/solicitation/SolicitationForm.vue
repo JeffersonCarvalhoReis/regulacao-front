@@ -586,7 +586,7 @@ const onSubmit = handleSubmit((values) => {
     if (!replaceAttachment.value && !attachment.value) {
       delete values.attachment;
     }
-    if (replaceAttachment.value) {
+    if (replaceAttachment.value && !attachment.value) {
       delete values.attachment;
       values.remove_attachment = true;
     }

@@ -168,7 +168,10 @@ const headers = computed(() => {
       align: "center",
     },
   ];
-  if (props.edit || props.showDelete) {
+  if (
+    (props.edit || props.showDelete) &&
+    !["regulation_doctor"].includes(role)
+  ) {
     baseHeaders.push({
       title: "Ações",
       value: "action",
