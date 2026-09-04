@@ -19,6 +19,7 @@
       :items-length="totalItems"
       :loading="loading"
       loading-text="Carregando..."
+      :row-props="getRowProps"
     >
       <template v-for="header in headers" #[`item.${header.key}`]="{ item }">
         <slot :item="item" :name="`item.${header.key}`">
@@ -228,6 +229,16 @@ const options = ref({
   itemsPerPage: 10,
 });
 
+const getRowProps = ({ item }) => {
+  if (!item.risk_classification) {
+    return {};
+  }
+
+  return {
+    class: `risk-${item.risk_classification}`,
+  };
+};
+
 const canShowNewAction = (item) => {
   if (typeof props.newAction === "function") {
     return props.newAction(item);
@@ -338,5 +349,25 @@ onMounted(() => {
 
 :deep(.v-data-table-footer) {
   @apply normal-case;
+}
+
+:deep(tbody > tr.risk-red > td:first-child) {
+  border-left: 5px solid #ef4444 !important;
+}
+
+:deep(tbody > tr.risk-orange > td:first-child) {
+  border-left: 5px solid #f97316 !important;
+}
+
+:deep(tbody > tr.risk-yellow > td:first-child) {
+  border-left: 5px solid #facc15 !important;
+}
+
+:deep(tbody > tr.risk-green > td:first-child) {
+  border-left: 5px solid #16a34a !important;
+}
+
+:deep(tbody > tr.risk-blue > td:first-child) {
+  border-left: 5px solid #1e3a8a !important;
 }
 </style>

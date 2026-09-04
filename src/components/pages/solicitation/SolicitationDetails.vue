@@ -57,21 +57,10 @@
       >
         <div v-if="doctorRole">
           <base-button-register
-            v-if="isUrgent"
             buttonText="Avaliar Urgência"
             buttonIcon="mdi-clipboard-pulse"
             @register="openRiskClassificationForm = true"
           />
-          <v-btn
-            v-else
-            class="bg-gray-500 hover:cursor-not-allowed text-white"
-            prepend-icon="mdi-clipboard-pulse"
-          >
-            Avaliar Urgência
-            <v-tooltip activator="parent"
-              >Avaliação não disponível para solicitação não urgente</v-tooltip
-            >
-          </v-btn>
         </div>
         <AttachmentButton :attachment="attachment" />
       </div>

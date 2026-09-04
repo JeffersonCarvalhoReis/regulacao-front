@@ -21,21 +21,27 @@ const props = defineProps({
 const riskClassificationOptions = [
   {
     label:
-      "Muito urgente: Caso grave e de risco significativo de evoluir para morte. Atendimento urgente",
+      "Emergência: Caso gravíssimo, com necessidade de atendimento imediato e risco de morte.",
     value: "red",
-    color: "red",
+    color: "#ec1f25",
+  },
+  {
+    label:
+      "Muito urgente: Caso grave e risco significativo de evoluir para morte. Atendimento urgente.",
+    value: "orange",
+    color: "#f38221",
   },
   {
     label:
       "Urgente: Caso de gravidade moderada, necessidade de atendimento médico, sem risco imediato",
     value: "yellow",
-    color: "amber",
+    color: "#fecb0a",
   },
   {
     label:
       "Pouco urgente: Caso para atendimento preferencial nas unidades de atenção básica",
     value: "green",
-    color: "green",
+    color: "#007e49",
   },
 ];
 

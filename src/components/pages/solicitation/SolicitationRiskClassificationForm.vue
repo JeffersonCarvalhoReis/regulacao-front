@@ -81,31 +81,49 @@ const emit = defineEmits(["close", "save"]);
 
 const riskClassificationOptions = [
   {
-    label: "Muito urgente",
+    label: "Emergência",
     value: "red",
     color: "red",
-    hex: "#E01E26",
+    hex: "#ec1f25",
+    title: "Emergência",
+    description:
+      "Caso gavsíssimo, com necessidade de atendimento imediato e risco de morte.",
+  },
+  {
+    label: "Muito urgente",
+    value: "orange",
+    color: "#f38221",
+    hex: "#f38221",
     title: "Muita Urgência",
     description:
-      "Caso grave e de risco significativo de evoluir para morte. Atendimento urgente",
+      "Caso de grave e risco significativo de evoluir para morte. Atendimento urgente.",
   },
   {
     label: "Urgente",
     value: "yellow",
-    color: "amber",
-    hex: "#F3B400",
+    color: "#fecb0a",
+    hex: "#fecb0a",
     title: "Urgência",
     description:
-      " Caso de gravidade moderada, necessidade de atendimento médico, sem risco imediato",
+      "Caso de gravidade moderada, necessidade de atendimento médico, sem risco imediato.",
   },
   {
     label: "Pouco urgente",
     value: "green",
     color: "green",
-    hex: "#0E7D45",
+    hex: "#007e49",
     title: "Pouca Urgência",
     description:
-      "Caso para atendimento preferencial nas unidades de atenção básica",
+      "Caso para atendimento preferencial nas unidades de atenção básica.",
+  },
+  {
+    label: "Não urgente",
+    value: "blue",
+    color: "blue",
+    hex: "#264474",
+    title: "Não Urgência",
+    description:
+      "Caso para atendimento na unidade de saúde mais próxima da residência. Atendimento de acordo com o horário de chegada",
   },
 ];
 
@@ -114,7 +132,10 @@ const schema = yup.object({
     .string()
     .trim()
     .required("Classificação de risco é obrigatória")
-    .oneOf(["red", "yellow", "green"], "Classificação de risco inválida"),
+    .oneOf(
+      ["red", "yellow", "green", "orange", "blue"],
+      "Classificação de risco inválida",
+    ),
 });
 
 const { handleSubmit, errors } = useForm({

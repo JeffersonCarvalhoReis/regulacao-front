@@ -40,7 +40,7 @@
               {{
                 formatDate(
                   props.modelValue.solicitation?.solicitation_date ||
-                    props.solicitationData.solicitation_date
+                    props.solicitationData.solicitation_date,
                 )
               }}
             </div>
@@ -55,6 +55,13 @@
               }}
             </div>
           </div>
+          <SolicitationRiskClassificationAlert
+            v-if="isUrgent"
+            :risk-classification-data="
+              props.modelValue.solicitation?.risk_classification ||
+              props.solicitationData.risk_classification
+            "
+          />
         </InfoGroup>
       </BaseSection>
       <v-form>
@@ -158,28 +165,28 @@ const { formatDate } = useFormatDate();
 const { onlyNumbers } = useOnlyNumbers();
 const { booleanToLabel } = useBooleanLabel();
 const isReturnLabel = computed(() =>
-  booleanToLabel(props.solicitationData.is_first_time, "Não", "Sim")
+  booleanToLabel(props.solicitationData.is_first_time, "Não", "Sim"),
 );
 const isReturnToEditLabel = computed(() =>
-  booleanToLabel(props.modelValue.solicitation.is_first_time, "Não", "Sim")
+  booleanToLabel(props.modelValue.solicitation.is_first_time, "Não", "Sim"),
 );
 const isUrgentLabel = computed(() =>
-  booleanToLabel(props.solicitationData.is_urgent)
+  booleanToLabel(props.solicitationData.is_urgent),
 );
 const isUrgentToEditLabel = computed(() =>
-  booleanToLabel(props.modelValue.solicitation.is_urgent)
+  booleanToLabel(props.modelValue.solicitation.is_urgent),
 );
 const isEditing = computed(() => !!props.modelValue?.id);
 
 const isExam = computed(
   () =>
     props.modelValue.solicitation?.solicitation_type ||
-    props.solicitationData.solicitation_type === "exam"
+    props.solicitationData.solicitation_type === "exam",
 );
 const isUrgent = computed(
   () =>
     props.modelValue.solicitation?.is_urgent == true ||
-    props.solicitationData.is_urgent == true
+    props.solicitationData.is_urgent == true,
 );
 
 const onTimeInput = (val) => {
@@ -220,7 +227,7 @@ const msgAppointment =
     ? "Solicitar Agendamento"
     : "Novo Agendamento";
 const title = computed(() =>
-  isEditing.value ? "Editar Agendamento" : msgAppointment
+  isEditing.value ? "Editar Agendamento" : msgAppointment,
 );
 
 const schema = yup.object({

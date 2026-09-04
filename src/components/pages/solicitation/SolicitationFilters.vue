@@ -93,7 +93,6 @@
         />
         <v-select
           v-model="filterForm.risk_classification"
-          :disabled="filterForm.is_urgent !== 1"
           density="compact"
           item-title="label"
           item-value="value"
@@ -192,9 +191,11 @@ const isUrgentOptions = [
 ];
 const riskClassificationOptions = [
   { label: "Não Avaliado", value: "not_evaluated" },
+  { label: "Não Urgente", value: "blue" },
   { label: "Pouco Urgente", value: "green" },
   { label: "Urgente", value: "yellow" },
-  { label: "Muito Urgente", value: "red" },
+  { label: "Muito Urgente", value: "orange" },
+  { label: "Emergência", value: "red" },
 ];
 const emit = defineEmits(["filters"]);
 
