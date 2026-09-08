@@ -27,12 +27,6 @@ const riskClassificationOptions = [
   },
   {
     label:
-      "Muito urgente: Caso grave e risco significativo de evoluir para morte. Atendimento urgente.",
-    value: "orange",
-    color: "#f38221",
-  },
-  {
-    label:
       "Urgente: Caso de gravidade moderada, necessidade de atendimento médico, sem risco imediato",
     value: "yellow",
     color: "#fecb0a",
