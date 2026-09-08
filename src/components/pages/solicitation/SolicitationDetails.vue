@@ -57,7 +57,7 @@
       >
         <div v-if="doctorRole">
           <base-button-register
-            buttonText="Avaliar Urgência"
+            buttonText="Classificação de risco"
             buttonIcon="mdi-clipboard-pulse"
             @register="openRiskClassificationForm = true"
           />
