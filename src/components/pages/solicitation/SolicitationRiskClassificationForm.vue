@@ -90,15 +90,6 @@ const riskClassificationOptions = [
       "Caso gavsíssimo, com necessidade de atendimento imediato e risco de morte.",
   },
   {
-    label: "Muito urgente",
-    value: "orange",
-    color: "#f38221",
-    hex: "#f38221",
-    title: "Muita Urgência",
-    description:
-      "Caso de grave e risco significativo de evoluir para morte. Atendimento urgente.",
-  },
-  {
     label: "Urgente",
     value: "yellow",
     color: "#fecb0a",
@@ -133,7 +124,7 @@ const schema = yup.object({
     .trim()
     .required("Classificação de risco é obrigatória")
     .oneOf(
-      ["red", "yellow", "green", "orange", "blue"],
+      ["red", "yellow", "green", "blue"],
       "Classificação de risco inválida",
     ),
 });

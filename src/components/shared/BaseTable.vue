@@ -355,10 +355,6 @@ onMounted(() => {
   border-left: 5px solid #ef4444 !important;
 }
 
-:deep(tbody > tr.risk-orange > td:first-child) {
-  border-left: 5px solid #f97316 !important;
-}
-
 :deep(tbody > tr.risk-yellow > td:first-child) {
   border-left: 5px solid #facc15 !important;
 }
