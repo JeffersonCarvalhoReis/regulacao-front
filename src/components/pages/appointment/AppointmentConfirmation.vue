@@ -52,7 +52,7 @@
           ><span class="uppercase">{{ props.appointmentData.patient }}</span
           ><br />
           <strong>CNS: </strong
-          >{{ props.appointmentData.solicitation.patient_cns }}<br />
+          >{{ props.appointmentData.solicitation?.patient_cns ?? "" }}<br />
           <strong>ACS: </strong
           ><span class="uppercase">{{
             props.appointmentData.solicitation.health_agent

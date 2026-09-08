@@ -6,7 +6,7 @@
           <div>CPF: {{ patientData.cpf }}</div>
           <div>Gênero: {{ genderMap(patientData.gender) }}</div>
           <div>Mãe: {{ patientData.mother_name }}</div>
-          <div>CNS: {{ patientData.cns }}</div>
+          <div>CNS: {{ patientData?.cns ?? "" }}</div>
           <div>
             Data de Nascimento: {{ formatDate(patientData.birth_date) }}
           </div>

@@ -194,7 +194,6 @@ const riskClassificationOptions = [
   { label: "Não Urgente", value: "blue" },
   { label: "Pouco Urgente", value: "green" },
   { label: "Urgente", value: "yellow" },
-  { label: "Muito Urgente", value: "orange" },
   { label: "Emergência", value: "red" },
 ];
 const emit = defineEmits(["filters"]);

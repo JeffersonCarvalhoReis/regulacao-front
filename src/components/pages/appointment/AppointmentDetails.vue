@@ -32,7 +32,7 @@
                 CPF: {{ props.appointmentData.solicitation.patient_cpf }}
               </div>
               <div>
-                SUS: {{ props.appointmentData.solicitation.patient_cns }}
+                SUS: {{ props.appointmentData.solicitation?.patient_cns ?? "" }}
               </div>
             </div>
             <div>

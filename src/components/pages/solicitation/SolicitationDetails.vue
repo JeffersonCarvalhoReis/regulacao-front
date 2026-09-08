@@ -12,7 +12,7 @@
             </div>
             <div>Idade: {{ calculateAge(localData.patient_birth_date) }}</div>
             <div>CPF: {{ localData.patient_cpf }}</div>
-            <div>SUS: {{ localData.patient_cns }}</div>
+            <div>SUS: {{ localData?.patient_cns ?? "" }}</div>
             <div>Telefone: {{ localData.patient_phone }}</div>
             <div>Unidade de Saúde: {{ localData.health_unit }}</div>
             <div>

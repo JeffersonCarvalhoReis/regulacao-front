@@ -619,7 +619,7 @@ watch(
 
     const source = isStandaloneCompanion.value
       ? {
-          cns: value.companion_cns,
+          cns: value?.companion_cns ?? "",
           name: value.companion_name,
           gender: value.companion_gender,
           birth_date: value.companion_birth_date,
