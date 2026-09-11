@@ -16,7 +16,6 @@
 
           <v-text-field
             v-model="cns"
-            class="required"
             density="compact"
             :error-messages="errors.cns"
             label="CNS"
@@ -283,9 +282,12 @@ const schema = yup.object({
   race: yup.string().required("Raça/Cor é obrigatório"),
   cns: yup
     .string()
-    .min(15, "CNS incompleto")
-    .required("CNS é obrigatório")
-    .test("valid-cns", "CNS inválido", (value) => isValidCns(value)),
+    .nullable()
+    .test("valid-cns", "CNS inválido", (value) => {
+      if (!value) return true;
+
+      return isValidCns(value);
+    }),
   mother_name: yup.string().required("Nome da mãe é obrigatório"),
   cpf: yup
     .string()

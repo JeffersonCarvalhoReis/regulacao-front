@@ -60,7 +60,7 @@
           </div>
           <div class="col-span-2 border-b border-r border-black p-1 pb-5">
             <span class="uppercase"
-              >SUS: {{ props.monitoringReportData.patient_cns }}</span
+              >SUS: {{ props.monitoringReportData?.patient_cns ?? " " }}</span
             >
           </div>
           <div class="col-span-1 border-b border-black p-1 pb-5">
@@ -93,7 +93,7 @@
           </div>
           <div class="col-span-2 border-b border-r border-black p-1 pb-5">
             <span class="uppercase"
-              >SUS: {{ props.monitoringReportData.companion_cns }}</span
+              >SUS: {{ props.monitoringReportData?.companion_cns ?? " " }}</span
             >
           </div>
           <div class="col-span-1 border-b border-black p-1 pb-5">

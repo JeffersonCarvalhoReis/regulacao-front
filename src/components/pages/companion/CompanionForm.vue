@@ -49,7 +49,7 @@
           />
           <v-text-field
             v-model="cns"
-            class="col-span-2 required"
+            class="col-span-2"
             density="compact"
             :error-messages="errors.cns"
             label="CNS"
@@ -181,16 +181,19 @@ onMounted(async () => {
 const emit = defineEmits(["close", "save"]);
 
 const title = computed(() =>
-  isEditing.value ? "Editar Acompanhante" : "Cadastrar Acompanhante"
+  isEditing.value ? "Editar Acompanhante" : "Cadastrar Acompanhante",
 );
 
 const schema = yup.object({
   name: yup.string().required("Nome é obrigatório"),
   cns: yup
     .string()
-    .min(15, "CNS incompleto")
-    .required("CNS é obrigatório")
-    .test("valid-cns", "CNS inválido", (value) => isValidCns(value)),
+    .nullable()
+    .test("valid-cns", "CNS inválido", (value) => {
+      if (!value) return true;
+
+      return isValidCns(value);
+    }),
   mother_name: yup.string().required("Nome da mãe é obrigatório"),
   cpf: yup
     .string()

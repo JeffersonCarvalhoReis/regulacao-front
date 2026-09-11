@@ -75,7 +75,9 @@
                 class="table-cell border-r border-b p-2"
                 :class="{ 'bg-slate-200': rowIndex % 2 === 1 }"
               >
-                {{ row.type === "patient" ? row.cns : row.companion_cns }}
+                {{
+                  row.type === "patient" ? row.cns : (row?.companion_cns ?? "")
+                }}
               </div>
               <div
                 class="table-cell border-r border-b p-2"
@@ -167,7 +169,7 @@ const tableRows = computed(() => {
           type: "companion",
           companion_name: patient.companion.name,
           companion_phone: patient.companion.phone,
-          companion_cns: patient.companion.cns,
+          companion_cns: patient.companion?.cns ?? "",
           companion_street: patient.companion.street,
           companion_neighborhood: patient.companion.neighborhood,
           hospital_name: patient.hospital_name,
@@ -198,7 +200,7 @@ const tableRows = computed(() => {
           type: "extra_companion",
           companion_name: comp.name,
           companion_phone: comp.phone,
-          companion_cns: comp.cns,
+          companion_cns: comp?.cns ?? "",
           companion_street: comp.street,
           companion_neighborhood: comp.neighborhood,
           hospital_name: patient.hospital_name,
@@ -229,7 +231,7 @@ const tableRows = computed(() => {
       type: "standalone_companion",
       companion_name: companion.companion_name,
       companion_phone: companion.companion_phone,
-      companion_cns: companion.companion_cns,
+      companion_cns: companion?.companion_cns ?? "",
       companion_street: companion.companion_street,
       companion_neighborhood: companion.companion_neighborhood,
       hospital_name: companion.hospital_name,

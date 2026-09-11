@@ -7,7 +7,7 @@
           <div>Data de Nascimento: {{ formatDate(props.data.birth_date) }}</div>
           <div>Idade: {{ calculateAge(props.data.birth_date) }}</div>
           <div>CPF: {{ props.data.cpf }}</div>
-          <div>CNS: {{ props.data.cns }}</div>
+          <div>CNS: {{ props.data?.cns ?? "" }}</div>
           <div>Nome da Mãe: {{ props.data.mother_name }}</div>
           <div v-if="props.data.phone">Telefone: {{ props.data.phone }}</div>
           <div>Unidade de Saúde: {{ props.data.health_unit }}</div>
@@ -29,7 +29,7 @@
           </div>
           <div>Idade: {{ calculateAge(props.data.companion?.birth_date) }}</div>
           <div>CPF: {{ props.data.companion?.cpf }}</div>
-          <div>CNS: {{ props.data.companion?.cns }}</div>
+          <div>CNS: {{ props.data.companion?.cns ?? "" }}</div>
           <div>Nome da Mãe: {{ props.data.companion?.mother_name }}</div>
           <div v-if="props.data.companion?.phone">
             Telefone: {{ props.data.companion?.phone }}
@@ -51,7 +51,7 @@
           </div>
           <div>Idade: {{ calculateAge(extra.companion.birth_date) }}</div>
           <div>CPF: {{ extra.companion.cpf }}</div>
-          <div>CNS: {{ extra.companion.cns }}</div>
+          <div>CNS: {{ extra.companion?.cns ?? "" }}</div>
           <div>Nome da Mãe: {{ extra.companion.mother_name }}</div>
           <div v-if="extra.companion.phone">
             Telefone: {{ extra.companion.phone }}

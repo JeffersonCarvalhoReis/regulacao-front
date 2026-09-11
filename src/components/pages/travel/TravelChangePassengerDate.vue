@@ -9,7 +9,7 @@
           </div>
           <div>Idade: {{ calculateAge(props.patientData.birth_date) }}</div>
           <div>CPF: {{ props.patientData.cpf }}</div>
-          <div>CNS: {{ props.patientData.cns }}</div>
+          <div>CNS: {{ props.patientData?.cns ?? "" }}</div>
           <div>Nome da Mãe: {{ props.patientData.mother_name }}</div>
           <div v-if="props.patientData.phone">
             Telefone: {{ props.patientData.phone }}
@@ -36,7 +36,7 @@
             Idade: {{ calculateAge(props.patientData.companion.birth_date) }}
           </div>
           <div>CPF: {{ props.patientData.companion.cpf }}</div>
-          <div>CNS: {{ props.patientData.companion.cns }}</div>
+          <div>CNS: {{ props.patientData.companion?.cns ?? "" }}</div>
           <div>Nome da Mãe: {{ props.patientData.companion.mother_name }}</div>
           <div v-if="props.patientData.companion.phone">
             Telefone: {{ props.patientData.companion.phone }}

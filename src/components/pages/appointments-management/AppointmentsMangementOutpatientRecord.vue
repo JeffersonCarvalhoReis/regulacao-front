@@ -73,7 +73,7 @@
             <LabeledLine label="Nome" :value="appointmentData.patient" />
             <LabeledLine
               label="SUS"
-              :value="appointmentData.solicitation.patient_cns"
+              :value="appointmentData.solicitation?.patient_cns ?? ''"
             />
             <LabeledLine
               label="CPF"
