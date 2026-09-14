@@ -66,6 +66,30 @@
       </BaseSection>
       <v-form>
         <h2 class="text-xl font-bold mt-4">Dados do Agendamento</h2>
+
+        <div v-if="canManageSchedules" class="mt-4">
+          <v-autocomplete
+            v-model="schedule_id"
+            clearable
+            density="compact"
+            :error-messages="errors.schedule_id"
+            :items="scheduleOptions"
+            :loading="loadingSchedules"
+            label="Selecionar uma Agenda Aberta (opcional)"
+            no-data-text="Nenhuma agenda aberta encontrada"
+            variant="outlined"
+          >
+            <template #item="{ props: itemProps, item }">
+              <v-list-item v-bind="itemProps" :subtitle="item?.subtitle" />
+            </template>
+          </v-autocomplete>
+
+          <div v-if="schedule_id" class="text-sm text-green-700 -mt-2 mb-2">
+            Data, unidade e médico preenchidos automaticamente pela agenda
+            selecionada.
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-2 mt-4">
           <base-input-date-picker
             v-model="date"
@@ -137,6 +161,7 @@
 <script setup>
 import { useDoctorApi } from "@/composables/modules/useDoctorModule";
 import { useProviderUnitApi } from "@/composables/modules/useProviderUnitModule";
+import { useScheduleApi } from "@/composables/modules/useScheduleModule";
 import { useBooleanLabel } from "@/composables/utils/useBooleanLabel";
 import { useFormatDate } from "@/composables/utils/useFormatDate";
 import { useOnlyNumbers } from "@/composables/utils/useOnlyNumbers";
@@ -151,6 +176,8 @@ const props = defineProps({
 
 const meStore = useMeStore();
 const role = meStore.role;
+const canManageSchedules = computed(() => role === "regulation_officer");
+
 const {
   data: providerUnitData,
   refetch: providerUnitFetch,
@@ -161,6 +188,12 @@ const {
   refetch: doctorFetch,
   params: doctorParams,
 } = useDoctorApi();
+const {
+  data: scheduleData,
+  loadingList: loadingSchedules,
+  refetch: scheduleFetch,
+  params: scheduleParams,
+} = useScheduleApi();
 const { formatDate } = useFormatDate();
 const { onlyNumbers } = useOnlyNumbers();
 const { booleanToLabel } = useBooleanLabel();
@@ -210,13 +243,28 @@ const AppointmentStatus = [
 onMounted(async () => {
   providerUnitParams.value.per_page = -1;
   doctorParams.value.per_page = -1;
+
   providerUnitParams.value.sort = "name";
   doctorParams.value.sort = "name";
+
   await nextTick();
-  await Promise.all([providerUnitFetch(), doctorFetch()]);
+
+  const requests = [providerUnitFetch(), doctorFetch()];
+
+  if (canManageSchedules.value) {
+    scheduleParams.value.per_page = -1;
+    scheduleParams.value.sort = "date";
+    scheduleParams.value["filter[open]"] = 1;
+
+    requests.push(scheduleFetch());
+  }
+
+  await Promise.all(requests);
 
   if (isEditing.value) {
-    resetForm({ values: props.modelValue });
+    resetForm({
+      values: props.modelValue,
+    });
   }
 });
 
@@ -259,6 +307,7 @@ const schema = yup.object({
     }),
   provider_unit_id: yup.number().required("Unidade prestadora é obrigatório"),
   doctor_id: yup.number().nullable(),
+  schedule_id: yup.number().nullable(),
   status: yup.string().nullable(),
 });
 
@@ -271,6 +320,7 @@ const { handleSubmit, errors, resetForm } = useForm({
       props.modelValue?.solicitation?.id || props.solicitationData?.id,
     provider_unit_id: null,
     doctor_id: null,
+    schedule_id: null,
   },
 });
 
@@ -278,7 +328,42 @@ const { value: date } = useField("date");
 const { value: time } = useField("time");
 const { value: provider_unit_id } = useField("provider_unit_id");
 const { value: doctor_id } = useField("doctor_id");
+const { value: schedule_id } = useField("schedule_id");
 const { value: status } = useField("status");
+
+const scheduleOptions = computed(() => {
+  if (!canManageSchedules.value) {
+    return [];
+  }
+
+  return scheduleData.value.map((schedule) => ({
+    value: schedule.id,
+    title: `${formatDate(schedule.date)} - ${schedule.provider_unit}`,
+    subtitle: `${schedule.doctor || "Qualquer médico"} • ${schedule.available_vacancies} vaga(s) disponível(is)`,
+  }));
+});
+
+const settingFromSchedule = ref(false);
+
+watch(schedule_id, (newScheduleId) => {
+  if (!newScheduleId) return;
+
+  const schedule = scheduleData.value.find((s) => s.id === newScheduleId);
+  if (!schedule) return;
+
+  settingFromSchedule.value = true;
+  date.value = schedule.date;
+  provider_unit_id.value = schedule.provider_unit_id;
+  doctor_id.value = schedule.doctor_id;
+  nextTick(() => {
+    settingFromSchedule.value = false;
+  });
+});
+
+watch([date, provider_unit_id, doctor_id], () => {
+  if (settingFromSchedule.value) return;
+  if (schedule_id.value) schedule_id.value = null;
+});
 
 const onSubmit = handleSubmit((values) => {
   if (role == "provider_unit_manager") values.status = "pending";

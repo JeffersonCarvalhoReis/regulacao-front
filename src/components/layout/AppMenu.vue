@@ -79,6 +79,13 @@
         title="Agendamentos"
         :to="{ name: 'appointments' }"
       />
+      <app-menu-item
+        v-if="['regulation_officer'].includes(role)"
+        :active="$route.name === 'schedules'"
+        prepend-icon="mdi-calendar-clock"
+        title="Agendas"
+        :to="{ name: 'schedules' }"
+      />
       <v-list-subheader
         v-if="['reception', 'regulation_officer'].includes(role)"
         class="menu-subheader"

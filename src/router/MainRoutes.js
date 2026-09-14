@@ -18,6 +18,7 @@ import PatientsTfd from "@/pages/PatientsTfd.vue";
 import Procedures from "@/pages/Procedures.vue";
 import ProviderUnits from "@/pages/ProviderUnits.vue";
 import RequestingUnits from "@/pages/RequestingUnits.vue";
+import Schedules from "@/pages/Schedules.vue";
 import Settings from "@/pages/Settings.vue";
 import Solicitations from "@/pages/Solicitations.vue";
 import Specialists from "@/pages/Specialists.vue";
@@ -67,6 +68,15 @@ export default [
     path: "/medicos",
     name: "doctors",
     component: Doctors,
+    meta: {
+      requiresAuth: true,
+      roles: ["regulation_officer"],
+    },
+  },
+  {
+    path: "/agendas",
+    name: "schedules",
+    component: Schedules,
     meta: {
       requiresAuth: true,
       roles: ["regulation_officer"],

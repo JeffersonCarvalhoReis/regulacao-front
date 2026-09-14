@@ -115,6 +115,7 @@ const pageTitle = computed(() => {
     "fibro-patients": "Pacientes Fibromialgia",
     "monitoring-reports": "Relatórios de Acompanhamento",
     "bpa-settings": "Definições do BPA",
+    schedules: "Agendas",
   };
 
   return titleMap[route?.name] || "";
