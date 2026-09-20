@@ -112,6 +112,22 @@
               recomendation
             }}</span>
           </p>
+          <hr />
+          <div
+            v-if="phone"
+            class="whatsapp-box flex items-center gap-3 my-4 p-3 rounded-lg border border-green-300 bg-green-50"
+          >
+            <img
+              alt="Logo WhatsApp"
+              class="w-10 h-10 shrink-0"
+              src="/src/assets/images/wpp-logo.svg"
+            />
+            <p class="text-sm leading-5 m-0">
+              <strong>Dúvidas?</strong> Fale conosco pelo WhatsApp da Secretaria
+              de Saúde:<br />
+              <strong class="text-base">{{ phone }}</strong>
+            </p>
+          </div>
         </div>
       </v-card-text>
     </div>
@@ -132,6 +148,7 @@ const props = defineProps({
   appointmentData: { type: Object, required: true },
 });
 
+const phone = import.meta.env.VITE_PHONE;
 const { formatDate } = useFormatDate();
 const emit = defineEmits(["close"]);
 const title = ref("Comprovante de Agendamento");
@@ -156,7 +173,7 @@ const printConfirmation = () => {
   const splittedContent = clonedContent
     .querySelector(".leading-6")
     .innerHTML.split("<hr>")
-    .slice(1, 7)
+    .slice(1)
     .join("<hr>");
 
   const printWindow = window.open("", "_blank", "width=800,height=600");
@@ -209,6 +226,27 @@ const printConfirmation = () => {
             line-height: 1.6;
           }
 
+          .whatsapp-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0;
+            padding: 8px 10px;
+            border: 1px solid #b7e4c7;
+            background: #f0fdf4;
+            border-radius: 6px;
+          }
+          .whatsapp-box img {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+          }
+          .whatsapp-box p {
+            margin: 0;
+            font-size: 10px;
+            line-height: 1.4;
+          }
+
           @media print {
             @page {
               margin: 0;
@@ -252,7 +290,6 @@ const printConfirmation = () => {
         <div class="info-block mb">
           ${splittedContent}
         </div>
-        <hr>
         <script>
           window.onload = function() {
             window.print();

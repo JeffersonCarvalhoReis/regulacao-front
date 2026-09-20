@@ -127,32 +127,48 @@
           </template>
           <template #item.action="{ item }">
             <v-btn-group divided variant="outlined">
-              <v-tooltip text="Aceitar">
-                <template #activator="{ props }">
-                  <v-btn
-                    v-bind="props"
-                    class="text-green-500 border-0 ml-1 h-full"
-                    flat
-                    icon
-                    @click="confirmAppointment(item)"
-                  >
-                    <v-icon>mdi-check</v-icon>
-                  </v-btn>
-                </template>
-              </v-tooltip>
-              <v-tooltip text="Recusar">
-                <template #activator="{ props }">
-                  <v-btn
-                    v-bind="props"
-                    class="text-red-500 border-0 ml-1 h-full"
-                    flat
-                    icon
-                    @click="handleDelete(item)"
-                  >
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </template>
-              </v-tooltip>
+              <div v-if="['regulation_officer'].includes(role)">
+                <v-tooltip text="Aceitar">
+                  <template #activator="{ props }">
+                    <v-btn
+                      v-bind="props"
+                      class="text-green-500 border-0 ml-1 h-full"
+                      flat
+                      icon
+                      @click="confirmAppointment(item)"
+                    >
+                      <v-icon>mdi-check</v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="Recusar">
+                  <template #activator="{ props }">
+                    <v-btn
+                      v-bind="props"
+                      class="text-red-500 border-0 ml-1 h-full"
+                      flat
+                      icon
+                      @click="handleDelete(item)"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+              </div>
+              <div v-else>
+                <v-tooltip text="Aguardando confirmação da regulação">
+                  <template #activator="{ props }">
+                    <v-btn
+                      v-bind="props"
+                      class="text-ita-yellow border-0 ml-1 h-full cursor-not-allowed"
+                      flat
+                      icon
+                    >
+                      <v-icon>mdi-timer-sand-complete</v-icon>
+                    </v-btn>
+                  </template>
+                </v-tooltip>
+              </div>
             </v-btn-group>
           </template>
         </base-table>
