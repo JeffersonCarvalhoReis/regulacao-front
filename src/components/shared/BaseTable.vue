@@ -341,6 +341,20 @@ onMounted(() => {
   gap: 4px;
 }
 
+/* Deixa o texto quebrar de linha dentro das células.
+   Sem isso, a tabela usa table-layout:auto e o navegador prefere
+   alargar a coluna (e a tabela toda) a quebrar o texto, já que o
+   "width" do header é só uma sugestão, não um limite. */
+:deep(.v-table__wrapper > table) {
+  table-layout: fixed;
+}
+
+:deep(.v-data-table__td) {
+  white-space: normal !important;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 /* --- Celular: cada linha vira um cartão legível --- */
 @media (max-width: 767px) {
   :deep(.v-data-table__tr--mobile) {
