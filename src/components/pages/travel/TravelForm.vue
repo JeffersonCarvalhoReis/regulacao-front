@@ -1,7 +1,7 @@
 <template>
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
-      <v-form class="grid grid-cols-2 gap-x-4">
+      <v-form class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
         <base-input-date-picker
           v-model="date"
           class-date-picker="absolute right-[-175px] top-0"
@@ -48,7 +48,7 @@
         <v-autocomplete
           :key="autocompleteKey"
           v-model="vehicle_id"
-          class="required col-span-2"
+          class="required lg:col-span-2"
           density="compact"
           :error-messages="errors.vehicle_id"
           item-title="vehicle_model"

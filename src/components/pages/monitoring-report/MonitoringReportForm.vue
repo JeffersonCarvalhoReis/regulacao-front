@@ -7,7 +7,7 @@
       <v-form>
         <!-- Seletores -->
         <div class="grid grid-cols-1 gap-2 mb-4">
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
             <PatientInput
               v-model="patient_id"
               :error-messages="errors.patient_id"
@@ -25,7 +25,7 @@
               </v-tooltip>
             </base-button-register>
           </div>
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
             <companion-input
               v-model="companion_id"
               :error-messages="errors.companion_id"
@@ -73,7 +73,7 @@
         <v-divider class="my-3" />
         <h3 class="text-sm font-semibold mb-2">Dados do Paciente</h3>
 
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <div>Nome: {{ form.patient_name }}</div>
           <div>CPF: {{ form.patient_cpf }}</div>
           <div>CNS: {{ form.patient_cns }}</div>
@@ -90,7 +90,7 @@
         <div v-if="companion_id">
           <h3 class="text-sm font-semibold mb-2">Dados do Acompanhante</h3>
 
-          <div class="grid grid-cols-3 gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             <div>Nome: {{ form.companion_name }}</div>
             <div>CPF: {{ form.companion_cpf }}</div>
             <div>CNS: {{ form.companion_cns }}</div>

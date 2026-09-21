@@ -362,6 +362,7 @@ const headers = computed(() => {
       value: "view",
       align: "left",
       width: "100px",
+      maxWidth: "100px",
     },
     {
       title: "Nome",
@@ -403,6 +404,7 @@ const headers = computed(() => {
       title: "Ações",
       value: "action",
       width: "200px",
+      maxWidth: "200px",
       align: "center",
     },
   ];
@@ -421,6 +423,7 @@ const standaloneHeaders = computed(() => [
     title: "BPA",
     key: "bpa",
     width: "150px",
+      maxWidth: "150px",
     sortable: false,
     align: "center",
   },
@@ -428,6 +431,7 @@ const standaloneHeaders = computed(() => [
     title: "Ações",
     value: "action",
     width: "150px",
+      maxWidth: "150px",
     align: "center",
   },
 ]);

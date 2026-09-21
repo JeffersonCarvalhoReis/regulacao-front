@@ -11,8 +11,40 @@
               {{ formatDate(localData.patient_birth_date) }}
             </div>
             <div>Idade: {{ calculateAge(localData.patient_birth_date) }}</div>
-            <div>CPF: {{ localData.patient_cpf }}</div>
-            <div>SUS: {{ localData?.patient_cns ?? "" }}</div>
+            <div class="flex items-center gap-1">
+              <span>CPF: {{ localData.patient_cpf }}</span>
+              <v-btn
+                v-if="localData.patient_cpf"
+                :color="isCopied('cpf') ? 'success' : undefined"
+                density="compact"
+                icon
+                size="x-small"
+                variant="text"
+                @click="copy(localData.patient_cpf, 'cpf')"
+              >
+                <v-icon :icon="isCopied('cpf') ? 'mdi-check' : 'mdi-content-copy'" size="16" />
+                <v-tooltip activator="parent" location="top">
+                  {{ isCopied("cpf") ? "Copiado!" : "Copiar CPF" }}
+                </v-tooltip>
+              </v-btn>
+            </div>
+            <div class="flex items-center gap-1">
+              <span>SUS: {{ localData?.patient_cns ?? "" }}</span>
+              <v-btn
+                v-if="localData.patient_cns"
+                :color="isCopied('cns') ? 'success' : undefined"
+                density="compact"
+                icon
+                size="x-small"
+                variant="text"
+                @click="copy(localData.patient_cns, 'cns')"
+              >
+                <v-icon :icon="isCopied('cns') ? 'mdi-check' : 'mdi-content-copy'" size="16" />
+                <v-tooltip activator="parent" location="top">
+                  {{ isCopied("cns") ? "Copiado!" : "Copiar SUS" }}
+                </v-tooltip>
+              </v-btn>
+            </div>
             <div>Telefone: {{ localData.patient_phone }}</div>
             <div>Unidade de Saúde: {{ localData.health_unit }}</div>
             <div>
@@ -78,6 +110,7 @@
 <script setup>
 import SolicitationRiskClassificationForm from "@/components/pages/solicitation/SolicitationRiskClassificationForm.vue";
 import { useBooleanLabel } from "@/composables/utils/useBooleanLabel";
+import { useClipboard } from "@/composables/utils/useClipboard";
 import { useFormatDate } from "@/composables/utils/useFormatDate";
 import { useMeStore } from "@/stores/me";
 
@@ -94,6 +127,7 @@ const emit = defineEmits(["close", "update-solicitation"]);
 const { formatDate } = useFormatDate();
 const { booleanToLabel } = useBooleanLabel();
 const { calculateAge } = useCalculateAge();
+const { copy, isCopied } = useClipboard();
 
 // Cópia local e reativa dos dados, para refletir alterações (ex.: classificação
 // de risco) imediatamente na tela, sem depender de recarregar a página.

@@ -156,7 +156,7 @@ const handleRenew = (report) => {
 const handleDelete = async (medicalReport) => {
   const confirm = await confirmModal(
     `Tem certeza que deseja excluir laudo do paciente <strong>${medicalReport.patient.name}</strong>?`,
-    "Atenção"
+    "Atenção",
   );
   if (confirm) {
     await showFeedback(() => destroy(medicalReport));
@@ -166,7 +166,7 @@ const handleDelete = async (medicalReport) => {
 const handleCloseReport = async (medicalReport) => {
   const confirm = await confirmModal(
     `Tem certeza que deseja encerrar laudo do paciente <strong>${medicalReport.patient.name}</strong>?`,
-    "Atenção"
+    "Atenção",
   );
   if (confirm) {
     await showFeedback(() => closeReport(medicalReport));
@@ -229,7 +229,7 @@ watch(
     setTableOptions(newOptions);
     refetch();
   },
-  { deep: true }
+  { deep: true },
 );
 
 onMounted(async () => {
@@ -245,6 +245,7 @@ const headers = computed(() => {
       value: "view",
       align: "left",
       width: "200px",
+      maxWidth: "200px",
     },
     {
       title: "Paciente",

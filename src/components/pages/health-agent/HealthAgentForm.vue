@@ -2,10 +2,10 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <v-form>
-        <div class="grid grid-cols-3 gap-x-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2">
           <v-text-field
             v-model="name"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.name"
             label="Nome"

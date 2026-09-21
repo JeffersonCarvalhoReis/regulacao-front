@@ -1,6 +1,6 @@
 <template>
   <companion-table ref="companionTableRef" :edit="true" :show-delete="true">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register @register="registerCompanion = true" />
       <v-badge v-if="badgeCounter > 0" color="error" :content="badgeCounter">
         <base-button-filter @filters="dialogFilter = true" />

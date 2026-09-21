@@ -3,10 +3,11 @@
   <v-navigation-drawer
     v-model="drawer"
     class="border-r border-gray-200 bg-slate-100 pb-6"
-    expand-on-hover
+    :expand-on-hover="isDesktop"
     flat
     :mobile-breakpoint="768"
-    :rail="$vuetify.display.width >= 768"
+    :rail="isDesktop"
+    :temporary="!isDesktop"
     @update:model-value="
       (val) => {
         if (!val) emit('close');
@@ -14,7 +15,7 @@
     "
   >
     <!-- Navigation Menu -->
-    <v-list density="compact" nav>
+    <v-list density="compact" nav @click="onNavigate">
       <!-- Main Navigation Items -->
       <app-menu-item
         v-if="['regulation_officer'].includes(role)"
@@ -258,6 +259,26 @@ import { useMeStore } from "@/stores/me";
 const meStore = useMeStore();
 const role = meStore.role;
 const drawer = ref(true);
+const isDesktop = ref(
+  typeof window !== "undefined" ? window.innerWidth >= 768 : true,
+);
+
+const handleResize = () => {
+  const desktop = window.innerWidth >= 768;
+  if (desktop !== isDesktop.value) {
+    isDesktop.value = desktop;
+    drawer.value = desktop;
+  }
+};
+
+// No celular, tocar em um item navega e fecha o menu
+const onNavigate = (event) => {
+  if (isDesktop.value) return;
+  if (event?.target?.closest?.(".v-list-item")) {
+    drawer.value = false;
+    emit("close");
+  }
+};
 
 const props = defineProps({
   open: {
@@ -275,11 +296,14 @@ watch(
   },
 );
 onMounted(() => {
-  if (window.innerWidth >= 768) {
-    drawer.value = true;
-  } else {
-    drawer.value = false;
-  }
+  drawer.value = window.innerWidth >= 768;
+  window.addEventListener("resize", handleResize, { passive: true });
+  window.addEventListener("orientationchange", handleResize, { passive: true });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleResize);
+  window.removeEventListener("orientationchange", handleResize);
 });
 </script>
 <style lang="css" scoped>
@@ -297,6 +321,21 @@ onMounted(() => {
 }
 .menu-subheader {
   display: none;
+}
+
+@media (max-width: 767px) {
+  .menu-subheader {
+    display: block;
+  }
+
+  :deep(.v-navigation-drawer) {
+    width: min(86vw, 320px) !important;
+  }
+
+  :deep(.v-list-item-title) {
+    white-space: normal;
+    line-height: 1.25;
+  }
 }
 
 .v-navigation-drawer.v-navigation-drawer--is-hovering .menu-subheader {

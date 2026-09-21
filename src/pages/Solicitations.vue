@@ -4,7 +4,7 @@
     :edit="true"
     :show-delete="true"
   >
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register
         v-if="!['regulation_doctor'].includes(role)"
         @register="registerSolicitation = true"

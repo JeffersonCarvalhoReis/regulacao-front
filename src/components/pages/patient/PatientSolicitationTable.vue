@@ -166,6 +166,7 @@
         value: 'action',
         align: 'center',
         width: '100px',
+      maxWidth: '100px',
       });
     }
     if(props.solicitationType == 'exam') {

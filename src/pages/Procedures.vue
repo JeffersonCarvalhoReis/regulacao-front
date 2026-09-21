@@ -1,6 +1,6 @@
 <template>
   <procedure-table ref="procedureTableRef" :edit="true" :show-delete="true">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register
         v-if="['regulation_officer'].includes(role)"
         @register="registerProcedure = true"

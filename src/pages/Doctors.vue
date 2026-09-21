@@ -1,6 +1,6 @@
 <template>
   <doctor-table ref="doctorTableRef" :edit="true" :show-delete="true">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register @register="registerDoctor = true" />
 
     </div>

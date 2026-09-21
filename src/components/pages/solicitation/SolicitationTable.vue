@@ -3,6 +3,15 @@
     <solicitation-search @search-solicitation="search">
       <slot />
     </solicitation-search>
+    <div class="text-right">
+      <v-btn
+        class="m-2 bg-ita-green hover:bg-green-600 text-white"
+        prepend-icon="mdi-microsoft-excel"
+        @click="dialogRepressedDemand = true"
+      >
+        Demanda Reprimida
+      </v-btn>
+    </div>
     <v-tabs
       v-model="tab"
       class="bg-white border-t border-x border-gray-200"
@@ -105,6 +114,9 @@
       @close="dialogAppointmentConfirmation = false"
     />
   </v-dialog>
+  <v-dialog v-model="dialogRepressedDemand" class="z-999">
+    <repressed-demand-export @close="dialogRepressedDemand = false" />
+  </v-dialog>
 </template>
 
 <script setup>
@@ -167,6 +179,7 @@ const viewSolicitationDetails = ref(false);
 const editSolicitation = ref(false);
 const dialogAppointment = ref(false);
 const dialogAppointmentConfirmation = ref(false);
+const dialogRepressedDemand = ref(false);
 const appointmentData = ref(null);
 const selectedSolicitation = ref({});
 const solicitationData = ref({});

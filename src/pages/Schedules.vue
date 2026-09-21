@@ -1,6 +1,6 @@
 <template>
   <schedule-table ref="scheduleTableRef" :edit="true" :show-delete="true">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register
         @register="registerSchedule = true"
         button-text="Abrir nova agenda"

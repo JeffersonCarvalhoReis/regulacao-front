@@ -113,6 +113,7 @@ const headers = computed(() => {
       value: "view",
       align: "left",
       width: "200px",
+      maxWidth: "200px",
     },
     {
       title: "Cidade",

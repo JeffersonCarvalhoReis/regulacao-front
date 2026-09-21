@@ -1,6 +1,6 @@
 <template>
   <base-card :title="title" @close="emit('close')">
-    <div class="flex justify-end gap-4 m-4">
+    <div class="flex flex-wrap justify-end gap-2 m-4 sm:gap-4">
       <v-btn
         color="success"
         :loading="clickPrint"

@@ -1,0 +1,287 @@
+/**
+ * mobile.css
+ * Camada de compatibilidade com telas de smartphone.
+ * Importada DEPOIS do tailwind.css (que usa `important`), por isso as regras
+ * daqui usam !important quando precisam vencer utilitários do Tailwind.
+ *
+ * Breakpoints usados:
+ *   - até 599px  -> celular (retrato)
+ *   - até 959px  -> celular grande / tablet retrato
+ */
+
+/* ---------------------------------------------------------------
+   1. Base: nada pode estourar a largura da viewport
+   --------------------------------------------------------------- */
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.v-application {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* Rolagem com inércia no iOS em qualquer área rolável */
+.v-card,
+.v-card-text,
+.v-table__wrapper,
+.v-overlay__content {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Respeita notch / barra de gestos */
+.v-application__wrap {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+}
+
+@media (max-width: 959px) {
+    /* -----------------------------------------------------------
+     2. Espaçamentos: recupera área útil da tela
+     ----------------------------------------------------------- */
+    .v-container {
+        padding: 8px !important;
+    }
+
+    .v-card-text,
+    .v-card-title,
+    .v-card-actions {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .v-card-title {
+        font-size: 1.125rem !important;
+        line-height: 1.4 !important;
+        word-break: break-word;
+    }
+
+    /* Títulos grandes de página */
+    .text-2xl {
+        font-size: 1.25rem !important;
+    }
+
+    /* -----------------------------------------------------------
+     3. Linhas horizontais viram colunas quando não cabem
+     ----------------------------------------------------------- */
+    .v-card-text > .flex:not(.flex-col),
+    .v-form > .flex:not(.flex-col),
+    .v-card-actions > .flex:not(.flex-col) {
+        flex-wrap: wrap;
+    }
+
+    /* Grupos de botões de ação no topo das listagens */
+    .v-card-text .flex.gap-2,
+    .v-card-text .flex.gap-4 {
+        flex-wrap: wrap;
+    }
+
+    /* -----------------------------------------------------------
+     4. Diálogos ocupam a tela inteira no celular
+     ----------------------------------------------------------- */
+    .v-dialog > .v-overlay__content {
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        border-radius: 0 !important;
+    }
+
+    .v-dialog > .v-overlay__content > .v-card,
+    .v-dialog > .v-overlay__content > form > .v-card {
+        display: flex;
+        flex-direction: column;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0 !important;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Cabeçalho do diálogo fica fixo, corpo rola */
+    .v-dialog .v-card > .v-card-title {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: rgb(var(--v-theme-surface));
+    }
+
+    .v-dialog .v-card > .v-card-text {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        /* documentos de impressão (laudos, BPA) rolam na horizontal
+       em vez de quebrar o layout da tela */
+        overflow-x: auto;
+    }
+
+    .v-dialog .v-card > .v-card-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        background: rgb(var(--v-theme-surface));
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Menus suspensos (select/autocomplete/date picker) não podem vazar */
+    .v-overlay__content > .v-list,
+    .v-menu > .v-overlay__content {
+        max-width: calc(100vw - 16px) !important;
+    }
+
+    /* -----------------------------------------------------------
+     5. Tabelas
+     ----------------------------------------------------------- */
+
+    /* Rodapé de paginação quebra em duas linhas em vez de cortar */
+    .v-data-table-footer {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 8px;
+        padding: 8px !important;
+        font-size: 0.75rem;
+    }
+
+    .v-data-table-footer__items-per-page {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .v-data-table-footer__info {
+        justify-content: center;
+    }
+
+    /* Layout "mobile" nativo do Vuetify: cada linha vira um cartão */
+    .v-data-table__td--mobile-title {
+        font-weight: 600;
+        color: #1261bd;
+    }
+
+    .v-data-table .v-data-table__tr--mobile > td {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 40px;
+        padding: 6px 12px !important;
+    }
+
+    .v-data-table .v-data-table__tr--mobile {
+        display: block;
+        border-bottom: 8px solid #f1f5f9;
+    }
+
+    /* Coluna de ações: botões lado a lado e alinhados à direita */
+    .v-data-table .v-btn-group {
+        flex-wrap: wrap;
+        height: auto !important;
+    }
+
+    /* -----------------------------------------------------------
+     6. Toque: alvos com tamanho mínimo confortável
+     ----------------------------------------------------------- */
+    .v-btn--icon {
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .v-list-item {
+        min-height: 44px;
+    }
+
+    /* Tooltips de hover não fazem sentido em toque */
+    .v-tooltip > .v-overlay__content {
+        display: none !important;
+    }
+}
+
+/* ---------------------------------------------------------------
+   7. Celular retrato: evita o zoom automático do iOS nos campos
+   (qualquer input com fonte < 16px faz o Safari dar zoom)
+   --------------------------------------------------------------- */
+@media (max-width: 599px) {
+    .v-field__input,
+    .v-field input,
+    .v-field textarea,
+    .v-field__input input,
+    input,
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+
+    .v-field__input {
+        min-height: 44px;
+    }
+
+    /* Rótulos acompanham o campo */
+    .v-label {
+        font-size: 0.875rem;
+    }
+
+    /* Larguras fixas herdadas do desktop não valem no celular */
+    .max-w-350,
+    .max-w-400,
+    .max-w-262\.5,
+    .max-w-375 {
+        max-width: 100% !important;
+    }
+
+    /* Documentos de impressão: mantém o desenho, mas deixa rolar */
+    .w-7xl,
+    .w-5xl,
+    .min-w-7xl,
+    .min-w-350,
+    .min-w-236,
+    .min-w-262\.5 {
+        max-width: none;
+    }
+
+    /* Barra superior mais enxuta */
+    .v-app-bar .v-toolbar-title {
+        font-size: 0.95rem;
+    }
+
+    /* Botões de texto longos quebram em vez de vazar */
+    .v-btn {
+        white-space: normal;
+    }
+
+    .v-btn__content {
+        white-space: normal;
+        line-height: 1.2;
+    }
+
+    /* Badge de contadores não escapa da tela */
+    .v-badge__badge {
+        font-size: 0.65rem;
+    }
+}
+
+/* ---------------------------------------------------------------
+   8. Impressão: ignora todas as adaptações de tela pequena
+   --------------------------------------------------------------- */
+@media print {
+    html,
+    body,
+    .v-application {
+        overflow: visible !important;
+        max-width: none !important;
+    }
+
+    .v-app-bar,
+    .v-navigation-drawer,
+    .v-footer {
+        display: none !important;
+    }
+}

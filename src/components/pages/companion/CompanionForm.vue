@@ -2,10 +2,10 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <v-form>
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
           <v-text-field
             v-model="name"
-            class="col-span-3 required"
+            class="lg:col-span-3 required"
             density="compact"
             :error-messages="errors.name"
             label="Nome"
@@ -22,7 +22,7 @@
           />
           <v-text-field
             v-model="mother_name"
-            class="col-span-3 required"
+            class="lg:col-span-3 required"
             density="compact"
             :error-messages="errors.mother_name"
             label="Nome da Mãe"
@@ -49,7 +49,7 @@
           />
           <v-text-field
             v-model="cns"
-            class="col-span-2"
+            class="lg:col-span-2"
             density="compact"
             :error-messages="errors.cns"
             label="CNS"
@@ -60,7 +60,7 @@
           />
           <v-text-field
             v-model="cpf"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.cpf"
             label="CPF"
@@ -78,7 +78,7 @@
           />
           <v-text-field
             v-model="street"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.street"
             label="Rua"
@@ -89,7 +89,7 @@
 
           <v-text-field
             v-model="neighborhood"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.neighborhood"
             label="Bairro"
@@ -99,7 +99,7 @@
           />
           <v-select
             v-model="gender"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.gender"
             item-title="label"
@@ -110,7 +110,7 @@
           />
           <v-select
             v-model="race"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.race"
             :items="raceOptions"

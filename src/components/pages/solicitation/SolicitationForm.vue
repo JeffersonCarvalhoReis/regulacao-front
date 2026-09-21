@@ -55,10 +55,10 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <PatientInput
             v-model="patient_id"
-            class="col-span-2"
+            class="lg:col-span-2"
             :error-messages="errors.patient_id"
             :is-editing="isEditing"
             is-clearable
@@ -71,10 +71,10 @@
             :error-messages="errors.solicitation_date"
             label="Data da Solicitação"
           />
-          <div class="col-span-3 grid grid-cols-6 gap-2">
+          <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
             <v-select
               v-model="solicitation_type"
-              class="required col-span-2"
+              class="required lg:col-span-2"
               density="compact"
               :error-messages="errors.solicitation_type"
               item-title="label"
@@ -85,7 +85,7 @@
             />
             <v-text-field
               v-model="cid"
-              class="col-span-2"
+              class="lg:col-span-2"
               density="compact"
               :error-messages="errors.cid"
               label="CID"
@@ -157,7 +157,7 @@
             variant="outlined"
           />
 
-          <div class="col-span-1">
+          <div class="lg:col-span-1">
             <!-- Modo edição: mostra anexo atual + opção de substituir -->
             <template
               v-if="isEditing && existingAttachment && !replaceAttachment"
@@ -213,7 +213,7 @@
           </div>
           <v-textarea
             v-model="reason"
-            class="col-span-3 required"
+            class="lg:col-span-3 required"
             density="compact"
             :error-messages="errors.reason"
             label="Motivo"

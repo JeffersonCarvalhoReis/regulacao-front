@@ -1,6 +1,6 @@
 <template>
   <vehicle-table ref="vehicleTableRef" :edit="true" :show-delete="true">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register @register="registerVehicle = true" />
     </div>
   </vehicle-table>

@@ -2,7 +2,7 @@
   <base-card :title="title">
     <v-card-text class="flex flex-col gap-2">
       <h2 class="font-bold text-lg">Dados do Patiente</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <PatientInput
           v-model="filterForm.patient_id"
         />
@@ -38,12 +38,12 @@
       </div>
       <v-divider />
       <h2 class="font-bold text-lg">Dados do Agendamento</h2>
-      <div class="grid grid-cols-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <v-btn-toggle v-model="appointmentDateInterval" mandatory>
           <v-btn color="primary">Data Exata</v-btn>
           <v-btn color="primary">Intervalo de Datas</v-btn>
         </v-btn-toggle>
-        <div v-if="appointmentDateInterval" class="flex gap-2 col-span-2">
+        <div v-if="appointmentDateInterval" class="flex gap-2 lg:col-span-2">
           <base-input-date-picker
             v-model="filterForm.date_between[0]"
             label="Início da Data de Agendamento"
@@ -60,7 +60,7 @@
           />
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <v-autocomplete
           v-model="filterForm.provider_unit_id"
           density="compact"
@@ -82,12 +82,12 @@
       </div>
       <v-divider />
       <h2 class="font-bold text-lg">Dados da Solicitação</h2>
-      <div class="grid grid-cols-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <v-btn-toggle v-model="dateInterval" mandatory>
           <v-btn color="primary">Data Exata</v-btn>
           <v-btn color="primary">Intervalo de Datas</v-btn>
         </v-btn-toggle>
-        <div v-if="dateInterval" class="flex gap-2 col-span-2">
+        <div v-if="dateInterval" class="flex gap-2 lg:col-span-2">
           <base-input-date-picker
             v-model="filterForm.solicitation_date_between[0]"
             label="Início da Data de Solicitação"
@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <v-select
           v-model="filterForm.is_first_time"
           density="compact"

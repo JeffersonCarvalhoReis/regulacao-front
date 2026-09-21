@@ -50,121 +50,132 @@
 </template>
 
 <script setup>
-  import { useScheduleApi } from '@/composables/modules/useScheduleModule';
-  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
+import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
+import { useScheduleApi } from "@/composables/modules/useScheduleModule";
 
-  const props = defineProps({
-    edit: { type: Boolean, default: false },
-    showDelete: { type: Boolean, default: false },
-  });
+const props = defineProps({
+  edit: { type: Boolean, default: false },
+  showDelete: { type: Boolean, default: false },
+});
 
-  const { data, loadingList, refetch, setTableOptions, meta, setFilter, clearFilters, update, destroy } = useScheduleApi();
-  const { showFeedback, confirmModal } = useSweetAlertFeedback();
-  const { formatDate } = useFormatDate();
+const {
+  data,
+  loadingList,
+  refetch,
+  setTableOptions,
+  meta,
+  setFilter,
+  clearFilters,
+  update,
+  destroy,
+} = useScheduleApi();
+const { showFeedback, confirmModal } = useSweetAlertFeedback();
+const { formatDate } = useFormatDate();
 
-  const options = ref({});
-  const editSchedule = ref(false);
-  const selectedSchedule = ref({});
-  const tooltipTextDelete = 'Não é possível excluir uma agenda que já possui agendamentos vinculados.';
+const options = ref({});
+const editSchedule = ref(false);
+const selectedSchedule = ref({});
+const tooltipTextDelete =
+  "Não é possível excluir uma agenda que já possui agendamentos vinculados.";
 
-  const updateOptions = newOptions => {
-    options.value = { ...newOptions }
-  };
+const updateOptions = (newOptions) => {
+  options.value = { ...newOptions };
+};
 
-  const handleEdit = schedule => {
-    selectedSchedule.value = schedule
-    editSchedule.value = true
-  };
+const handleEdit = (schedule) => {
+  selectedSchedule.value = schedule;
+  editSchedule.value = true;
+};
 
-  const submit = async value => {
-    await showFeedback(() => update(selectedSchedule.value.id, value));
-    await refetch();
-    editSchedule.value = false;
-  };
+const submit = async (value) => {
+  await showFeedback(() => update(selectedSchedule.value.id, value));
+  await refetch();
+  editSchedule.value = false;
+};
 
-  const handleDelete = async schedule => {
-    const confirm = await confirmModal(
-      `Tem certeza que deseja excluir a agenda de <strong>${formatDate(schedule.date)}</strong>?`,
-      'Atenção'
-    );
-    if (confirm) {
-      await showFeedback(() => destroy(schedule));
-      refetch();
-    }
-  };
-
-  const filterByProviderUnit = async providerUnitId => {
-    setFilter('provider_unit_id', providerUnitId);
-    await nextTick();
-    refetch();
-  };
-
-  const filterByDoctor = async doctorId => {
-    setFilter('doctor_id', doctorId);
-    await nextTick();
-    refetch();
-  };
-
-  const filterByDate = async date => {
-    setFilter('date', date);
-    await nextTick();
-    refetch();
-  };
-
-  watch(
-    () => options.value,
-    async newOptions => {
-      await nextTick()
-      setTableOptions(newOptions)
-      refetch()
-    },
-    { deep: true }
+const handleDelete = async (schedule) => {
+  const confirm = await confirmModal(
+    `Tem certeza que deseja excluir a agenda de <strong>${formatDate(schedule.date)}</strong>?`,
+    "Atenção",
   );
+  if (confirm) {
+    await showFeedback(() => destroy(schedule));
+    refetch();
+  }
+};
 
-  const headers = computed(() => {
-    const baseHeaders = [
-      {
-        title: 'Data',
-        key: 'date',
-        sortable: true,
-        align: 'center',
-      },
-      {
-        title: 'Unidade Prestadora',
-        key: 'provider_unit',
-        align: 'center',
-      },
-      {
-        title: 'Médico',
-        key: 'doctor',
-        align: 'center',
-      },
-      {
-        title: 'Vagas Disponíveis / Total',
-        key: 'vacancies',
-        sortable: true,
-        align: 'center',
-      },
-      {
-        title: 'Situação',
-        key: 'is_open',
-        align: 'center',
-      },
-    ];
-    if (props.edit || props.showDelete) {
-      baseHeaders.push({
-        title: 'Ações',
-        value: 'action',
-        align: 'center',
-        width: '100px',
-      });
-    }
-    return baseHeaders
-  });
+const filterByProviderUnit = async (providerUnitId) => {
+  setFilter("provider_unit_id", providerUnitId);
+  await nextTick();
+  refetch();
+};
 
-  defineExpose({
-    refetch,
-    setFilter,
-    clearFilters,
-  });
+const filterByDoctor = async (doctorId) => {
+  setFilter("doctor_id", doctorId);
+  await nextTick();
+  refetch();
+};
+
+const filterByDate = async (date) => {
+  setFilter("date", date);
+  await nextTick();
+  refetch();
+};
+
+watch(
+  () => options.value,
+  async (newOptions) => {
+    await nextTick();
+    setTableOptions(newOptions);
+    refetch();
+  },
+  { deep: true },
+);
+
+const headers = computed(() => {
+  const baseHeaders = [
+    {
+      title: "Data",
+      key: "date",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Unidade Prestadora",
+      key: "provider_unit",
+      align: "center",
+    },
+    {
+      title: "Médico",
+      key: "doctor",
+      align: "center",
+    },
+    {
+      title: "Vagas Disponíveis / Total",
+      key: "vacancies",
+      sortable: true,
+      align: "center",
+    },
+    {
+      title: "Situação",
+      key: "is_open",
+      align: "center",
+    },
+  ];
+  if (props.edit || props.showDelete) {
+    baseHeaders.push({
+      title: "Ações",
+      value: "action",
+      align: "center",
+      width: "100px",
+    });
+  }
+  return baseHeaders;
+});
+
+defineExpose({
+  refetch,
+  setFilter,
+  clearFilters,
+});
 </script>

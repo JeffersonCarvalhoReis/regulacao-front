@@ -6,10 +6,10 @@
       <v-card-text>
         <h2 class="text-xl font-bold">Dados do Estabelecimento de Saúde</h2>
 
-        <div class="grid grid-cols-5 gap-x-2 mx-2 mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-2 mx-2 mt-4">
           <v-text-field
             v-model="establishment_name"
-            class="col-span-4"
+            class="lg:col-span-4"
             density="compact"
             label="Nome do Estabelecimento de Saúde"
             variant="outlined"

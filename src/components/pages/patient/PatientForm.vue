@@ -2,10 +2,10 @@
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
       <v-form>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <v-text-field
             v-model="name"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.name"
             label="Nome"
@@ -27,7 +27,7 @@
 
           <v-text-field
             v-model="mother_name"
-            class="col-span-2 required"
+            class="lg:col-span-2 required"
             density="compact"
             :error-messages="errors.mother_name"
             label="Nome da Mãe"
@@ -128,7 +128,7 @@
 
           <v-text-field
             v-model="neighborhood"
-            :class="role === 'caps' ? 'required' : 'required col-span-2'"
+            :class="role === 'caps' ? 'required' : 'required lg:col-span-2'"
             density="compact"
             :error-messages="errors.neighborhood"
             label="Bairro"
@@ -145,7 +145,7 @@
             placeholder="Informações adicionais sobre o paciente"
             variant="outlined"
           />
-          <div v-if="role === 'caps'" class="col-span-1">
+          <div v-if="role === 'caps'" class="lg:col-span-1">
             <template
               v-if="isEditing && existingAttachment && !replaceAttachment"
             >

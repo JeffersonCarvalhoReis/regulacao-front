@@ -1,13 +1,18 @@
 <template>
-  <v-card class="border-t-6 border-ita-light-blue max-w-350 w-full mx-auto">
-    <v-card-title class="flex items-center justify-between text-2xl gap-4">
-      <span>
+  <v-card
+    class="border-t-6 border-ita-light-blue w-full mx-auto sm:max-w-350 base-card-mobile"
+  >
+    <v-card-title
+      class="flex items-center justify-between gap-3 text-lg sm:text-2xl"
+    >
+      <span class="min-w-0 break-words">
         {{ title }}
       </span>
       <v-btn
-        class="cursor-pointer hover:bg-gray-200 text-2xl transition-all hover:scale-105 active:scale-95 duration-300 rounded-full"
+        class="cursor-pointer hover:bg-gray-200 shrink-0 transition-all hover:scale-105 active:scale-95 duration-300 rounded-full"
         flat
         icon
+        aria-label="Fechar"
         @click="emit('close')"
       >
         <v-icon>
@@ -28,3 +33,22 @@
   })
   const emit = defineEmits(['close'])
 </script>
+
+<style scoped>
+/* No celular o cartão ocupa a tela toda: cabeçalho fixo, conteúdo rolando */
+@media (max-width: 767px) {
+  .base-card-mobile {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    border-radius: 0;
+  }
+
+  .base-card-mobile :deep(> .v-card-title) {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgb(var(--v-theme-surface));
+  }
+}
+</style>

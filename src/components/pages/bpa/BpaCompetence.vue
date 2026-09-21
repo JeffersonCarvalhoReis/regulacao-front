@@ -1,7 +1,7 @@
 <template>
   <BaseCard title="Exportar BPA" @close="emit('close')">
     <div class="flex gap-4 p-4 flex-col">
-      <div class="flex gap-4">
+      <div class="flex flex-wrap gap-4">
         <v-select
           v-model="selectedMonth"
           :items="months"

@@ -59,6 +59,7 @@ declare global {
   const useBooleanLabel: typeof import('./composables/utils/useBooleanLabel.js')['useBooleanLabel']
   const useBpaTablePdf: typeof import('./composables/utils/useBpaTablePdf.js')['useBpaTablePdf']
   const useCalculateAge: typeof import('./composables/utils/useCalculateAge')['useCalculateAge']
+  const useClipboard: typeof import('./composables/utils/useClipboard.js')['useClipboard']
   const useCnsValidator: typeof import('./composables/utils/useCnsValidator.js')['useCnsValidator']
   const useCpfValidator: typeof import('./composables/utils/useCpfValidator.js')['useCpfValidator']
   const useCssModule: typeof import('vue')['useCssModule']
@@ -152,6 +153,7 @@ declare module 'vue' {
     readonly useBooleanLabel: UnwrapRef<typeof import('./composables/utils/useBooleanLabel.js')['useBooleanLabel']>
     readonly useBpaTablePdf: UnwrapRef<typeof import('./composables/utils/useBpaTablePdf.js')['useBpaTablePdf']>
     readonly useCalculateAge: UnwrapRef<typeof import('./composables/utils/useCalculateAge')['useCalculateAge']>
+    readonly useClipboard: UnwrapRef<typeof import('./composables/utils/useClipboard.js')['useClipboard']>
     readonly useCnsValidator: UnwrapRef<typeof import('./composables/utils/useCnsValidator.js')['useCnsValidator']>
     readonly useCpfValidator: UnwrapRef<typeof import('./composables/utils/useCpfValidator.js')['useCpfValidator']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
