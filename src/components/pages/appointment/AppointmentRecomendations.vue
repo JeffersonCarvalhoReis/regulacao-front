@@ -1,7 +1,7 @@
 <template>
   <BaseCard title="Novas Recomendações" @close="emit('close')">
     <v-card-text>
-      <div class="flex gap-4">
+      <div class="flex flex-wrap gap-4">
         <v-select
           density="compact"
           item-title="text"

@@ -1,6 +1,6 @@
 <template>
   <specialist-table ref="specialistTableRef" :edit="true" :show-delete="true">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register
         v-if="['regulation_officer'].includes(role)"
         @register="registerSpecialist = true"

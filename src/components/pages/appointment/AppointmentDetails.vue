@@ -3,7 +3,7 @@
     <v-card-text class="flex flex-col gap-2">
       <BaseSection>
         <InfoGroup title="Dados do paciente">
-          <div class="flex gap-10">
+          <div class="flex flex-wrap gap-4 sm:gap-10">
             <div>
               <div>
                 Paciente: {{ props.appointmentData.solicitation.patient }}
@@ -53,7 +53,7 @@
       </BaseSection>
       <BaseSection>
         <InfoGroup title="Dados do Agendamento">
-          <div class="flex gap-10">
+          <div class="flex flex-wrap gap-4 sm:gap-10">
             <div>
               <div>
                 Data da Consulta: {{ formatDate(props.appointmentData.date) }}
@@ -81,7 +81,7 @@
       </BaseSection>
       <BaseSection>
         <InfoGroup title="Dados da Solicitação">
-          <div class="flex gap-10">
+          <div class="flex flex-wrap gap-4 sm:gap-10">
             <div>
               <div v-if="isExam">
                 Exame: {{ props.appointmentData.solicitation.procedure }}

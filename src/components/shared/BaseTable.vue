@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 overflow-auto"
+    class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 max-w-full overflow-x-auto"
     flat
   >
     <!-- Data Table -->
@@ -19,6 +19,7 @@
       :items-length="totalItems"
       :loading="loading"
       loading-text="Carregando..."
+      :mobile-breakpoint="768"
       :row-props="getRowProps"
     >
       <template v-for="header in headers" #[`item.${header.key}`]="{ item }">
@@ -45,7 +46,7 @@
           <slot :item="item" name="item.action" />
         </template>
         <template v-else>
-          <v-btn-group divided variant="outlined" class="flex justify-end">
+          <v-btn-group divided variant="outlined" class="flex justify-end flex-wrap">
             <div v-if="handleConditionalAction(item)">
               <v-tooltip v-if="canShowNewAction(item)" :text="textNewAction">
                 <template #activator="{ props }">
@@ -338,6 +339,56 @@ onMounted(() => {
 <style scoped>
 .v-btn-group {
   gap: 4px;
+}
+
+/* --- Celular: cada linha vira um cartão legível --- */
+@media (max-width: 767px) {
+  :deep(.v-data-table__tr--mobile) {
+    border-bottom: 8px solid #f1f5f9;
+  }
+
+  :deep(.v-data-table__tr--mobile > td) {
+    min-height: 40px;
+    padding: 6px 12px !important;
+  }
+
+  :deep(.v-data-table__td-title) {
+    font-weight: 600;
+    color: #1261bd;
+    text-transform: none;
+  }
+
+  /* Faixa de classificação de risco vai para a borda esquerda do cartão */
+  :deep(tr.risk-red),
+  :deep(tr.risk-yellow),
+  :deep(tr.risk-green),
+  :deep(tr.risk-blue) {
+    border-left-width: 5px;
+    border-left-style: solid;
+  }
+
+  :deep(tr.risk-red) {
+    border-left-color: #ef4444;
+  }
+
+  :deep(tr.risk-yellow) {
+    border-left-color: #facc15;
+  }
+
+  :deep(tr.risk-green) {
+    border-left-color: #16a34a;
+  }
+
+  :deep(tr.risk-blue) {
+    border-left-color: #1e3a8a;
+  }
+
+  :deep(tbody > tr.risk-red > td:first-child),
+  :deep(tbody > tr.risk-yellow > td:first-child),
+  :deep(tbody > tr.risk-green > td:first-child),
+  :deep(tbody > tr.risk-blue > td:first-child) {
+    border-left: 0 !important;
+  }
 }
 :deep(tbody > tr:nth-child(odd)) {
   background-color: #f8fafc; /* Tailwind slate-50 */

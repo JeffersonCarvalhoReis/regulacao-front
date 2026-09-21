@@ -1,9 +1,11 @@
 <template>
   <v-card class="border border-gray-200 shadow-sm mb-2" flat>
-    <v-card-text class="flex justify-between">
+    <v-card-text
+      class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+    >
       <v-text-field
         v-model="searchPatient"
-        class="max-w-150"
+        class="w-full sm:max-w-150"
         compact
         density="compact"
         hide-details
@@ -35,7 +37,7 @@ watch(
     if (!newVal) {
       emit("search-patient");
     }
-  }
+  },
 );
 
 defineExpose({

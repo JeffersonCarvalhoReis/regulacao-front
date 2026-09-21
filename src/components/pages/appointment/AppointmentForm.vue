@@ -3,7 +3,7 @@
     <v-card-text>
       <BaseSection>
         <InfoGroup title="Dados da Solicitação">
-          <div class="grid grid-cols-3 gap-x-10">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10">
             <div>
               Paciente:
               {{
@@ -90,7 +90,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
           <base-input-date-picker
             v-model="date"
             position="top"
@@ -135,7 +135,7 @@
           <v-select
             v-if="isEditing"
             v-model="status"
-            class="col-span-1"
+            class="lg:col-span-1"
             density="compact"
             :error-messages="errors.status"
             item-title="label"

@@ -12,7 +12,7 @@
           placeholder="Nome do procedimento"
           variant="outlined"
         />
-        <div class="flex gap-4">
+        <div class="flex flex-wrap gap-4">
           <v-text-field
             v-model="min_age"
             density="compact"

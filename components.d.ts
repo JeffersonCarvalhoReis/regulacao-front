@@ -121,7 +121,6 @@ declare module 'vue' {
     SolicitationDetails: typeof import('./src/components/pages/solicitation/SolicitationDetails.vue')['default']
     SolicitationFilters: typeof import('./src/components/pages/solicitation/SolicitationFilters.vue')['default']
     SolicitationForm: typeof import('./src/components/pages/solicitation/SolicitationForm.vue')['default']
-    SolicitationRiskAvalationAlert: typeof import('./src/components/pages/solicitation/SolicitationRiskAvalationAlert.vue')['default']
     SolicitationRiskClassificationAlert: typeof import('./src/components/pages/solicitation/SolicitationRiskClassificationAlert.vue')['default']
     SolicitationRiskClassificationForm: typeof import('./src/components/pages/solicitation/SolicitationRiskClassificationForm.vue')['default']
     SolicitationSearch: typeof import('./src/components/pages/solicitation/SolicitationSearch.vue')['default']

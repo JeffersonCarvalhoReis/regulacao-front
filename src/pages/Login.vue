@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-screen w-full flex justify-center">
+  <div class="relative min-h-screen w-full flex justify-center overflow-x-hidden">
     <!-- Imagem de fundo com desfoque -->
     <div
       class="absolute inset-0 bg-cover bg-center blur-md"
@@ -7,14 +7,14 @@
     />
     <div class="absolute inset-0 bg-white/30" />
 
-    <div class="flex items-center lg:w-full max-w-7xl">
+    <div class="flex items-center w-full lg:w-full max-w-7xl">
       <div>
         <v-card
-          class="shadow-md h-screen lg:h-auto w-full md:w-md flex flex-col items-start justify-start lg:justify-center min-w-sm px-5"
+          class="shadow-md min-h-screen lg:min-h-0 lg:h-auto w-full md:w-md flex flex-col items-start justify-start lg:justify-center px-4 sm:px-5"
           flat
         >
-          <div class="w-full flex flex-col mt-20">
-            <div class="w-65 flex flex-col lg:hidden items-center self-center">
+          <div class="w-full flex flex-col mt-10 sm:mt-20">
+            <div class="w-full max-w-65 flex flex-col lg:hidden items-center self-center">
               <img
                 class="w-65"
                 alt="Logo da prefeitura"
@@ -28,12 +28,12 @@
             </div>
 
             <h1
-              class="text-2xl text-blue-800 font-bold tracking-wide text-center lg:mb-10 mt-20 lg:mt-0"
+              class="text-xl sm:text-2xl text-blue-800 font-bold tracking-wide text-center lg:mb-10 mt-8 sm:mt-20 lg:mt-0"
             >
               <v-icon>mdi-clipboard-check-outline</v-icon> Sistema de Regulação
             </h1>
 
-            <div class="grow items-center justify-center lg:mt-0 mb-20">
+            <div class="grow items-center justify-center lg:mt-0 mb-10 sm:mb-20">
               <v-card-title class="text-2xl text-center mb-4"
                 >Conecte-se</v-card-title
               >

@@ -1,6 +1,6 @@
 <template>
   <patient-search ref="patientSearchRef" @search-patient="search">
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <base-button-register @register="registerMedicalReport = true" />
     </div>
   </patient-search>

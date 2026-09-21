@@ -1,10 +1,10 @@
 <template>
   <base-card :title="title" @close="emit('close')">
     <v-card-text>
-      <v-form class="grid grid-cols-3 gap-x-4">
+      <v-form class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4">
         <v-text-field
           v-model="vehicle_model"
-          class="required col-span-2"
+          class="required lg:col-span-2"
           density="compact"
           :error-messages="errors.vehicle_model"
           label="Veículo"

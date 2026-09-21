@@ -40,7 +40,7 @@
         Deixe o campo "Paciente" em branco para cadastrar apenas
         acompanhante(s), sem paciente vinculado.
       </v-alert>
-      <v-form class="grid grid-cols-2 gap-x-4">
+      <v-form class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
         <PatientInput
           :key="autocompleteKey"
           v-model="patient_id"
@@ -82,7 +82,7 @@
         <div
           v-for="(companion, index) in companions"
           :key="index"
-          class="col-span-2 grid grid-cols-2 gap-x-4"
+          class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4"
         >
           <CompanionInput
             :key="autocompleteKey"

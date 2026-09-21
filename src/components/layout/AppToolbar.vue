@@ -9,7 +9,7 @@
         <v-icon> mdi-menu</v-icon>
       </v-btn>
       <div
-        class="bg-blue-300 border border- rounded-full flex items-center justify-center w-12 h-12 p-1 ml-4"
+        class="bg-blue-300 rounded-full flex items-center justify-center w-9 h-9 ml-1 p-1 shrink-0 sm:w-12 sm:h-12 sm:ml-4"
       >
         <img
           alt="brasão da prefeitura de itaguaçu da bahia"
@@ -17,27 +17,27 @@
           src="@/assets/images/brasao.svg"
         />
       </div>
-      <v-app-bar-title class="md:hidden lg:block">
-        <span class="uppercase tracking-wider"
-          >Sistema de Regulação | {{ pageTitle }}</span
-        >
+      <v-app-bar-title class="min-w-0">
+        <span class="uppercase tracking-wider block truncate text-sm sm:text-base">
+          <span class="hidden sm:inline">Sistema de Regulação | </span>{{ pageTitle }}
+        </span>
       </v-app-bar-title>
       <v-spacer />
 
       <!-- Menu do usuário -->
       <v-menu transition="slide-y-transition">
         <template #activator="{ props }">
-          <v-btn class="ml-2" v-bind="props" variant="text">
-            <v-avatar class="mr-2 bg-blue-300 text-white w-8 h-8">
+          <v-btn class="ml-1 px-1 min-w-0 sm:ml-2 sm:px-3" v-bind="props" variant="text">
+            <v-avatar class="bg-blue-300 text-white w-8 h-8 sm:mr-2">
               {{ getInitials(userName) }}
             </v-avatar>
-            <span>{{ userName }}</span>
-            <v-icon>mdi-chevron-down</v-icon>
+            <span class="hidden md:inline max-w-40 truncate">{{ userName }}</span>
+            <v-icon class="hidden sm:inline">mdi-chevron-down</v-icon>
           </v-btn>
         </template>
-        <v-list>
+        <v-list class="max-w-[85vw]">
           <v-list-item>
-            <v-list-item-title class="font-bold">
+            <v-list-item-title class="font-bold whitespace-normal">
               {{ userName }}
             </v-list-item-title>
             <v-list-item-subtitle>{{
@@ -64,8 +64,8 @@
     </v-app-bar>
     <app-menu :open="openMenu" @close="openMenu = false" />
 
-    <v-main class="overflor-hidden">
-      <v-container fluid>
+    <v-main class="overflow-x-hidden">
+      <v-container fluid class="px-2 py-2 sm:px-4">
         <slot />
       </v-container>
     </v-main>

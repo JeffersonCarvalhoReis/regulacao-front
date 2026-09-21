@@ -30,6 +30,7 @@
       <v-icon
         ref="dragHandle"
         aria-label="Arrastar"
+        v-if="!isMobile"
         class="absolute top-0 -right-6 w-8 h-8 text-gray-500 flex items-center justify-center cursor-grab"
         @pointerdown.prevent="startDrag"
         @pointerup="endPointer"
@@ -38,7 +39,7 @@
         mdi-arrow-all
       </v-icon>
 
-      <div>
+      <div class="date-picker-shell">
         <v-date-picker
           v-model="date"
           border="sm"
@@ -105,6 +106,15 @@ const emit = defineEmits(["update:modelValue", "change"] as const);
 
 /* estado */
 const menu = ref(false);
+
+/* No celular o calendário é centralizado na tela em vez de usar
+   deslocamentos fixos pensados para desktop (que o jogariam para fora). */
+const isMobile = ref(
+  typeof window !== "undefined" ? window.innerWidth < 768 : false,
+);
+const syncIsMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
 const date = ref<Date | null>(null);
 const dateInput = ref<string | null>(null);
 
@@ -266,15 +276,28 @@ watch(
 const dragging = ref(false);
 const start = ref({ x: 0, y: 0, left: 0, top: 0 });
 
-const wrapperStyle = computed(
-  (): CSSProperties => ({
+const wrapperStyle = computed((): CSSProperties => {
+  if (isMobile.value) {
+    return {
+      position: "fixed",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+      zIndex: 3000,
+      width: "min(94vw, 360px)",
+      maxHeight: "90vh",
+      overflowY: "auto",
+    };
+  }
+
+  return {
     position: "fixed",
     left: `${pos.value.left}px`,
     top: `${pos.value.top}px`,
     zIndex: 3000,
     minWidth: "260px",
-  }),
-);
+  };
+});
 
 // inicializa posição quando o menu abre para evitar "salto"
 watch(menu, async (open) => {
@@ -354,9 +377,16 @@ function endPointer(e: PointerEvent) {
   dragging.value = false;
 }
 
+onMounted(() => {
+  window.addEventListener("resize", syncIsMobile, { passive: true });
+  window.addEventListener("orientationchange", syncIsMobile, { passive: true });
+});
+
 onBeforeUnmount(() => {
   window.removeEventListener("pointermove", onPointerMove);
   window.removeEventListener("pointerup", stopDrag);
+  window.removeEventListener("resize", syncIsMobile);
+  window.removeEventListener("orientationchange", syncIsMobile);
 });
 </script>
 
@@ -364,5 +394,16 @@ onBeforeUnmount(() => {
 /* garante que o botão de arraste não capture eventos do picker */
 [ref="dragHandle"] {
   touch-action: none;
+}
+
+.date-picker-shell :deep(.v-date-picker),
+.date-picker-shell :deep(.v-picker) {
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  .date-picker-shell :deep(.v-date-picker) {
+    width: 100%;
+  }
 }
 </style>

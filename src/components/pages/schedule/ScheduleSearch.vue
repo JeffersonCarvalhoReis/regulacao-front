@@ -1,10 +1,10 @@
 <template>
   <v-card class="border border-gray-200 shadow-sm mb-2" flat>
-    <v-card-text class="flex justify-between flex-wrap gap-2">
-      <div class="flex gap-2 w-full">
+    <v-card-text class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:flex-wrap">
+      <div class="flex flex-col gap-2 w-full sm:flex-row">
         <v-autocomplete
           v-model="providerUnitId"
-          class="max-w-100"
+          class="w-full sm:max-w-100"
           clearable
           density="compact"
           item-title="name"
@@ -16,7 +16,7 @@
         />
         <v-autocomplete
           v-model="doctorId"
-          class="max-w-100"
+          class="w-full sm:max-w-100"
           clearable
           density="compact"
           item-title="name"
@@ -26,7 +26,7 @@
           variant="outlined"
           @update:model-value="emit('search-doctor', doctorId)"
         />
-        <div class="w-full max-w-60">
+        <div class="w-full sm:max-w-60">
           <base-input-date-picker
             v-model="date"
             label="Data"

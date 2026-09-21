@@ -1,10 +1,10 @@
 <template>
   <v-card class="border border-gray-200 shadow-sm mb-2" flat>
-    <v-card-text class="flex justify-between">
+    <v-card-text class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex flex-col w-full">
         <v-text-field
           v-model="searchAppointment"
-          class="max-w-150"
+          class="w-full sm:max-w-150"
           density="compact"
           hide-details
           label="Buscar Agendamento de Paciente"
