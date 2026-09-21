@@ -21,6 +21,7 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { useAppointmentPendingStore } from "./stores/appointmentPendingCount";
+import { useDashboardRefreshStore } from "./stores/dashboardRefresh";
 import { useMeStore } from "./stores/me";
 
 const route = useRoute();
@@ -30,6 +31,7 @@ const getMe = useMeStore().getMe;
 const meStore = useMeStore();
 const appointmentPendingStore = useAppointmentPendingStore();
 const countAppointment = appointmentPendingStore.appointmentPendingCount;
+const dashboardRefreshStore = useDashboardRefreshStore();
 
 const alert = ref(false);
 const msg = ref(null);
@@ -71,6 +73,9 @@ function setupEchoChannels() {
     });
     echo.private(ch).listen(".pending", (event) => {
       appointmentPendingStore.pending = event.appointments_pending;
+    });
+    echo.private(ch).listen(".dashboard-updated", () => {
+      dashboardRefreshStore.bump();
     });
   }
 
