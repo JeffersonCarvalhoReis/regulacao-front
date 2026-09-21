@@ -1,11 +1,9 @@
 <template>
-  <v-card
-    class="border border-gray-200 shadow-sm mb-2"
-    flat
-  >
-    <v-card-text class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <v-card class="border border-gray-200 shadow-sm mb-2" flat>
+    <v-card-text
+      class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+    >
       <div class="flex flex-col w-full">
-
         <v-text-field
           v-model="searchAppointment"
           class="w-full sm:max-w-150"
@@ -25,7 +23,9 @@
           :items="appointmentStatusOptions"
           label="Status do Agendamento"
           variant="outlined"
-          @update:model-value="emit('search-appointment-status', appointmentStatus)"
+          @update:model-value="
+            emit('search-appointment-status', appointmentStatus)
+          "
         />
       </div>
       <slot />
@@ -34,15 +34,14 @@
 </template>
 
 <script setup>
-  const emit = defineEmits(['search-appointment', 'search-appointment-status'])
-  const searchAppointment = ref(null);
-  const appointmentStatus = ref('')
-  const appointmentStatusOptions = [
-    { value: '', label: 'Todos' },
-    { value: 'scheduled', label: 'Agendados' },
-    { value: 'not-present', label: 'Não comparecidos' },
-    { value: 'realized', label: 'Realizados' },
-    { value: 'pending', label: 'Pendentes' },
-  ]
-
+const emit = defineEmits(["search-appointment", "search-appointment-status"]);
+const searchAppointment = ref(null);
+const appointmentStatus = ref("");
+const appointmentStatusOptions = [
+  { value: "", label: "Todos" },
+  { value: "scheduled", label: "Agendados" },
+  { value: "not-present", label: "Não comparecidos" },
+  { value: "realized", label: "Realizados" },
+  { value: "pending", label: "Pendentes" },
+];
 </script>
