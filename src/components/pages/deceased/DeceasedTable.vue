@@ -166,7 +166,6 @@ const headers = computed(() => {
       value: "action",
       align: "center",
       width: "100px",
-      maxWidth: "100px",
     });
   }
   return baseHeaders;

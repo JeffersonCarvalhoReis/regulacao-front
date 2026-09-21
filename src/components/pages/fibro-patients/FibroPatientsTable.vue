@@ -77,14 +77,14 @@ const handleEdit = (patient) => {
 const handleAction = (patient) => {
   window.open(
     `${import.meta.env.VITE_BACKEND_URL}/api/carteirinha/${patient.id}`,
-    "_blank"
+    "_blank",
   );
 };
 
 const handleDelete = async (fibroPatient) => {
   const confirm = await confirmModal(
     `Tem certeza que deseja excluir o paciente <strong>${fibroPatient.name}</strong>?`,
-    "Atenção"
+    "Atenção",
   );
   if (confirm) {
     await showFeedback(() => destroy(fibroPatient));
@@ -105,7 +105,7 @@ watch(
     setTableOptions(newOptions);
     refetch();
   },
-  { deep: true }
+  { deep: true },
 );
 
 const headers = computed(() => {
@@ -140,7 +140,6 @@ const headers = computed(() => {
       value: "action",
       align: "center",
       width: "100px",
-      maxWidth: "100px",
     },
   ];
   return baseHeaders;

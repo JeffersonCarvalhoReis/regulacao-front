@@ -17,74 +17,73 @@
       @update-options="updateOptions"
     />
   </BaseCard>
-  <v-dialog
-    v-model="dialogNewbBpaDoctor"
-    class="z-999"
-  >
-    <BpaSettingForm :model-value="selectedDoctor" @close="dialogNewbBpaDoctor = false" @save="submitNewDoctor" @update="submitUpdateDoctor" />
+  <v-dialog v-model="dialogNewbBpaDoctor" class="z-999">
+    <BpaSettingForm
+      :model-value="selectedDoctor"
+      @close="dialogNewbBpaDoctor = false"
+      @save="submitNewDoctor"
+      @update="submitUpdateDoctor"
+    />
   </v-dialog>
 </template>
 
 <script setup>
-  import { useSweetAlertFeedback } from '@/composables/feedback/useSweetAlert';
-  import { useBpaDoctorApi } from '@/composables/modules/useBpaDoctor';
+import { useSweetAlertFeedback } from "@/composables/feedback/useSweetAlert";
+import { useBpaDoctorApi } from "@/composables/modules/useBpaDoctor";
 
-  const emit = defineEmits(['close', 'update'])
+const emit = defineEmits(["close", "update"]);
 
-  const { data, refetch, loadingList, meta, create, update } = useBpaDoctorApi();
-  const { showFeedback } = useSweetAlertFeedback();
+const { data, refetch, loadingList, meta, create, update } = useBpaDoctorApi();
+const { showFeedback } = useSweetAlertFeedback();
 
-  const dialogNewbBpaDoctor = ref(false);
-  const selectedDoctor = ref(null)
+const dialogNewbBpaDoctor = ref(false);
+const selectedDoctor = ref(null);
 
-  const submitNewDoctor = async v => {
-    await showFeedback(() => create(v));
-    refetch();
-    dialogNewbBpaDoctor.value = false;
-    emit('update')
-  };
-  const submitUpdateDoctor = async v => {
-    await showFeedback(() => update(v.id, v));
-    refetch();
-    dialogNewbBpaDoctor.value = false;
-    emit('update')
-  };
+const submitNewDoctor = async (v) => {
+  await showFeedback(() => create(v));
+  refetch();
+  dialogNewbBpaDoctor.value = false;
+  emit("update");
+};
+const submitUpdateDoctor = async (v) => {
+  await showFeedback(() => update(v.id, v));
+  refetch();
+  dialogNewbBpaDoctor.value = false;
+  emit("update");
+};
 
-  const handleEdit = v => {
-    selectedDoctor.value = v;
-    dialogNewbBpaDoctor.value = true
-  }
+const handleEdit = (v) => {
+  selectedDoctor.value = v;
+  dialogNewbBpaDoctor.value = true;
+};
 
-  onMounted(() => {
-    refetch();
-  });
+onMounted(() => {
+  refetch();
+});
 
-  const headers = [
-    {
-      title: 'Nome',
-      value: 'name',
-      align: 'center',
-    },
-    {
-      title: 'CNS',
-      value: 'cns',
-      align: 'center',
-    },
-    {
-      title: 'CBO',
-      value: 'cbo',
-      align: 'center',
-    },
-    {
-      title: 'Ações',
-      value: 'action',
-      width: '200px',
-      maxWidth: '200px',
-      align: 'center',
-    },
-  ]
+const headers = [
+  {
+    title: "Nome",
+    value: "name",
+    align: "center",
+  },
+  {
+    title: "CNS",
+    value: "cns",
+    align: "center",
+  },
+  {
+    title: "CBO",
+    value: "cbo",
+    align: "center",
+  },
+  {
+    title: "Ações",
+    value: "action",
+    width: "200px",
+    align: "center",
+  },
+];
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
