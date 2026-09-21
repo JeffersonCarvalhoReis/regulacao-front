@@ -46,6 +46,8 @@ declare module 'vue' {
     CompanionProfile: typeof import('./src/components/pages/companion/CompanionProfile.vue')['default']
     CompanionSearch: typeof import('./src/components/pages/companion/CompanionSearch.vue')['default']
     CompanionTable: typeof import('./src/components/pages/companion/CompanionTable.vue')['default']
+    DashboardPanel: typeof import('./src/components/pages/home/DashboardPanel.vue')['default']
+    DashboardStat: typeof import('./src/components/pages/home/DashboardStat.vue')['default']
     DeceasedTable: typeof import('./src/components/pages/deceased/DeceasedTable.vue')['default']
     DoctorAddProviderUnits: typeof import('./src/components/pages/doctor/DoctorAddProviderUnits.vue')['default']
     DoctorAddSpecialists: typeof import('./src/components/pages/doctor/DoctorAddSpecialists.vue')['default']
