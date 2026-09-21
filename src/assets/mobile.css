@@ -28,6 +28,10 @@ body {
     overflow-x: hidden;
 }
 
+.v-card {
+    overflow: auto;
+}
+
 /* Rolagem com inércia no iOS em qualquer área rolável */
 .v-card,
 .v-card-text,
@@ -88,7 +92,7 @@ body {
      ----------------------------------------------------------- */
     .v-dialog > .v-overlay__content {
         margin: 0 !important;
-        width: 100% !important;
+        width: 95% !important;
         max-width: 100% !important;
         height: 100% !important;
         max-height: 100% !important;

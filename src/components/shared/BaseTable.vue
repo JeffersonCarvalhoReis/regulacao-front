@@ -1,13 +1,13 @@
 <template>
   <v-card
-    class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 max-w-full overflow-x-auto"
+    class="bg-white border border-slate-200 shadow-sm rounded-xs mb-6 min-h-max max-w-full overflow-x-auto"
     flat
   >
     <!-- Data Table -->
     <v-data-table-server
       v-model:items-per-page="options.itemsPerPage"
       v-model:options="options"
-      class="uppercase"
+      class="uppercase min-h-max"
       density="compact"
       :header-props="{
         class: 'text-ita-blue font-semibold text-sm normal-case',

@@ -1,6 +1,6 @@
 <template>
   <v-card class="border border-gray-200 shadow-sm mb-2" flat>
-    <v-card-text class="flex justify-between gap-4">
+    <v-card-text class="flex flex-col sm:flex-row justify-between gap-4">
       <base-input-date-picker
         v-model="travelDate"
         class-date-picker="absolute translate-x-100 translate-y-30"
