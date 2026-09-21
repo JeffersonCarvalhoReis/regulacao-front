@@ -102,6 +102,7 @@
         value: 'view',
         align: 'left',
         width: '200px',
+      maxWidth: '200px',
       },
       {
         title: 'Hospital',
@@ -124,6 +125,7 @@
         title: 'Ações',
         value: 'action',
         width: '200px',
+      maxWidth: '200px',
         align: 'center',
       });
     }

@@ -113,6 +113,7 @@ const headers = computed(() => {
       value: "view",
       align: "left",
       width: "200px",
+      maxWidth: "200px",
     },
     {
       title: "Cidade",
@@ -132,6 +133,7 @@ const headers = computed(() => {
       title: "Ações",
       value: "action",
       width: "200px",
+      maxWidth: "200px",
       align: "center",
     });
   }

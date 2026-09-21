@@ -102,6 +102,7 @@
         value: 'view',
         align: 'left',
         width: '150px',
+      maxWidth: '150px',
       },
       {
         title: 'Agente Comunitário de Saúde',
@@ -124,6 +125,7 @@
         title: 'Ações',
         value: 'action',
         width: '200px',
+      maxWidth: '200px',
         align: 'center',
       });
     }

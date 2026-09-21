@@ -75,6 +75,7 @@
         value: 'view',
         align: 'center',
         width: '100px',
+      maxWidth: '100px',
       },
       {
         title: 'Paciente',

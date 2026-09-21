@@ -110,6 +110,7 @@
         value: 'view',
         align: 'center',
         width: '100px',
+      maxWidth: '100px',
       },
       {
         title: 'Nome',
@@ -140,6 +141,7 @@
         value: 'action',
         align: 'center',
         width: '100px',
+      maxWidth: '100px',
       });
     }
     return baseHeaders

@@ -232,6 +232,7 @@ const headers = computed(() => {
       title: "Ações",
       value: "action",
       width: "200px",
+      maxWidth: "200px",
       align: "center",
     });
   }

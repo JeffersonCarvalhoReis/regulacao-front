@@ -46,7 +46,11 @@
           <slot :item="item" name="item.action" />
         </template>
         <template v-else>
-          <v-btn-group divided variant="outlined" class="flex justify-end flex-wrap">
+          <v-btn-group
+            divided
+            variant="outlined"
+            class="btn-actions flex flex-nowrap justify-end"
+          >
             <div v-if="handleConditionalAction(item)">
               <v-tooltip v-if="canShowNewAction(item)" :text="textNewAction">
                 <template #activator="{ props }">
@@ -341,18 +345,21 @@ onMounted(() => {
   gap: 4px;
 }
 
-/* Deixa o texto quebrar de linha dentro das células.
-   Sem isso, a tabela usa table-layout:auto e o navegador prefere
-   alargar a coluna (e a tabela toda) a quebrar o texto, já que o
-   "width" do header é só uma sugestão, não um limite. */
-:deep(.v-table__wrapper > table) {
-  table-layout: fixed;
+/* Ícones de ação sempre lado a lado. Se a coluna ficar estreita
+   demais (celular), rola na horizontal em vez de quebrar linha. */
+.btn-actions {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  max-width: 100%;
 }
 
-:deep(.v-data-table__td) {
-  white-space: normal !important;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+.btn-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-actions :deep(.v-btn) {
+  flex-shrink: 0;
 }
 
 /* --- Celular: cada linha vira um cartão legível --- */
@@ -417,18 +424,18 @@ onMounted(() => {
 }
 
 :deep(tbody > tr.risk-red > td:first-child) {
-  border-left: 5px solid #ef4444 !important;
+  border-left: 5px solid #ef4444;
 }
 
 :deep(tbody > tr.risk-yellow > td:first-child) {
-  border-left: 5px solid #facc15 !important;
+  border-left: 5px solid #facc15;
 }
 
 :deep(tbody > tr.risk-green > td:first-child) {
-  border-left: 5px solid #16a34a !important;
+  border-left: 5px solid #16a34a;
 }
 
 :deep(tbody > tr.risk-blue > td:first-child) {
-  border-left: 5px solid #1e3a8a !important;
+  border-left: 5px solid #1e3a8a;
 }
 </style>

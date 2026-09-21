@@ -245,6 +245,7 @@ const headers = computed(() => {
       value: "view",
       align: "left",
       width: "200px",
+      maxWidth: "200px",
     },
     {
       title: "Paciente",
@@ -264,6 +265,7 @@ const headers = computed(() => {
       value: "action",
       align: "center",
       width: "100px",
+      maxWidth: "100px",
     },
   ];
   switch (tab.value) {
