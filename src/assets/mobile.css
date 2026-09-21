@@ -144,15 +144,6 @@ body {
     /* -----------------------------------------------------------
      5. Tabelas
      ----------------------------------------------------------- */
-    /* O Vuetify aplica "overflow: auto" (os dois eixos) no wrapper
-     da tabela. Sem isso, o toque para rolar a PÁGINA para baixo
-     fica "preso" nesse container, que também é rolável na
-     vertical mesmo sem precisar. Aqui a tabela rola só na
-     horizontal; o gesto de descer a tela passa direto pra página. */
-    .v-table__wrapper {
-        overflow-x: auto;
-        overflow-y: visible !important;
-    }
 
     /* Rodapé de paginação quebra em duas linhas em vez de cortar */
     .v-data-table-footer {
