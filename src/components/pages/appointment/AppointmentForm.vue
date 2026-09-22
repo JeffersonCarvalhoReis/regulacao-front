@@ -73,6 +73,7 @@
             clearable
             density="compact"
             :error-messages="errors.schedule_id"
+            :filter-keys="['title', 'raw.doctorName']"
             :items="scheduleOptions"
             :loading="loadingSchedules"
             label="Selecionar uma Agenda Aberta (opcional)"
@@ -340,6 +341,7 @@ const scheduleOptions = computed(() => {
     value: schedule.id,
     title: `${formatDate(schedule.date)} - ${schedule.provider_unit}`,
     subtitle: `${schedule.doctor || "Qualquer médico"} • ${schedule.available_vacancies} vaga(s) disponível(is)`,
+    doctorName: schedule.doctor || "",
   }));
 });
 
