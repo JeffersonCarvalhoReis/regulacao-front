@@ -15,6 +15,7 @@
       :headers="headers"
       :hide-default-footer="hideDefaultFooter"
       item-value="id"
+      :items-per-page-options="itemsPerPageOptions"
       :items="items"
       :items-length="totalItems"
       :loading="loading"
@@ -233,6 +234,14 @@ const options = ref({
   page: 1,
   itemsPerPage: 10,
 });
+
+const itemsPerPageOptions = [
+  { value: 10, title: "10" },
+  { value: 25, title: "25" },
+  { value: 50, title: "50" },
+  { value: 100, title: "100" },
+  { value: 500, title: "500" },
+];
 
 const getRowProps = ({ item }) => {
   if (!item.risk_classification) {
