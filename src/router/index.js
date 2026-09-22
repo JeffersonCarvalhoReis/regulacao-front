@@ -9,23 +9,46 @@ const router = createRouter({
   routes: setupLayouts(MainRoutes),
 });
 
+// Controla se a sessão já foi validada com o backend neste carregamento
+// da página. É uma variável de módulo (não persistida), então ela volta
+// a "false" sempre que a página é recarregada de verdade (F5, nova aba),
+// mas não a cada navegação interna do SPA.
+let sessionVerified = false;
+
+// Estado exibido pelo App.vue enquanto a sessão está sendo validada.
+// Começa "true" somente quando existe uma sessão salva para checar (lido
+// direto do localStorage, antes até da store ser hidratada), assim quem
+// nunca logou vai direto para o login sem passar pelo loading.
+export const authChecking = ref(localStorage.getItem("hasSession") === "true");
+
 router.beforeEach(async (to, from, next) => {
   const meStore = useMeStore();
   const auth = useAuthStore();
 
   await nextTick();
 
+  // Sempre que a página é aberta/recarregada com "hasSession" ativo,
+  // valida com o backend antes de decidir qualquer coisa. Isso é
+  // necessário mesmo que meStore.isLoggedIn já esteja "true", pois esse
+  // valor pode vir apenas do localStorage (dados de uma sessão antiga),
+  // sem garantir que o cookie de sessão ainda é válido no servidor.
+  if (auth.hasSession && !sessionVerified) {
+    sessionVerified = true;
+    await meStore.getMe();
+  }
+  setTimeout(() => {
+    authChecking.value = false;
+  }, 500);
+
+  // Se depois da validação a sessão continua marcada como ativa mas o
+  // backend não retornou usuário (401), trata como sessão expirada.
   if (auth.hasSession && !meStore.isLoggedIn) {
-    try {
-      await meStore.getMe();
-    } catch {
-      auth.hasSession = false;
-      meStore.reset();
+    auth.hasSession = false;
+    meStore.reset();
 
-      await auth.logout(false);
+    await auth.logout(false);
 
-      return next({ name: "login" });
-    }
+    return next({ name: "login" });
   }
 
   if (to.meta.requiresAuth && !meStore.isLoggedIn) {

@@ -1,24 +1,31 @@
 <template>
   <v-app theme="light">
-    <router-view class="bg-gray-100" />
-    <v-snackbar
-      v-model="alert"
-      :color="color"
-      :timeout="4000"
-      timer-color="white"
-      timer
-      close-on-content-click
-      close-delay
-    >
-      <template #prepend>
-        <v-icon size="24" color="white">{{ icon }}</v-icon>
-      </template>
-      {{ msg }}
-    </v-snackbar>
+    <div v-if="authChecking" class="app-splash">
+      <v-progress-circular color="primary" indeterminate size="56" width="5" />
+      <span class="app-splash-text">Verificando sessão...</span>
+    </div>
+    <template v-else>
+      <router-view class="bg-gray-100" />
+      <v-snackbar
+        v-model="alert"
+        :color="color"
+        :timeout="4000"
+        timer-color="white"
+        timer
+        close-on-content-click
+        close-delay
+      >
+        <template #prepend>
+          <v-icon size="24" color="white">{{ icon }}</v-icon>
+        </template>
+        {{ msg }}
+      </v-snackbar>
+    </template>
   </v-app>
 </template>
 
 <script setup>
+import { authChecking } from "@/router";
 import { useRoute } from "vue-router";
 import { useAppointmentPendingStore } from "./stores/appointmentPendingCount";
 import { useDashboardRefreshStore } from "./stores/dashboardRefresh";
@@ -116,3 +123,21 @@ watch(
   { immediate: true },
 );
 </script>
+
+<style scoped>
+.app-splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100vh;
+  width: 100%;
+  background-color: #f8fafc;
+}
+
+.app-splash-text {
+  font-size: 14px;
+  color: #64748b;
+}
+</style>
