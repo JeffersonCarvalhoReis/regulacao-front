@@ -42,6 +42,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideDeceased: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -58,6 +62,9 @@ const { patientLabel } = usePatientLabel();
 const onSearch = debounce(async (v) => {
   if (patient_id.value) return;
   clearFilters();
+  if (props.hideDeceased) {
+    setFilter("is_deceased", 0);
+  }
   const name = v.split("-");
   setFilter("name", name[0]);
   await nextTick();
@@ -75,6 +82,9 @@ watch(
 );
 onMounted(async () => {
   if (!props.isEditing) {
+    if (props.hideDeceased) {
+      setFilter("is_deceased", 0);
+    }
     await refetch();
   }
 });

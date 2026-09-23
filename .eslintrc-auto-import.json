@@ -92,6 +92,7 @@
     "useRouter": true,
     "useSlots": true,
     "useTemplateRef": true,
+    "useWhatsappMessage": true,
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,

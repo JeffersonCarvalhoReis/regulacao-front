@@ -51,6 +51,49 @@
           <template #item.date="{ item }">
             {{ formatDate(item.date) }}
           </template>
+          <template #item.whatsapp="{ item }">
+            <v-tooltip
+              :text="
+                item.status === 'pending'
+                  ? 'Requer agendamento aceito'
+                  : item.patient_phone
+                    ? 'Enviar lembrete pelo WhatsApp'
+                    : 'Paciente sem telefone cadastrado'
+              "
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-if="item.status === 'pending'"
+                  v-bind="props"
+                  class="text-gray-300 bg-white/0 border-0 cursor-not-allowed"
+                  icon
+                  flat
+                >
+                  <v-icon>mdi-timer-sand</v-icon>
+                </v-btn>
+                <v-btn
+                  v-else-if="!item.patient_phone"
+                  v-bind="props"
+                  class="text-gray-300 bg-white/0 border-0 cursor-not-allowed"
+                  icon
+                  flat
+                >
+                  <v-icon>mdi-whatsapp</v-icon>
+                </v-btn>
+
+                <v-btn
+                  v-else
+                  v-bind="props"
+                  class="text-green-600 bg-white/0 border-0"
+                  flat
+                  icon
+                  @click="sendWhatsappReminder(item)"
+                >
+                  <v-icon>mdi-whatsapp</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+          </template>
           <template #item.action="{ item }">
             <v-btn-group divided variant="outlined">
               <div v-if="['regulation_officer'].includes(role)">
@@ -124,6 +167,28 @@
         >
           <template #item.date="{ item }">
             {{ formatDate(item.date) }}
+          </template>
+          <template #item.whatsapp="{ item }">
+            <v-tooltip
+              :text="
+                item.patient_phone
+                  ? 'Enviar lembrete pelo WhatsApp'
+                  : 'Paciente sem telefone cadastrado'
+              "
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  class="text-green-600 bg-white/0 border-0"
+                  :disabled="!item.patient_phone"
+                  flat
+                  icon
+                  @click="sendWhatsappReminder(item)"
+                >
+                  <v-icon>mdi-whatsapp</v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
           </template>
           <template #item.action="{ item }">
             <v-btn-group divided variant="outlined">
@@ -228,9 +293,10 @@ const {
   setSort: sortExport,
   clearFilters: clearFiltersExport,
 } = useAppointmentExportApi();
-const { showFeedback, confirmModal, showFeedbackLoading } =
+const { showFeedback, confirmModal, showFeedbackLoading, showWarning } =
   useSweetAlertFeedback();
 const { formatDate } = useFormatDate();
+const { openAppointmentWhatsapp } = useWhatsappMessage();
 const options = ref({});
 const viewAppointmentDetails = ref(false);
 const editAppointment = ref(false);
@@ -329,6 +395,13 @@ const viewAppointment = (v) => {
   viewAppointmentDetails.value = true;
 };
 
+const sendWhatsappReminder = (appointment) => {
+  const opened = openAppointmentWhatsapp(appointment);
+  if (!opened) {
+    showWarning("Paciente não possui telefone cadastrado.");
+  }
+};
+
 const handleWatch = debounce(async () => {
   setFilter("solicitation_type", tab.value);
   filterExport("solicitation_type", tab.value);
@@ -394,6 +467,13 @@ const headers = computed(() => {
       key: "scheduled_by",
       align: "center",
       sortable: true,
+    },
+    {
+      title: "WhatsApp",
+      key: "whatsapp",
+      align: "center",
+      sortable: false,
+      width: "10px",
     },
     {
       title: "Ações",

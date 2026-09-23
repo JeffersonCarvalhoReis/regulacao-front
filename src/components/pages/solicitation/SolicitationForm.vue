@@ -61,6 +61,7 @@
             class="lg:col-span-2"
             :error-messages="errors.patient_id"
             :is-editing="isEditing"
+            hide-deceased
             is-clearable
             is-required
             @update:modelValue="updatePatient"

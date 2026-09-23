@@ -88,6 +88,19 @@ export function useSweetAlertFeedback() {
     }
   };
 
+  const showWarning = (message, options = {}) => {
+    Swal.fire({
+      target: document.body,
+      icon: "warning",
+      title: options.title || "Atenção",
+      text: message,
+      confirmButtonText: "OK",
+      customClass: {
+        confirmButton: "!bg-sky-400 text-white",
+      },
+    });
+  };
+
   const showInactivityAlert = (text = null) => {
     Swal.fire({
       target: document.body,
@@ -130,6 +143,7 @@ export function useSweetAlertFeedback() {
   return {
     showFeedback,
     showFeedbackLoading,
+    showWarning,
     showInactivityAlert,
     confirmModal,
   };
