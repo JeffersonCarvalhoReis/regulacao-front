@@ -171,16 +171,37 @@
           <template #item.whatsapp="{ item }">
             <v-tooltip
               :text="
-                item.patient_phone
-                  ? 'Enviar lembrete pelo WhatsApp'
-                  : 'Paciente sem telefone cadastrado'
+                item.status === 'pending'
+                  ? 'Requer agendamento aceito'
+                  : item.patient_phone
+                    ? 'Enviar lembrete pelo WhatsApp'
+                    : 'Paciente sem telefone cadastrado'
               "
             >
               <template #activator="{ props }">
                 <v-btn
+                  v-if="item.status === 'pending'"
+                  v-bind="props"
+                  class="text-gray-300 bg-white/0 border-0 cursor-not-allowed"
+                  icon
+                  flat
+                >
+                  <v-icon>mdi-timer-sand</v-icon>
+                </v-btn>
+                <v-btn
+                  v-else-if="!item.patient_phone"
+                  v-bind="props"
+                  class="text-gray-300 bg-white/0 border-0 cursor-not-allowed"
+                  icon
+                  flat
+                >
+                  <v-icon>mdi-whatsapp</v-icon>
+                </v-btn>
+
+                <v-btn
+                  v-else
                   v-bind="props"
                   class="text-green-600 bg-white/0 border-0"
-                  :disabled="!item.patient_phone"
                   flat
                   icon
                   @click="sendWhatsappReminder(item)"
