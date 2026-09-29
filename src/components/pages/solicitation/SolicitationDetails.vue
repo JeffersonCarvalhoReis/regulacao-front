@@ -22,7 +22,10 @@
                 variant="text"
                 @click="copy(localData.patient_cpf, 'cpf')"
               >
-                <v-icon :icon="isCopied('cpf') ? 'mdi-check' : 'mdi-content-copy'" size="16" />
+                <v-icon
+                  :icon="isCopied('cpf') ? 'mdi-check' : 'mdi-content-copy'"
+                  size="16"
+                />
                 <v-tooltip activator="parent" location="top">
                   {{ isCopied("cpf") ? "Copiado!" : "Copiar CPF" }}
                 </v-tooltip>
@@ -39,13 +42,35 @@
                 variant="text"
                 @click="copy(localData.patient_cns, 'cns')"
               >
-                <v-icon :icon="isCopied('cns') ? 'mdi-check' : 'mdi-content-copy'" size="16" />
+                <v-icon
+                  :icon="isCopied('cns') ? 'mdi-check' : 'mdi-content-copy'"
+                  size="16"
+                />
                 <v-tooltip activator="parent" location="top">
                   {{ isCopied("cns") ? "Copiado!" : "Copiar SUS" }}
                 </v-tooltip>
               </v-btn>
             </div>
-            <div>Telefone: {{ localData.patient_phone }}</div>
+            <div class="flex items-center gap-1">
+              <span> Telefone: {{ localData.patient_phone }} </span>
+              <v-btn
+                v-if="localData.patient_phone"
+                :color="isCopied('phone') ? 'success' : undefined"
+                density="compact"
+                icon
+                size="x-small"
+                variant="text"
+                @click="copy(localData.patient_phone, 'phone')"
+              >
+                <v-icon
+                  :icon="isCopied('phone') ? 'mdi-check' : 'mdi-content-copy'"
+                  size="16"
+                />
+                <v-tooltip activator="parent" location="top">
+                  {{ isCopied("phone") ? "Copiado!" : "Copiar telefone" }}
+                </v-tooltip>
+              </v-btn>
+            </div>
             <div>Unidade de Saúde: {{ localData.health_unit }}</div>
             <div>
               Agente Comunitário de Saúde:
