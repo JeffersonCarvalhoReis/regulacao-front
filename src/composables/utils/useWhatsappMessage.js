@@ -38,55 +38,54 @@ export function useWhatsappMessage() {
   };
 
   /**
+   * Monta a linha de data, incluindo o horário quando existir.
+   */
+  const buildDateLine = (appointment) => {
+    const date = formatAppointmentDate(appointment.date);
+
+    return `\u{1F4C5} Data: ${date}`;
+  };
+
+  /**
    * Monta a mensagem do agendamento.
-   * Tom neutro: pode ser lida tanto pelo paciente quanto por um responsável.
+   * - Com especialista: usa o modelo de consulta (especialidade + médico).
+   * - Sem especialista: usa o modelo de exame/procedimento.
    */
   const buildAppointmentMessage = (appointment) => {
-    const patientName = appointment.patient;
-
-    const specialtyOrProcedure =
-      appointment.specialist || appointment.procedure;
+    const patientName = appointment.patient ?? "";
+    const isConsultation = Boolean(appointment.specialist);
 
     const lines = [
-      `Ol\u00e1! \u{1F44B}`,
+      `Ol\u00e1, ${patientName}! Informamos que sua solicita\u00e7\u00e3o foi agendada pela Secretaria Municipal de Sa\u00fade de Itagua\u00e7u da Bahia.`,
       "",
-      `Informamos que o agendamento para *${patientName}* foi confirmado pela Secretaria Municipal de Sa\u00fade de Itagua\u00e7u da Bahia.`,
-      "",
-      `\u{1F4C5} Data: ${formatAppointmentDate(appointment.date)}`,
-      `\u{1F550} Hor\u00e1rio: ${appointment.time ?? ""}`,
+      buildDateLine(appointment),
       `\u{1F3E5} Local: ${appointment.provider_unit ?? ""}`,
     ];
 
-    if (appointment.provider_unit_localization) {
+    if (isConsultation) {
+      lines.push(`\u{1FA7A} Especialidade: ${appointment.specialist}`);
       lines.push(
-        `\u{1F4CD} Endere\u00e7o: ${appointment.provider_unit_localization}`,
+        `\u{1F468}\u{200D}\u{2695}\u{FE0F} M\u00e9dico: ${appointment.doctor ?? ""}`,
       );
-    }
-
-    if (specialtyOrProcedure) {
-      lines.push(
-        `\u{1FA7A} ${
-          appointment.specialist ? "Especialista" : "Procedimento"
-        }: ${specialtyOrProcedure}`,
-      );
-    }
-
-    if (appointment.doctor) {
-      // Emoji neutro (pessoa profissional de sa\u00fade), sem marcar g\u00eanero.
-      lines.push(
-        `\u{1F9D1}\u{200D}\u{2695}\u{FE0F} M\u00e9dico(a): ${appointment.doctor}`,
-      );
+    } else {
+      lines.push(`\u{1FA7A} Exame: ${appointment.procedure ?? ""}`);
     }
 
     lines.push(
       "",
-      "\u{1F4CC} Importante:",
-      "Leve a requisi\u00e7\u00e3o m\u00e9dica original.",
+      "\u{1F4CC} IMPORTANTE:",
+      "\u00c9 *OBRIGAT\u00d3RIO* retirar o comprovante de agendamento na Secretaria Municipal de Sa\u00fade, portando a solicita\u00e7\u00e3o m\u00e9dica original.",
+      "",
+      "\u26A0\uFE0F Sem o comprovante de agendamento, n\u00e3o ser\u00e1 poss\u00edvel realizar o atendimento.",
+      "",
+      "\u2753 *Voc\u00ea confirma seu interesse no agendamento?*",
+      "",
+      "Caso n\u00e3o tenhamos retorno com a confirma\u00e7\u00e3o, o agendamento ser\u00e1 cancelado.",
       "",
       "Em caso de d\u00favidas, entre em contato conosco.",
       "",
       "Atenciosamente,",
-      "Secretaria Municipal de Sa\u00fade de Itagua\u00e7u da Bahia.",
+      "SECRETARIA MUNICIPAL DE SA\u00daDE DE ITAGUA\u00c7U DA BAHIA",
     );
 
     return lines.join("\n");
