@@ -64,9 +64,11 @@ export function useWhatsappMessage() {
 
     if (isConsultation) {
       lines.push(`\u{1FA7A} Especialidade: ${appointment.specialist}`);
-      lines.push(
-        `\u{1F468}\u{200D}\u{2695}\u{FE0F} M\u00e9dico: ${appointment.doctor ?? ""}`,
-      );
+      if (appointment.doctor) {
+        lines.push(
+          `\u{1F468}\u{200D}\u{2695}\u{FE0F} M\u00e9dico: ${appointment.doctor ?? ""}`,
+        );
+      }
     } else {
       lines.push(`\u{1FA7A} Exame: ${appointment.procedure ?? ""}`);
     }
