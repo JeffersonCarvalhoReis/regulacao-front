@@ -54,6 +54,7 @@ export function useWhatsappMessage() {
   const buildAppointmentMessage = (appointment) => {
     const patientName = appointment.patient ?? "";
     const isConsultation = Boolean(appointment.specialist);
+    const time = appointment.time;
 
     const lines = [
       `Ol\u00e1, ${patientName}! Informamos que sua solicita\u00e7\u00e3o foi agendada pela Secretaria Municipal de Sa\u00fade de Itagua\u00e7u da Bahia.`,
@@ -72,6 +73,8 @@ export function useWhatsappMessage() {
     } else {
       lines.push(`\u{1FA7A} Exame: ${appointment.procedure ?? ""}`);
     }
+
+    lines.push(`\u{23F0} Hor\u00e1rio: ${time ?? ""}`);
 
     lines.push(
       "",
